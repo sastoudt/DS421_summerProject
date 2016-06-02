@@ -24,14 +24,21 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F){
   }
   data=data[!is.na(data$res),]
   data=data[!is.na(data$flo),]
+
+  # title
+  txt <- paste0(data$resdup[1], ' ~ s(time) + s(season) + s(flo)') 
+
   ggplot(data, aes(x = date, y = res))+geom_point()+
-    geom_line(aes(y = mod$fitted.values),color='darkblue',lwd=1)+
-    geom_line(aes(y = modNoFlow$fitted.values),lwd=1,color="orange")+
+    geom_line(aes(y = mod$fitted.values, color = 'Predicted'),lwd=1)+
+    geom_line(aes(y = modNoFlow$fitted.values, color = 'Flow-normalized'), lwd=1)+
     xlim(xlim)+
     xlab("")+
-    ylab(ylabel)#+
-  #scale_colour_manual(name = '', 
-  #                   values =c('orange'="No Flow",'darkblue'="Flow"))
+    ylab(ylabel)+
+  scale_colour_manual(name = '', 
+    labels = c('Predicted', 'Flow-normalized'), 
+    values =c('darkblue','orange')
+    ) + 
+  ggtitle(txt)
 }
 ## need legend
 
@@ -70,16 +77,23 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F){
     
   }
   
+  # title
+  txt <- paste0(data$resdup[1], ' ~ s(time) + s(season)') 
+  
   data=merge(data,normalGrid,by.x="month",by.y="month")
   data=data[order(data$date),]
   ggplot(data, aes(x = date, y = res))+geom_point()+
-    geom_line(aes(y = normVal),color='darkblue',lwd=1)+
-    geom_line(aes(y = normValNoFlow),lwd=1,color="orange")+
+    geom_line(aes(y = normVal, color = 'Predicted'),lwd=1)+
+    geom_line(aes(y = normValNoFlow, color = 'Flow-normalized'),lwd=1)+
     xlim(xlim)+
     xlab("")+
-    ylab(ylabel)#+
-  #scale_colour_manual(name = '', 
-  #                   values =c('orange'="No Flow",'darkblue'="Flow"))
+    ylab(ylabel)+
+  scale_colour_manual(name = '', 
+    labels = c('Predicted', 'Flow-normalized'), 
+    values =c('darkblue','orange')
+    ) + 
+  ggtitle(txt)
+  
 }
 
 
