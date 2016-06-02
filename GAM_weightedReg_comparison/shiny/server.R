@@ -21,21 +21,24 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F){
     ylabel <- gsub('ln-|log-', '', as.character(ylabel))
     ylabel <- as.expression(parse(text = ylabel))
     
+    
   }
   data=data[!is.na(data$res),]
   data=data[!is.na(data$flo),]
 
+  titleLab=ifelse(scale,data$resdup[1],paste("ln(",data$resdup[1],")",sep=""))
+  
   # title
-  txt <- paste0(data$resdup[1], ' ~ s(time) + s(season) + s(flo)') 
+  txt <- paste0(titleLab, ' ~ s(time) + s(season) + [s(flo)]') 
 
   ggplot(data, aes(x = date, y = res))+geom_point()+
-    geom_line(aes(y = mod$fitted.values, color = 'Predicted'),lwd=1)+
-    geom_line(aes(y = modNoFlow$fitted.values, color = 'Flow-normalized'), lwd=1)+
+    geom_line(aes(y = mod$fitted.values, color = 'With Flow'),lwd=1)+
+    geom_line(aes(y = modNoFlow$fitted.values, color = 'No Flow'), lwd=1)+
     xlim(xlim)+
     xlab("")+
     ylab(ylabel)+
   scale_colour_manual(name = '', 
-    labels = c('Predicted', 'Flow-normalized'), 
+    labels = c('With Flow', 'No Flow'), 
     values =c('darkblue','orange')
     ) + 
   ggtitle(txt)
@@ -76,20 +79,21 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F){
     #print(i)
     
   }
-  
+  titleLab=ifelse(scale,data$resdup[1],paste("ln(",data$resdup[1],")",sep=""))
+                  
   # title
-  txt <- paste0(data$resdup[1], ' ~ s(time) + s(season)') 
+  txt <- paste0("Average Per Month Across Years: ",titleLab, ' ~ s(time) + s(season) + [s(flo)]') 
   
   data=merge(data,normalGrid,by.x="month",by.y="month")
   data=data[order(data$date),]
   ggplot(data, aes(x = date, y = res))+geom_point()+
-    geom_line(aes(y = normVal, color = 'Predicted'),lwd=1)+
-    geom_line(aes(y = normValNoFlow, color = 'Flow-normalized'),lwd=1)+
+    geom_line(aes(y = normVal, color = 'With Flow'),lwd=1)+
+    geom_line(aes(y = normValNoFlow, color = 'No Flow'),lwd=1)+
     xlim(xlim)+
     xlab("")+
     ylab(ylabel)+
   scale_colour_manual(name = '', 
-    labels = c('Predicted', 'Flow-normalized'), 
+    labels = c('With Flow', 'No Flow'), 
     values =c('darkblue','orange')
     ) + 
   ggtitle(txt)
