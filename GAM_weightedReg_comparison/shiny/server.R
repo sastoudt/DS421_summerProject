@@ -209,8 +209,10 @@ library(dplyr)
 library(tidyr)
 
 # raw data
-load(file = 'data/modelsNoLag_default.RData')
-load(file = 'data/modelsNoLag_NoFlow_default.RData')
+#load(file = 'data/modelsNoLag_default.RData')
+#load(file = 'data/modelsNoLag_NoFlow_default.RData')
+load(file="data/modelsNoLag_NoFlow_Nested.RData")
+load(file="data/modelsNoLag_Nested.RData")
 load(file="data/dataNice_nolag.RData")
 load(file="data/dataPredNice_nolag.RData")
 
@@ -226,7 +228,7 @@ shinyServer(function(input, output) {
     res <- input$res
     #scl <- input$scl
     
-    out <- which(names(modelsNoLag_default)==paste(stat,res,sep="_"))
+    out <- which(names(modelsNoLag_Nested)==paste(stat,res,sep="_"))
 
     return(out)
     
@@ -331,7 +333,7 @@ shinyServer(function(input, output) {
     dat=dataNiceNoLag[[dat()]]
    
     # create plot
-    flowPlot_SAS(dat,modelsNoLag_NoFlow_default[[mod()]],modelsNoLag_default[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
+    flowPlot_SAS(dat,modelsNoLag_NoFlow_Nested[[mod()]],modelsNoLag_Nested[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
    
   }, height = 250, width = 1200)
   
@@ -356,7 +358,7 @@ shinyServer(function(input, output) {
     ## wrtds
     
     dat=dataNiceNoLag[[dat()]]
-    flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_default[[mod()]],modelsNoLag_default[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
+    flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_Nested[[mod()]],modelsNoLag_Nested[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
     
     
   }, height = 250, width = 1200)
