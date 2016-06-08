@@ -39,7 +39,7 @@ for(i in 1:length(dataNiceNoLag)){
 ## problematic cases
 
 for(i in 4:6){
- 
+  
   tmp <- mods_nolag$data[[i]] %>% 
     mutate(
       dec_time = dec_time(Date)[['dec_time']],
@@ -57,10 +57,10 @@ for(i in 4:6){
                       ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"),k=c(6,6))+
                       ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
                                                           bs=c("cc","tp","tp")), data = tmp) ##i=4, 5, 6
- 
+  
   modelsNoLag_Nested[[i]]=gamDEFAULT
   names(modelsNoLag_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
-
+  
   
 }
 
@@ -81,7 +81,7 @@ for(i in 19:20){
   gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=15)+
                       ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                       ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
-                       bs=c("cc","tp","tp")), data = tmp) ##i=19,20
+                                                          bs=c("cc","tp","tp")), data = tmp) ##i=19,20
   modelsNoLag_Nested[[i]]=gamDEFAULT
   names(modelsNoLag_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
   
@@ -100,13 +100,13 @@ tmp <- mods_nolag$data[[i]] %>%
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
 
-  gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=22)+
-                      ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
-                      ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,bs=c("cc","tp","tp")),data=tmp)
- 
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=22)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                    ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,bs=c("cc","tp","tp")),data=tmp)
+
 modelsNoLag_Nested[[i]]=gamDEFAULT
 names(modelsNoLag_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
-  
+
 save(modelsNoLag_Nested,file="data/modelsNoLag_Nested.RData")
 save(modelsNoLag_NoFlow_Nested,file="data/modelsNoLag_NoFlow_Nested.RData")
 
