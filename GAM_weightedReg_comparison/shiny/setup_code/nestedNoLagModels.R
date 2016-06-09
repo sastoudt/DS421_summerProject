@@ -136,9 +136,13 @@ tmp <- mods_nolag$data[[i]] %>%
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
 
-gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=23)+
-                          ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp) #k=19
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=23)+
+                          ti(doy,dec_time,bs=c("cc","tp")), data = tmp) #k=19
 ## k=23 is as big as I can get, iffy
+gam.check(gamDEFAULTnoflow)
+vis.gam(gamDEFAULTnoflow,view=c("doy","dec_time"),plot.type="contour")
+vis.gam(gamDEFAULTnoflow)
+
 
 modelsNoLag_NoFlow_Nested[[i]]=gamDEFAULTnoflow
 names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
@@ -188,3 +192,5 @@ gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=23)+
 
 modelsNoLag_NoFlow_Nested[[i]]=gamDEFAULTnoflow
 names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
+
+save(modelsNoLag_NoFlow_Nested,file="data/modelsNoLag_NoFlow_Nested.RData")
