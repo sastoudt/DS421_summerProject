@@ -1,4 +1,5 @@
 source("getFlowNormalized.R")
+source("nestedPlot.R")
 lablk <- list(
   shrt = c('din', 'nh', 'no23'),
   lngs = c(
@@ -48,7 +49,7 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F)
       xlab("")+
       ylab(ylabel)+
       scale_colour_manual(name = '',
-                          labels = c('With Flow', 'No Flow'),
+                          labels = c('With Flow'='darkblue', 'No Flow'="orange"),
                           values =c('darkblue','orange')
       ) +
       ggtitle(txt)
@@ -66,7 +67,7 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F)
     xlab("")+
     ylab(ylabel)+
   scale_colour_manual(name = '', 
-    labels = c('With Flow', 'No Flow'), 
+    labels = c('With Flow'="darkblue", 'No Flow'="orange"), 
     values =c('darkblue','orange')
     ) + 
   ggtitle(txt)
@@ -207,6 +208,8 @@ library(mgcv)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(lubridate)
+library(WRTDStidal)
 
 # raw data
 #load(file = 'data/modelsNoLag_default.RData')
@@ -229,7 +232,7 @@ shinyServer(function(input, output) {
     #scl <- input$scl
     
     out <- which(names(modelsNoLag_Nested)==paste(stat,res,sep="_"))
-
+#print(out)
     return(out)
     
   })
@@ -241,6 +244,7 @@ shinyServer(function(input, output) {
     #scl <- input$scl
     
     out <- which(names(dataNiceNoLag)==paste(stat,res,sep="_"))
+    #print(out)
     return(out)
     
   })
@@ -328,7 +332,7 @@ shinyServer(function(input, output) {
     # aggregation period
     annuals <- TRUE
     if(input$annuals == 'observed') annuals <- FALSE
-    ### NEED TO DO ####
+    
     
     dat=dataNiceNoLag[[dat()]]
    
@@ -352,7 +356,7 @@ shinyServer(function(input, output) {
     # aggregation period
     annuals <- TRUE
     if(input$annuals == 'observed') annuals <- FALSE
-    ### NEED TO DO ####
+   
     
     # create plot
     ## wrtds
@@ -363,5 +367,54 @@ shinyServer(function(input, output) {
     
   }, height = 250, width = 1200)
   
+  output$nestedPlotNoFlow <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    #taus <- input$tau
+    
+    # scale argument
+    logspace <- FALSE
+    if(input$scl == 'linear') logspace <- TRUE
+    
+    # aggregation period
+    annuals <- TRUE
+    if(input$annuals == 'observed') annuals <- FALSE
+   
+    
+    # create plot
+    ## wrtds
+    
+    dat=dataNiceNoLag[[dat()]]
+    nestedPlotNoFlow(dat,modelsNoLag_NoFlow_Nested[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
+    
+    
+  }, height = 250, width = 1200)
+  
+  output$nestedPlotFlow <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    #taus <- input$tau
+    
+    # scale argument
+    logspace <- FALSE
+    if(input$scl == 'linear') logspace <- TRUE
+    
+    # aggregation period
+    annuals <- TRUE
+    if(input$annuals == 'observed') annuals <- FALSE
+    
+    
+    # create plot
+    ## wrtds
+    
+    dat=dataNiceNoLag[[dat()]]
+    nestedPlotFlow(dat,modelsNoLag_Nested[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
+    
+    
+  }, height = 250, width = 1200)
   
 })

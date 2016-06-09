@@ -68,7 +68,8 @@ shinyUI(fluidPage(
     #plotOutput("floplot", height = "100%"),
     plotOutput("fitplot", height = "100%"),
     plotOutput("nrmplot", height = "100%"),
-    
+    plotOutput("nestedPlotFlow",height="100%"),
+    plotOutput("nestedPlotNoFlow",height="100%"),
     width = 9
     
   )
