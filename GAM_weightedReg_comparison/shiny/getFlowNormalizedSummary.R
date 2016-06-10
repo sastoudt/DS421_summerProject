@@ -58,51 +58,95 @@ getFlowNormalizedSummary<-function(data,model){
                model$fitted.values[which(data$date==minDate)])/
     model$fitted.values[which(data$date==minDate)]
   
-  #start here
-  
   seasonal1=subset(data,month %in% c(1:3))
   seasonal1I=which(data$month %in% c(1:3))
-  seasonal1P=predVal[seasonal1I]
+  minDate=which.min(seasonal1$date)
+  maxDate=which.max(seasonal1$date)
+  seasonal1M=mean(model$fitted.values[seasonal1I])
+  seasonal1PC=(model$fitted.values[which(data$date==maxDate)]-
+               model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   seasonal2=subset(data,month %in% c(4:6))
   seasonal2I=which(data$month %in% c(4:6))
-  seasonal2P=predVal[seasonal2I]
+  minDate=which.min(seasonal2$date)
+  maxDate=which.max(seasonal2$date)
+  seasonal2M=mean(model$fitted.values[seasonal2I])
+  seasonal2PC=(model$fitted.values[which(data$date==maxDate)]-
+                 model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   seasonal3=subset(data,month %in% c(7:9))
   seasonal3I=which(data$month %in% c(7:9))
-  seasonal3P=predVal[seasonal3I]
+  minDate=which.min(seasonal3$date)
+  maxDate=which.max(seasonal3$date)
+  seasonal3M=mean(model$fitted.values[seasonal3I])
+  seasonal3PC=(model$fitted.values[which(data$date==maxDate)]-
+                 model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   seasonal4=subset(data,month %in% c(10:12))
   seasonal4I=which(data$month %in% c(10:12))
-  seasonal4P=predVal[seasonal4I]
-  
-  rmseS1=sqrt(sum((seasonal1$res-seasonal1P)^2))
-  rmseS2=sqrt(sum((seasonal2$res-seasonal2P)^2))
-  rmseS3=sqrt(sum((seasonal3$res-seasonal3P)^2))
-  rmseS4=sqrt(sum((seasonal4$res-seasonal4P)^2))
+  minDate=which.min(seasonal4$date)
+  maxDate=which.max(seasonal4$date)
+  seasonal4M=mean(model$fitted.values[seasonal4I])
+  seasonal4PC=(model$fitted.values[which(data$date==maxDate)]-
+                 model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   flow1=subset(data,flo<quantile(data$flo,.25))
   flow1I=which(data$flo<quantile(data$flo,0.25))
-  flow1P=predVal[flow1I]
+  minDate=which.min(flow1$date)
+  maxDate=which.max(flow1$date)
+  flow1M=mean(model$fitted.values[flow1I])
+  flow1PC=(model$fitted.values[which(data$date==maxDate)]-
+                 model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   flow2=subset(data,flo>=quantile(data$flo,.25) & flow<quantile(data$flo,0.5))
   flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flow<quantile(data$flo,0.5))
-  flow2P=predVal[flow2I]
+  minDate=which.min(flow2$date)
+  maxDate=which.max(flow2$date)
+  flow2M=mean(model$fitted.values[flow2I])
+  flow2PC=(model$fitted.values[which(data$date==maxDate)]-
+              model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   flow3=subset(data,flo>=quantile(data$flo,.5) & flow<quantile(data$flo,0.75))
   flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flow<quantile(data$flo,0.75))
-  flow3P=predVal[flow3I]
+  minDate=which.min(flow3$date)
+  maxDate=which.max(flow3$date)
+  flow3M=mean(model$fitted.values[flow3I])
+  flow3PC=(model$fitted.values[which(data$date==maxDate)]-
+              model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
   flow4=subset(data,flo>=quantile(data$flo,.75) )
   flow4I=which(data$flo>=quantile(data$flo,0.75))
-  flow4P=predVal[flow4I]
+  minDate=which.min(flow4$date)
+  maxDate=which.max(flow4$date)
+  flow4M=mean(model$fitted.values[flow4I])
+  flow4PC=(model$fitted.values[which(data$date==maxDate)]-
+              model$fitted.values[which(data$date==minDate)])/
+    model$fitted.values[which(data$date==minDate)]
   
-  rmseF1=sqrt(sum((flow1$res-flow1P)^2))
-  rmseF2=sqrt(sum((flow2$res-flow2P)^2))
-  rmseF3=sqrt(sum((flow3$res-flow3P)^2))
-  rmseF4=sqrt(sum((flow4$res-flow4P)^2))
+  avg=rbind(avgOverall,annual1M,annual2M,annual3M,annual4M,annual5M,
+            seasonal1M,seasonal2M,seasonal3M,seasonal4M,
+            flow1M,flow2M,flow3M,flow4M)
+  pc=rbind(percentChange,annual1PC,annual2PC,annual3PC,annual4PC,annual5PC,
+           seasonal1PC,seasonal2PC,seasonal3PC,seasonal4PC,
+           flow1PC,flow2PC,flow3PC,flow4PC)
+  return(list(avg=avg,pc=pc))
   
-  return(list(all=rmse,annual1=rmseA1,annual2=rmseA2,annual3=rmseA3,annual4=rmseA4,
-              seasonal1=rmseS1, seasonal2=rmseS2, seasonal3=rmseS3, seasonal4=rmseS4,
-              flow1=rmseF1,flow2=rmseF2,flow3=rmseF3,flow4=rmseF4))
+  # return(list(allM=avgOverall,allPC=percentChange,annual1M=annual1M,annual1PC=annual1PC,
+  #             annual2M=annual2M,annual2PC=annual2PC, annual3M=annual3M, 
+  #             annual3PC=annual3PC, annual4M=annual4M, annual4PC=annual4PC, annual5M=annual5M,
+  #             annual5PC=annual5PC,
+  #             seasonal1M=seasonal1M,seasonal1PC=seasonal1PC, seasonal2M=seasonal2M,
+  #             seasonal2PC=seasonal2PC,
+  #             seasonal3M=seasonal3M, seasonal3PC=seasonal3PC, seasonal4M=seasonal4M,
+  #             seasonal4PC=seasonal4PC,
+  #             flow1M=flow1M, flow1PC=flow1PC, flow2M=flow2M, flow2PC=flow2PC, 
+  #             flow3M=flow3M, flow3PC=flow3PC,
+  #             flow4M=flow4M, flow4PC=flow4PC))
 }

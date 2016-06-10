@@ -146,7 +146,12 @@ getSummaryDeviance<-function(data,model){
   flowDev3=sum(flow3R^2)
   flowDev4=sum(flow4R^2)
   
-  return(list(all=dev,annual1=annualDev1,annual2=annualDev2,annual3=annualDev3,annual4=annualDev4,
-              seasonal1=seasonalDev1, seasonal2=seasonalDev2, seasonal3=seasonalDev3, seasonal4=seasonalDev4,
-              flow1=flowDev1,flow2=flowDev2,flow3=flowDev3,flow4=flowDev4))
+  dev=rbind(dev,annualDev1,annualDev2,annualDev3,annualDev4,annualDev5,
+            seasonalDev1,seasonalDev2,seasonalDev3,seasonalDev4,
+            flowDev1,flowDev2,flowDev3,flowDev4)
+  return(dev)
+  
+  # return(list(all=dev,annual1=annualDev1,annual2=annualDev2,annual3=annualDev3,annual4=annualDev4,annual5=annualDev5,
+  #             seasonal1=seasonalDev1, seasonal2=seasonalDev2, seasonal3=seasonalDev3, seasonal4=seasonalDev4,
+  #             flow1=flowDev1,flow2=flowDev2,flow3=flowDev3,flow4=flowDev4))
 }
