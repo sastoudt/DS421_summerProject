@@ -17,6 +17,7 @@ for(i in 1:length(dataNiceNoLag)){
     )
   tmp=tmp[!is.na(tmp$res),]
   tmp=tmp[!is.na(tmp$flo),]
+  tmp=tmp[order(tmp$date),]
   gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
                       ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                       ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
@@ -52,7 +53,7 @@ for(i in 4:6){
     )
   tmp=tmp[!is.na(tmp$res),]
   tmp=tmp[!is.na(tmp$flo),]
-  
+  tmp=tmp[order(tmp$date),]
   gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
                       ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"),k=c(6,6))+
                       ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
@@ -77,7 +78,7 @@ for(i in 19:20){
     )
   tmp=tmp[!is.na(tmp$res),]
   tmp=tmp[!is.na(tmp$flo),]
-  
+  tmp=tmp[order(tmp$date),]
   gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=15)+
                       ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                       ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
@@ -99,7 +100,7 @@ tmp <- mods_nolag$data[[i]] %>%
   )
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
-
+tmp=tmp[order(tmp$date),]
 gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=22)+
                     ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                     ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,bs=c("cc","tp","tp")),data=tmp)
@@ -135,7 +136,7 @@ tmp <- mods_nolag$data[[i]] %>%
   )
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
-
+tmp=tmp[order(tmp$date),]
 gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=23)+
                           ti(doy,dec_time,bs=c("cc","tp")), data = tmp) #k=19
 ## k=23 is as big as I can get, iffy
@@ -161,8 +162,7 @@ tmp <- mods_nolag$data[[i]] %>%
   )
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
-
-
+tmp=tmp[order(tmp$date),]
 gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=20)+
                           ti(doy,dec_time,bs=c("cc","tp")), data = tmp) #k=20
 ## k=20 is as big as I can get, iffy
@@ -184,8 +184,7 @@ tmp <- mods_nolag$data[[i]] %>%
   )
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
-
-
+tmp=tmp[order(tmp$date),]
 gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=23)+
                           ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp) #k=21
 ## k=23 is as big as I can get, iffy
