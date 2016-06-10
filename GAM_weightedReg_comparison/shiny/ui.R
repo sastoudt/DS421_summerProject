@@ -70,6 +70,7 @@ shinyUI(fluidPage(
     plotOutput("nrmplot", height = "100%"),
     plotOutput("nestedPlotFlow",height="100%"),
     plotOutput("nestedPlotNoFlow",height="100%"),
+    plotOutput("dynagamP",height="100%"),
     width = 9
     
   )

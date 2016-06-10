@@ -1,5 +1,147 @@
 source("getFlowNormalized.R")
 source("nestedPlot.R")
+
+## need to change xlabel to something more informative
+dynagam <- function(mod_in, dat_in, grd = 30, years = NULL, alpha = 1,
+                    size = 1, col_vec = NULL, allflo = TRUE, month = c(1:12), scales = NULL, ncol = NULL, 
+                    pretty = TRUE, grids = TRUE, use_bw = TRUE, fac_nms = NULL,transform=F){
+  ylabel=with(lablk, lngs[shrt == dat_in$resdup[1]])
+  # add year, month columns to dat_in
+  dat_in <- mutate(dat_in, 
+                   month = as.numeric(strftime(date, '%m')), 
+                   year = as.numeric(strftime(date, '%Y'))
+  )
+  to_plo <- dat_in
+  
+  # flo values to predict
+  flo_vals <- range(to_plo[, 'flo'], na.rm = TRUE)
+  flo_vals <- seq(flo_vals[1], flo_vals[2], length = grd)
+  
+  # get model predictions across range of flow values
+  dynadat <- rep(flo_vals, each = nrow(to_plo)) %>% 
+    matrix(., nrow = nrow(to_plo), ncol = grd) %>% 
+    cbind(to_plo[, c('dec_time', 'doy')], .) %>%
+    gather('split', 'flo', -dec_time, -doy) %>% 
+    select(-split) %>% 
+    data.frame(., res = predict(mod_in, .))
+  
+  if(transform){
+    dynadat$res=exp(dynadat$res)
+    ylabel <- gsub('ln-|log-', '', as.character(ylabel))
+    ylabel <- as.expression(parse(text = ylabel))
+  }
+  dynadat<-dynadat %>% 
+    spread(flo, res) %>% 
+    select(-dec_time, -doy)
+
+  
+  
+  # merge predictions with year, month data, make long format
+  to_plo <- select(to_plo, year, month) %>% 
+    cbind(., dynadat) %>% 
+    gather('flo', 'res', -year, -month) %>% 
+    mutate(flo = as.numeric(as.character(flo)))
+  
+  # subset years to plot
+  if(!is.null(years)){
+    
+    to_plo <- to_plo[to_plo$year %in% years, ]
+    to_plo <- to_plo[to_plo$month %in% month, ]
+    
+    if(nrow(to_plo) == 0) stop('No data to plot for the date range')
+    
+  }
+  
+  # constrain plots to salinity limits for the selected month
+  if(!allflo){
+    
+    #min, max salinity values to plot
+    lim_vals <- group_by(data.frame(dat_in), month) %>% 
+      summarise(
+        Low = quantile(flo, 0.05, na.rm = TRUE),
+        High = quantile(flo, 0.95, na.rm = TRUE)
+      )
+    
+    # month flo ranges for plot
+    lim_vals <- lim_vals[lim_vals$month %in% month, ]
+    
+    # merge limts with months
+    to_plo <- left_join(to_plo, lim_vals, by = 'month')
+    to_plo <- to_plo[to_plo$month %in% month, ]
+    
+    # reduce data
+    sel_vec <- with(to_plo, 
+                    flo >= Low &
+                      flo <= High
+    )
+    to_plo <- to_plo[sel_vec, !names(to_plo) %in% c('Low', 'High')]
+    to_plo <- arrange(to_plo, year, month)
+    
+  }
+  
+  # reshape data frame, average by year, month for symmetry
+  to_plo <- group_by(to_plo, year, month, flo) %>% 
+    summarise(
+      res = mean(res, na.rm = TRUE)
+    )
+  
+  # months labels as text
+  mo_lab <- data.frame(
+    num = seq(1:12), 
+    txt = c('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')
+  )
+  mo_lab <- mo_lab[mo_lab$num %in% month, ]
+  to_plo$month <- factor(to_plo$month, levels =  mo_lab$num, labels = mo_lab$txt)
+  
+  # reassign facet names if fac_nms is provided
+  if(!is.null(fac_nms)){
+    
+    if(length(fac_nms) != length(unique(to_plo$month))) stop('fac_nms must have same lengths as months')
+    
+    to_plo$month <- factor(to_plo$month, labels = fac_nms)
+    
+  }
+  
+  
+  # make plot
+  p <- ggplot(to_plo, aes(x = flo, y = res, group = year)) + 
+    facet_wrap(~month, ncol = ncol, scales = scales)+
+    ggtitle("Changes in Relationship Between Response and Flow Across Time \n (Using Model With Flow)")+
+    ylab(ylabel) 
+  
+  # return bare bones if FALSE
+  if(!pretty) return(p + geom_line())
+  
+  # colors, uses gradcols from WRTDStidal
+  cols <- gradcols(col_vec = col_vec)
+  
+  # use bw theme
+  if(use_bw) p <- p + theme_bw()
+  
+  p <- p + 
+    geom_line(size = size, aes(colour = year), alpha = alpha) +
+    scale_y_continuous(expand = c(0, 0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    theme(
+      legend.position = 'top'
+    ) +
+    scale_colour_gradientn('Year', colours = cols) +
+    guides(colour = guide_colourbar(barwidth = 10)) 
+  
+  # remove grid lines
+  if(!grids) 
+    p <- p + 
+    theme(      
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank()
+    )
+  
+  return(p)
+  
+}
+
+
+
 lablk <- list(
   shrt = c('din', 'nh', 'no23'),
   lngs = c(
@@ -416,5 +558,33 @@ shinyServer(function(input, output) {
     
     
   }, height = 250, width = 1200)
+  
+  output$dynagamP <- renderPlot({
+    
+    # inputs
+    
+    # dt_rng <- input$dt_rng
+    # #taus <- input$tau
+    # 
+    # scale argument
+    logspace <- FALSE
+    if(input$scl == 'linear') logspace <- TRUE
+    # 
+    # # aggregation period
+    # annuals <- TRUE
+    # if(input$annuals == 'observed') annuals <- FALSE
+    # 
+    # 
+    # create plot
+    ## wrtds
+    
+    dat=dataNiceNoLag[[dat()]]
+
+    dynagam(modelsNoLag_Nested[[mod()]],dat,transform=logspace)
+    #dynagam(gamtmp, tmp)
+
+    
+  }, height = 800, width = 1200
+  )
   
 })
