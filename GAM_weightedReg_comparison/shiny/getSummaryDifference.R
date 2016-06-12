@@ -86,15 +86,15 @@ getSummaryDifference<-function(data,modelGAM,modelWRTDS){
   flowAvgDiff1=(sum(flow1PW)-sum(flow1PG))/sum(flow1PG)*100
   flowRMSE1=sqrt(sum((flow1PW-flow1PG)^2))
   
-  flow2=subset(data,flo>=quantile(data$flo,.25) & flow<quantile(data$flo,0.5))
-  flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flow<quantile(data$flo,0.5))
+  flow2=subset(data,flo>=quantile(data$flo,.25) & flo<quantile(data$flo,0.5))
+  flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flo<quantile(data$flo,0.5))
   flow2PW=predValWRTDS[flow2I]
   flow2PG=predValGAM[flow2I]
   flowAvgDiff2=(sum(flow2PW)-sum(flow2PG))/sum(flow2PG)*100
   flowRMSE2=sqrt(sum((flow2PW-flow2PG)^2))
   
-  flow3=subset(data,flo>=quantile(data$flo,.5) & flow<quantile(data$flo,0.75))
-  flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flow<quantile(data$flo,0.75))
+  flow3=subset(data,flo>=quantile(data$flo,.5) & flo<quantile(data$flo,0.75))
+  flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flo<quantile(data$flo,0.75))
   flow3PW=predValWRTDS[flow3I]
   flow3PG=predValGAM[flow3I]
   flowAvgDiff3=(sum(flow3PW)-sum(flow3PG))/sum(flow3PG)*100
