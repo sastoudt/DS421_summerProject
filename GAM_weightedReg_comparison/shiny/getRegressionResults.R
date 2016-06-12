@@ -3,8 +3,12 @@
 
 ## assume that model has gone through modfit and has an attribute $fits or $norms
 ## assume the predictions match up: order by date before making predictions
-getRegressionResults<-function(modGAM,modWRTDS,sigLevel){
+getRegressionResults<-function(data,modGAM,modWRTDS,sigLevel){
 
+  data=data[!is.na(data$res),]
+  data=data[!is.na(data$flo),]
+  data=data[order(data$date),]
+  
   toUse=ifelse("norms" %in% names(modWRTDS),"norms","fits")
   
   mod.lm=lm(modWRTDS[,toUse]~modGAM$fitted.values)
@@ -13,8 +17,8 @@ getRegressionResults<-function(modGAM,modWRTDS,sigLevel){
   pVals=unname(summary(mod.lm)$coefficients[,4])
   isSignificant=ifelse(pVals<sigLevel,1,0)
   
-  predValGAM=modelGAM$fitted.values
-  predValWRTDS=modelWRTDS[,toUse]
+  predValGAM=modGAM$fitted.values
+  predValWRTDS=modWRTDS[,toUse]
   
   data$month=as.numeric(strftime(data$date, '%m'))
   data$year=as.numeric(strftime(data$date, '%Y'))
@@ -110,8 +114,8 @@ getRegressionResults<-function(modGAM,modWRTDS,sigLevel){
   flowPVals1=unname(summary(mod.flow1)$coefficients[,4])
   isSignificantFlow1=ifelse(flowPVals1<sigLevel,1,0)
   
-  flow2=subset(data,flo>=quantile(data$flo,.25) & flow<quantile(data$flo,0.5))
-  flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flow<quantile(data$flo,0.5))
+  flow2=subset(data,flo>=quantile(data$flo,.25) & flo<quantile(data$flo,0.5))
+  flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flo<quantile(data$flo,0.5))
   flow2PW=predValWRTDS[flow2I]
   flow2PG=predValGAM[flow2I]
   mod.flow2=lm(flow2PW~flow2PG)
@@ -119,8 +123,8 @@ getRegressionResults<-function(modGAM,modWRTDS,sigLevel){
   flowPVals2=unname(summary(mod.flow2)$coefficients[,4])
   isSignificantFlow2=ifelse(flowPVals2<sigLevel,1,0)
   
-  flow3=subset(data,flo>=quantile(data$flo,.5) & flow<quantile(data$flo,0.75))
-  flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flow<quantile(data$flo,0.75))
+  flow3=subset(data,flo>=quantile(data$flo,.5) & flo<quantile(data$flo,0.75))
+  flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flo<quantile(data$flo,0.75))
   flow3PW=predValWRTDS[flow3I]
   flow3PG=predValGAM[flow3I]
   mod.flow3=lm(flow3PW~flow3PG)

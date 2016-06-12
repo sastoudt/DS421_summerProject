@@ -60,12 +60,12 @@ getSummaryRMSE<-function(data,model){
   flow1I=which(data$flo<quantile(data$flo,0.25))
   flow1P=predVal[flow1I]
   
-  flow2=subset(data,flo>=quantile(data$flo,.25) & flow<quantile(data$flo,0.5))
-  flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flow<quantile(data$flo,0.5))
+  flow2=subset(data,flo>=quantile(data$flo,.25) & flo<quantile(data$flo,0.5))
+  flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flo<quantile(data$flo,0.5))
   flow2P=predVal[flow2I]
   
-  flow3=subset(data,flo>=quantile(data$flo,.5) & flow<quantile(data$flo,0.75))
-  flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flow<quantile(data$flo,0.75))
+  flow3=subset(data,flo>=quantile(data$flo,.5) & flo<quantile(data$flo,0.75))
+  flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flo<quantile(data$flo,0.75))
   flow3P=predVal[flow3I]
   
   flow4=subset(data,flo>=quantile(data$flo,.75) )
@@ -77,9 +77,12 @@ getSummaryRMSE<-function(data,model){
   rmseF3=sqrt(sum((flow3$res-flow3P)^2))
   rmseF4=sqrt(sum((flow4$res-flow4P)^2))
   
-  return(list(all=rmse,annual1=rmseA1,annual2=rmseA2,annual3=rmseA3,annual4=rmseA4,
-              seasonal1=rmseS1, seasonal2=rmseS2, seasonal3=rmseS3, seasonal4=rmseS4,
-              flow1=rmseF1,flow2=rmseF2,flow3=rmseF3,flow4=rmseF4))
+  rmse=rbind(rmse,rmseA1,rmseA2,rmseA2,rmseA3,rmseA4,rmseS1,rmseS2,rmseS3,rmseS4,
+             rmseF1,rmseF2,rmseF3,rmseF4)
+  return(rmse)
+  # return(list(all=rmse,annual1=rmseA1,annual2=rmseA2,annual3=rmseA3,annual4=rmseA4,
+  #             seasonal1=rmseS1, seasonal2=rmseS2, seasonal3=rmseS3, seasonal4=rmseS4,
+  #             flow1=rmseF1,flow2=rmseF2,flow3=rmseF3,flow4=rmseF4))
 }
 
 ## stay on log scale
@@ -111,6 +114,7 @@ getSummaryDeviance<-function(data,model){
   annualDev2=sum(annual2R^2)
   annualDev3=sum(annual3R^2)
   annualDev4=sum(annual4R^2)
+  annualDev5=sum(annual5R^2)
   
   seasonal1I=which(data$month %in% c(1:3))
   seasonal1R=model$residuals[seasonal1I]
