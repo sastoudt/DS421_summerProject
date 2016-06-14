@@ -3,7 +3,7 @@
 getSummaryRMSE<-function(data,model){
   data=data[!is.na(data$res),]
   data=data[!is.na(data$flo),]
-  trueVal=data$res
+  trueVal=data$res ## need to pass this in
   predVal=model$fitted.values
   rmse=sqrt(sum((trueVal-predVal)^2))
   data$month=as.numeric(strftime(data$date, '%m'))
@@ -77,7 +77,7 @@ getSummaryRMSE<-function(data,model){
   rmseF3=sqrt(sum((flow3$res-flow3P)^2))
   rmseF4=sqrt(sum((flow4$res-flow4P)^2))
   
-  rmse=rbind(rmse,rmseA1,rmseA2,rmseA2,rmseA3,rmseA4,rmseS1,rmseS2,rmseS3,rmseS4,
+  rmse=rbind(rmse,rmseA1,rmseA2,rmseA3,rmseA4,rmseA5,rmseS1,rmseS2,rmseS3,rmseS4,
              rmseF1,rmseF2,rmseF3,rmseF4)
   return(rmse)
   # return(list(all=rmse,annual1=rmseA1,annual2=rmseA2,annual3=rmseA3,annual4=rmseA4,
