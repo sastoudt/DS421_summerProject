@@ -71,6 +71,8 @@ shinyUI(fluidPage(
     plotOutput("nestedPlotFlow",height="100%"),
     plotOutput("nestedPlotNoFlow",height="100%"),
     plotOutput("dynagamP",height="100%"),
+    h5("Below All on Log Scale Always: RMSE per Station for Chosen Response"),
+    plotOutput("spatialPlotRMSE",height="100%"),
     width = 9
     
   )

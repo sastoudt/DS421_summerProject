@@ -1,5 +1,8 @@
 source("getFlowNormalized.R")
 source("nestedPlot.R")
+source("spatialResultsPlot.R")
+#load("data/delt_dat.RData")
+#load("data/delt_map.RData")
 
 ## need to change xlabel to something more informative
 dynagam <- function(mod_in, dat_in, grd = 30, years = NULL, alpha = 1,
@@ -587,4 +590,43 @@ shinyServer(function(input, output) {
   }, height = 800, width = 1200
   )
   
+  output$spatialPlotRMSE <- renderPlot({
+    replayPlot(spatPlot()$plot)
+  }, height = 800, width = 1200
+  )
+  
+  spatPlot <- reactive({
+    
+    # inputs
+    
+    # dt_rng <- input$dt_rng
+    # #taus <- input$tau
+    # 
+    # scale argument
+    logspace <- FALSE
+    #if(input$scl == 'linear') logspace <- TRUE
+    # 
+    # # aggregation period
+    # annuals <- TRUE
+    # if(input$annuals == 'observed') annuals <- FALSE
+    # 
+    # 
+    # create plot
+    ## wrtds
+ 
+    locationLookUp=as.data.frame(cbind(unique(delt_dat$Site_Code),
+                                       unique(delt_dat$Latitude),
+                                       unique(delt_dat$Longitude)))
+    names(locationLookUp)=c("site","lat","long")
+    
+    
+
+    dev.control("enable")
+    makeSpatialPlot("getSummaryRMSE",dataNiceNoLag,modelsNoLag_Nested,input$res,locationLookUp)
+    spatPlot=recordPlot()
+    dev.off()
+   return(list(plot=spatPlot))
+  
+  })
+    
 })
