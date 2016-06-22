@@ -59,7 +59,7 @@ Things to Check:
 
 - check if output of WRTDS is in the expected format: for getSummaryDifference.R and getRegressionResults.R I assume that the model has gone through modfit and has an attribute $fits or $norms
 and that the predictions match up: order by date before making predictions so the output is ordered by date
-- trimming of extreme values in dynagam: what does it mean to constrain plots to salinity limits for the selected month? effectively rounding up or down if our predictions don't match known limits, but how do we know the salinity limits?
+- ~~trimming of extreme values in dynagam: what does it mean to constrain plots to salinity limits for the selected month? effectively rounding up or down if our predictions don't match known limits, but how do we know the salinity limits?~~
 - do we have access to chl data for this network?
 
 
