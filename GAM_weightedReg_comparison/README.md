@@ -30,6 +30,8 @@ shiny::runGitHub("DS421_summerProject", "sastoudt", subdir = "GAM_weightedReg_co
 
 This is created by using https://beckmw.shinyapps.io/sf_trends/ as a framework.
 
+Or view it online: https://sastoudt.shinyapp.io/GAM_Delta
+
 ## Progress as of 6/14/16
 
 - Fixed Flow Normalization: getFlowNormalized.R
