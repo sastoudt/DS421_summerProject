@@ -1,6 +1,6 @@
 #DS421 Summer Project Proposal
 
-## Sara Stoudt
+## Sara Stoudt 
 
 ## Mentors: Perry de Valpine (ESPM), David Senn and Erica Spotswood (San Francisco Estuary Institute, SFEI)
 
