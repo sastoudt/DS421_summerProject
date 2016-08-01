@@ -31,6 +31,9 @@ nestedPlotFlow<-function(data,mod,xlim=range(data$date),scale=F,annual=F){
   all=predict(mod,data,exclude=terms[-7])-intercept
   intercept=rep(intercept,nrow(data))
   
+  test=intercept+flo+doy+dec_time+flo_doy+flo_dec_time+doy_dec_time
+  head(test)
+  head(mod$fitted.values)
   nestPred=as.data.frame(cbind.data.frame(intercept,flo,doy,dec_time,flo_doy,flo_dec_time,doy_dec_time,all,data$date))
   names(nestPred)[9]="date"
   

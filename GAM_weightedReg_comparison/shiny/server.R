@@ -9,7 +9,7 @@ dynagam <- function(mod_in, dat_in, grd = 30, years = NULL, alpha = 1,
                     size = 1, col_vec = NULL, allflo = FALSE, month = c(1:12), scales = NULL, ncol = NULL, 
                     pretty = TRUE, grids = TRUE, use_bw = TRUE, fac_nms = NULL,transform=F){
   ylabel=with(lablk, lngs[shrt == dat_in$resdup[1]])
-  # add year, month columns to dat_in
+  # add year, month columns to da111t_in
   dat_in <- mutate(dat_in, 
                    month = as.numeric(strftime(date, '%m')), 
                    year = as.numeric(strftime(date, '%Y'))
@@ -378,6 +378,7 @@ shinyServer(function(input, output) {
     
     out <- which(names(modelsNoLag_Nested)==paste(stat,res,sep="_"))
 #print(out)
+    
     return(out)
     
   })
