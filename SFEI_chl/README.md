@@ -10,6 +10,21 @@
 - pick promising covariates for "parsimonious" model
 - add variables of interest in a "full" model
 
+"parsimonious model" - variables that look promising
+
+- doy: day of year
+- date_dec: date as a decimal value
+- pheo: pheophytin a
+- tn (montly structure): total nitrogen
+- do_per (check context of the "per"): dissolved oxygen
+
+"full model"- add variables of interest in context
+
+- sio2: silica
+- tp: total phosphorus
+- tss: total suspended solids
+- nh4 (when data available): ammonia 
+
 - make a GAM model for each station separately
 - display results in a Shiny app like in the WRTDS/GAM comparisons
 
