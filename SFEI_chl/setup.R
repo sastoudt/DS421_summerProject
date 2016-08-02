@@ -16,7 +16,7 @@ names(sfei)
 # cl: Chloride mg/L
 # clt:
 # chl: chhlorophyll a microgram/L
-# EC: therms? degrees C
+# EC: conductivity microS/cm at 25°C
 # tkn: total kjeldahl nitrogen mg/L as N
 # no3: nitrate mg/L as N
 # no2: nitrogen dioxite
