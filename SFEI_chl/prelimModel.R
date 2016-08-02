@@ -82,35 +82,79 @@ data=na.omit(perStation[[1]][,c("Date","doy","date_dec","sio2","temp","chl")])
 
 terms<-c("ti(doy)","ti(date_dec)","ti(temp)",
          "ti(sio2)",'intercept')
-  intercept=exp(summary(gamDEFAULT)$p.coeff)
-  doy=predict(gamDEFAULT,data,exclude=terms[-1],type="response")-intercept
-  date_dec=predict(gamDEFAULT,data,exclude=terms[-2],type="response")-intercept
-  temp=predict(gamDEFAULT,data,exclude=terms[-3],type="response")-intercept
-  sio2=predict(gamDEFAULT,data,exclude=terms[-4],type="response")-intercept
-  all=predict(gamDEFAULT,data,exclude=terms[-5])-intercept
-  intercept=rep(intercept,nrow(data))
   
-  nestPred=as.data.frame(cbind.data.frame(intercept,doy,date_dec,temp,sio2,all,data$date))
-  names(nestPred)[7]="date"
+  intercept=summary(gamDEFAULT)$p.coeff
+  
+  
+  all3=gamDEFAULT$fitted.values
+  tryThis=predict(gamDEFAULT,data,type="terms")
+  tryThis2=apply(tryThis,1,sum)+rep(intercept,length(all3))
+  head(exp(tryThis2))
+  head(all3) ## these don't match?
+  
+head(apply(tryThis,1,sum))-head(doy+date_dec+temp+sio2)
+ head(tryThis2)-head(intercept+doy+date_dec+temp+sio2)
+ tryThisCompare=intercept+doy+date_dec+temp+sio2
+ 
+ 
+ plot(density(tryThis2-tryThisCompare))
+ 
+ plot(density(exp(tryThis2)-all3)) ## both marginally different from fitted.values
+ plot(density(exp(tryThisCompare)-all3)) 
+ 
+ max(abs(exp(tryThis2)-all3))
+ max(abs(exp(tryThisCompare)-all3)) ## this one a little bit further off
+ 
+ ## use "terms" instead of exclude
+ 
+  nestPred=as.data.frame(cbind.data.frame(tryThis,intercept,data$Date,tryThis2))
+  names(nestPred)=c("doy","date_dec","sio2","temp","intercept","date","all")
+  
+  
+  nestPred$date=as.Date(nestPred$date)
+
+  
+  
+  require(visreg)
+  visreg(gamDEFAULT,scale="response")
   
   require(ggplot2)
+  
+  ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+    geom_line(data=nestPred,aes(x=date,y = temp, color = 'ti(temp)'),lwd=1)+
+    geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+    geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)
+  ## leave out intercept and doy, because makes scale weird
+  
+  ## means aren't matching up
+  ## I thought this might have to do with the bias issue of transforming back and forth
+  ## But now I think it is the fact that the model predicts values down to zero
+  ## true data has a minimum of 0.85 (detection limit or something?)
+  
+  summary(nestPred$all) ## these means don't match up
+  summary(log(data$chl))
+  
+  summary(gamDEFAULT$fitted.values)
+  summary(data$chl)
  
-  ggplot(data,aes(x = Date, y = chl))+geom_point()+
-    geom_line(aes(x=Date,y = temp, color = 'ti(temp)'),lwd=1)+
-    geom_line(aes(x=Date,y = doy, color = 'ti(doy)'), lwd=1)+
-    geom_line(aes(x=Date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-    geom_line(aes(x=Date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-    geom_line(aes(x=Date,y = intercept, color = 'intercept'), lwd=1)+
-    
-   
-    
+  ##all
+  ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+    geom_line(data=nestPred,aes(x=date,y = temp, color = 'ti(temp)'),lwd=1)+
+  geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+    geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+    geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
+    geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
     scale_colour_manual(name = '',
                         labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                   "forestgreen"=terms[4],"blue"=terms[5]),values=c("red","orange",
-                                      "dodgerblue","forestgreen","blue")
+                                                                                   "dodgerblue","forestgreen","blue")
     ) +
-   ggtitle(names(perStation)[1])
-  
-
-
-
+    ggtitle(names(perStation)[1])
+    
+    
+  ## fitted value plot
+  ggplot(data,aes(x = Date, y = chl))+geom_point()+
+    geom_line(data=nestPred,aes(x=date,y = exp(all),col="red"),lwd=1)+
+  ggtitle(paste(names(perStation)[1], "Fitted Values",sep=" "))+theme(legend.position='none')
+    
+   
