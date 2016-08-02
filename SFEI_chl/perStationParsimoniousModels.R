@@ -821,4 +821,125 @@ data=perStation[[21]]
 gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=15)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=15)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## fine
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=13)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=40)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## seems ok with date_dec but low p-value?
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+## check adding on the lower end before going above k=50
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=25),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=23),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=22),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## good, but resids v linear pred look bad
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=60)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=22),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning plus getting slow
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=55)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=22),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## resids v linear pred look bad
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=50)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## going back to this because I'm worried about that weird plot 
+
+perStationParsMod[[21]]=gamP
+
+####
+
+data=perStation[[22]]
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=15)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+plot(gamP$linear.pred,gamP$residuals,xlim=c(0,5)) ## This looks ok
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=25)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=23)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=22)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## go with this
+plot(gamP$linear.pred,gamP$residuals,xlim=c(0,5)) ## This looks ok
+
+perStationParsMod[[22]]=gamP
+
+####
+
+data=perStation[[23]]
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
 
