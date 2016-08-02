@@ -32,7 +32,7 @@ names(sfei)
 # tp: total phosphorus mg/L
 # secchi: secchi depth? cm
 # sio2: silica mg/L
-# tds: total disolved solids mg/L
+# tds: total dissolved solids mg/L
 # tss: total suspended solids mg/L
 # vss: volatile suspended solid mg/L
 # temp: deg C
