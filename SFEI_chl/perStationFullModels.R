@@ -749,3 +749,125 @@ perStationFullMod[[17]]=gamP
 
 ####
 
+data=perStation[[18]]
+sum(is.na(data$nh4))/nrow(data) ## use
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=10)+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=7)+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=6)+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=6)+ti(tp,bs="tp")+ti(tss,bs="tp",k=10)+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=6)+ti(tp,bs="tp")+ti(tss,bs="tp",k=15)+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=6)+ti(tp,bs="tp")+ti(tss,bs="tp",k=15)+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+perStationFullMod[[18]]=gamP
+
+####
+data=perStation[[21]]
+sum(is.na(data$nh4))/nrow(data) ## use
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp")+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=15)+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=12)+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp")+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp",k=10)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp")+ti(do_per,bs="tp")+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp")+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp")+ti(nh4,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=11)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10)+
+            ti(sio2,bs="tp",k=8)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp",k=10)+ti(nh4,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+perStationFullMod[[21]]=gamP
+
+####
+
