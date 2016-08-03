@@ -1478,6 +1478,7 @@ rangeY
 ## 1, 2, 5, 7, 19, 11, 13, 15, 16, 17, 18(), 21, 22, 23, 29, 40
 
 wholeSeries<-c(1, 2, 5, 7, 9, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+names(perStation)[wholeSeries]
 
 plot(sfei$Longitude,sfei$Latitude)
 for(i in wholeSeries){

@@ -29,6 +29,25 @@
 - make a GAM model for each station separately
 - display results in a Shiny app like in the WRTDS/GAM comparisons
 
+Stations [16/41] To Focus On (full/almost full record)
+
+- C10
+- C3
+- D10
+- D12
+- D15
+- D22
+- D26
+- D28A
+- D4
+- D41
+- D6
+- D7
+- D8
+- MD10
+- P8
+ 
+
 
 ## Week 2 Goals
 
