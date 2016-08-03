@@ -718,7 +718,72 @@ gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=100)+ti(pheo,bs="tp",k=
 gam.check(gamP) 
 
 ## ok something is going on here, come back
+## let's try this again
+data=perStation[[17]]
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
 
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp")+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=10)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp"),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## Now we are getting somewhere
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp")+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=11),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning, stuck at this value for parameter
+
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp",k=10)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## getting slow now
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=15)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=15)+ti(pheo,bs="tp",k=10)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=15)+ti(pheo,bs="tp",k=15)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=15)+ti(pheo,bs="tp",k=20)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=20)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=25)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=23)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=24)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## getting slow
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=25)+ti(pheo,bs="tp",k=24)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=25)+ti(pheo,bs="tp",k=24)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=30)+ti(pheo,bs="tp",k=24)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=35)+ti(pheo,bs="tp",k=24)+ti(tn,bs="tp",k=8)+ti(do_per,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## go with this
+
+perStationParsMod[[17]]=gamP
 ####
 
 data=perStation[[18]]
@@ -1330,3 +1395,6 @@ for(i in 1:41){
   filled<-c(filled,is.null(perStationParsMod[[i]]))
 }
 sum(filled) ## 12, 17, 25:28, 31:35, 39
+
+names(perStationParsMod)=names(perStation)
+save(perStationParsMod,file="perStationParsimoniousModels.Rda")
