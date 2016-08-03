@@ -24,6 +24,7 @@
 - tp: total phosphorus
 - tss: total suspended solids
 - nh4 (when data available): ammonia 
+- sal: salinity
 
 - make a GAM model for each station separately
 - display results in a Shiny app like in the WRTDS/GAM comparisons
