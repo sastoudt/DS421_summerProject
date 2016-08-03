@@ -78,9 +78,10 @@ shinyUI(fluidPage(
     ## fitted values full
     ## nested structure parsimonious
     
-    plotOutput("floplot", height = "100%"),
-    plotOutput("fitplot", height = "100%"),
-    plotOutput("nrmplot", height = "100%"),
+    plotOutput("fittedPars", height = "100%"),
+    plotOutput("fittedFull", height = "100%"),
+    plotOutput("nestedPlotPars", height = "100%"),
+    #plotOutput("nestedPlotFull",height="100%"),
     
     width = 9
     
