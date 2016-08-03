@@ -55,8 +55,9 @@ shinyServer(function(input, output) {
     mod<-perStationParsMod[[index]]
     
     toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
-    toUse=as.data.frame(cbind.data.frame(toUse,mod$fitted.values))
-  names(toUse)[7]="fitted.values"
+    fullPred=predict(mod,toUse,type="response")
+    toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+names(toUse)[7]="fitted.values"
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
       ggtitle(paste(names(perStation)[index], "Fitted Values Parsimonious Model",sep=" "))+
@@ -86,7 +87,8 @@ shinyServer(function(input, output) {
                             "sio2","tp","tss","nh4","Date")])
     }
     
-    toUse=as.data.frame(cbind.data.frame(toUse,mod$fitted.values))
+    fullPred=predict(mod,toUse,type="response")
+    toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
     names(toUse)[ncol(toUse)]="fitted.values"
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
@@ -133,4 +135,6 @@ shinyServer(function(input, output) {
     
     
   }, height = 250, width = 1200)
+  
+  
 })
