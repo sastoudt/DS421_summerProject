@@ -86,23 +86,43 @@ shinyServer(function(input, output) {
     data<-dat()
     mod<-perStationFullMod[[index]]
     
-    if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","Date")])
+    if(index %in% c(5,7)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
+                            "sal","Date")])
+      fullPred=predict(mod,toUse,type="response")
+      toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+      names(toUse)[ncol(toUse)]="fitted.values"
       
+    }else if(index==13){
+      
+    }else if(index %in% c(17, 18, 21, 22, 23)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+                            "sio2","tp","tss","nh4","sal","Date")])
+      fullPred=predict(mod,toUse,type="response")
+      toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+      names(toUse)[ncol(toUse)]="fitted.values"
     }else{
       toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
                             "sio2","tp","tss","nh4","Date")])
+      fullPred=predict(mod,toUse,type="response")
+      toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+      names(toUse)[ncol(toUse)]="fitted.values"
     }
     
-    fullPred=predict(mod,toUse,type="response")
-    toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-    names(toUse)[ncol(toUse)]="fitted.values"
-    ggplot(data,aes(x = Date, y = chl))+geom_point()+
-      geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-      ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
-      theme(legend.position='none')+
-      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
+    
+    if(index==13){
+      df <- data.frame()
+      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)
+    }else{
+      ggplot(data,aes(x = Date, y = chl))+geom_point()+
+        geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
+        ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
+        theme(legend.position='none')+
+        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
+    }
+    
+    
+    
     
     
   }, height = 250, width = 1200)
@@ -137,20 +157,20 @@ shinyServer(function(input, output) {
     nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
     names(nestPred)=toName
     if(index %in% c(5,7,13)){
-    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-     # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
-      scale_colour_manual(name = '',
-                          labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                    "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
-                                                        "dodgerblue","blue","purple")
-      ) +
-      ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
-      ylab("ln(chl a) ")+xlab("Date")
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
+                                      "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
+                                                                                  "dodgerblue","blue","purple")
+        ) +
+        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")
     }else{
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
