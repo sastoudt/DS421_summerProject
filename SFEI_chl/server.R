@@ -223,18 +223,17 @@ shinyServer(function(input, output) {
         geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(sal)'), lwd=1)+
+        #geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
+        #geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
+        #geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = sal, color = 'ti(sal)'), lwd=1)+
         
         geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "blue"=terms[4],"purple"=terms[5],
-                                      "magenta"=terms[6],'grey'=terms[7],'mediumturquoise'=terms[8],"black"=terms[9]),
+                                      "blue"=terms[4],'mediumturquoise'=terms[5],"black"=terms[6]),
                             values=c("red","orange",
-                                         "dodgerblue","blue","purple","magenta","grey","mediumturquoise","black")
+                                         "dodgerblue","blue","mediumturquoise","black")
         ) +
         ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
