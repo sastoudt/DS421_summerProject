@@ -17,10 +17,10 @@ shinyServer(function(input, output) {
   dat <- reactive({
     
     stat <- input$stat
-  
+    
     
     out<-perStation[[which(names(perStation)==stat)]]
-   
+    
     
     return(out)
     
@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
   
   ## plots
   
-
+  
   output$fittedPars<- renderPlot({
     
     # inputs
@@ -54,16 +54,24 @@ shinyServer(function(input, output) {
     data<-dat()
     mod<-perStationParsMod[[index]]
     
-    toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
+    if(index %in% c(5,7,13)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
+      
+    }else{
+      
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
+      
+    }
+    
     fullPred=predict(mod,toUse,type="response")
     toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-names(toUse)[7]="fitted.values"
+    names(toUse)[ncol(toUse)]="fitted.values"
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
       ggtitle(paste(names(perStation)[index], "Fitted Values Parsimonious Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
-   
+    
     
   }, height = 250, width = 1200)
   
@@ -103,7 +111,7 @@ names(toUse)[7]="fitted.values"
   output$nestedPlotPars <- renderPlot({
     
     # inputs
-
+    
     dt_rng <- input$dt_rng
     stat <- input$stat
     index=which(names(perStation)==stat)
@@ -114,7 +122,7 @@ names(toUse)[7]="fitted.values"
     
     toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
     byTerm=predict(mod,toUse,type="terms")
-  
+    
     nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
     names(nestPred)=c("doy","date_dec","pheo","tn","do_per","date","intercept")
     terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
@@ -128,7 +136,7 @@ names(toUse)[7]="fitted.values"
       scale_colour_manual(name = '',
                           labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                     "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
-                                                                                     "dodgerblue","forestgreen","blue","purple")
+                                                                                                       "dodgerblue","forestgreen","blue","purple")
       ) +
       ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")
@@ -178,25 +186,25 @@ names(toUse)[7]="fitted.values"
     names(nestPred)=toName
     
     if(index %in% c(5,7,13)){
-    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-      
-      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
-      scale_colour_manual(name = '',
-                          labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                    "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
-                                    "magenta"=terms[7],'grey'=terms[8],'mediumturquoise'=terms[9]),values=c("red","orange",
-                                         "dodgerblue","forestgreen","blue","purple","magenta","grey","mediumturquoise")
-      ) +
-      ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
-      ylab("ln(chl a) ")+xlab("Date")
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
+        
+        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
+                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
+                                      "magenta"=terms[7],'grey'=terms[8],'mediumturquoise'=terms[9]),values=c("red","orange",
+                                                                                                              "dodgerblue","forestgreen","blue","purple","magenta","grey","mediumturquoise")
+        ) +
+        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")
     }else{
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
@@ -215,8 +223,8 @@ names(toUse)[7]="fitted.values"
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
                                       "magenta"=terms[7],'grey'=terms[8],'mediumturquoise'=terms[9],
                                       "chocolate3"=terms[10]),values=c("red","orange",
-                                         "dodgerblue","forestgreen","blue","purple","magenta",
-                                         "grey","mediumturquoise","chocolate3")
+                                                                       "dodgerblue","forestgreen","blue","purple","magenta",
+                                                                       "grey","mediumturquoise","chocolate3")
         ) +
         ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
