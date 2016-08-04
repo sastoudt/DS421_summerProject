@@ -202,56 +202,60 @@ shinyServer(function(input, output) {
     data<-dat()
     mod<-perStationFullMod[[index]]
     
-    
-    
-    if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","Date")])
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
-               "ti(sio2)","ti(tp)","ti(tss)",
+    if(index %in% c(5,7)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
+                            "sal","Date")])
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)",
+                "ti(sal)",
                "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","date","intercept")
+      toName=c("doy","date_dec","pheo","do_per","sal","date","intercept")
+      
+      byTerm=predict(mod,toUse,type="terms")
       
       
-    }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","Date")])
       
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
-               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
+      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+      names(nestPred)=toName
       
-    }
-    
-    byTerm=predict(mod,toUse,type="terms")
-    
-    
-    
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
-    
-    if(index %in% c(5,7,13)){
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
+       # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(sal)'), lwd=1)+
         
         geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
-                                      "magenta"=terms[7],'grey'=terms[8],'mediumturquoise'=terms[9]),values=c("red","orange",
-                                                                                                              "dodgerblue","forestgreen","blue","purple","magenta","grey","mediumturquoise")
+                                      "blue"=terms[4],"purple"=terms[5],
+                                      "magenta"=terms[6],'grey'=terms[7],'mediumturquoise'=terms[8],"black"=terms[9]),
+                            values=c("red","orange",
+                                         "dodgerblue","blue","purple","magenta","grey","mediumturquoise","black")
         ) +
         ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
-    }else{
+      
+    }else if(index==13){
+      df <- data.frame()
+      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)
+    }else if(index %in% c(17,18,21,22,23)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+                            "sio2","tp","tss","nh4","sal","Date")])
+      
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
+               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)","ti(sal)",
+               "intercept")
+      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","sal","date","intercept")
+      byTerm=predict(mod,toUse,type="terms")
+
+      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    
+      names(nestPred)=toName
+      
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
@@ -262,19 +266,63 @@ shinyServer(function(input, output) {
         geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
         geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(nh4)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(sal)'), lwd=1)+
         
         geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
                                       "magenta"=terms[7],'grey'=terms[8],'mediumturquoise'=terms[9],
-                                      "chocolate3"=terms[10]),values=c("red","orange",
+                                      "chocolate3"=terms[10],"black"=terms[11]),values=c("red","orange",
                                                                        "dodgerblue","forestgreen","blue","purple","magenta",
-                                                                       "grey","mediumturquoise","chocolate3")
+                                                                       "grey","mediumturquoise","chocolate3","black")
+        ) +
+        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")
+    }else{
+      
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+                            "sio2","tp","tss","nh4","Date")])
+      
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
+               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
+               "intercept")
+      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
+      byTerm=predict(mod,toUse,type="terms")
+      
+      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+   
+      names(nestPred)=toName
+      
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(nh4)'), lwd=1)+
+
+        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
+                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
+                                      "magenta"=terms[7],'grey'=terms[8],'mediumturquoise'=terms[9],
+                                      "chocolate3"=terms[10]),values=c("red","orange",
+                                                                                         "dodgerblue","forestgreen","blue","purple","magenta",
+                                                                                         "grey","mediumturquoise","chocolate3")
         ) +
         ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
     }
+    
+    
+    
+   
+    
+   
     
   }, height = 250, width = 1200)
 })
