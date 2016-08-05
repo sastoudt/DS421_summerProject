@@ -472,39 +472,18 @@ shinyServer(function(input, output) {
     
     nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
     names(nestPred)=toName
-    if(index %in% c(5,7,13)){
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
-        scale_colour_manual(name = '',
-                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
-                                                                                  "dodgerblue","blue","purple")
-        ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-    }else{
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
-        scale_colour_manual(name = '',
-                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
-                                                                                                         "dodgerblue","forestgreen","blue","purple")
-        ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-    }
-    
-  }, height = 250, width = 1200)
+   
+    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+      geom_line(data=nestPred,aes_string(x="date",y = input$plot5choice1, color = "as.character(input$plot5choice1)"),lwd=1)+
+      geom_line(data=nestPred,aes_string(x="date",y = input$plot5choice2, color = "as.character(input$plot5choice2)"),lwd=1)+
+      scale_colour_manual(name = '',
+                          labels =c('red'=input$plot5choice1,"dodgerblue"=input$plot5choice2)
+                                    ,values=c("red", "dodgerblue")
+      ) +
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+
+    }, height = 250, width = 1200)
   
   
 })

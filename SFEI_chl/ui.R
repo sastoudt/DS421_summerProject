@@ -125,7 +125,7 @@ shinyUI(fluidPage(
     plotOutput("fittedFull", height = "100%"),
     plotOutput("nestedPlotPars", height = "100%"),
     plotOutput("nestedPlotFull",height="100%"),
-    #plotOutput("nestedPlotParsJust2",height="100%"),
+    plotOutput("nestedPlotParsJust2",height="100%"),
     
     width = 9
     
