@@ -82,10 +82,10 @@ shinyServer(function(input, output) {
     index=which(names(perStation)==input$stat)
     
     if(index %in% c(5,7,13)){
-      selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"))
+      selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"),"Intercept will be added to center results")
       
     }else{
-      selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","tn","do_per"))
+      selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","tn","do_per"),"Intercept will be added to center results")
       
     }
     
@@ -469,7 +469,7 @@ shinyServer(function(input, output) {
     }
     
     byTerm=predict(mod,toUse,type="terms")
-    
+    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
     nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
     names(nestPred)=toName
    
@@ -480,7 +480,7 @@ shinyServer(function(input, output) {
                           labels =c('red'=input$plot5choice1,"dodgerblue"=input$plot5choice2)
                                     ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
 
     }, height = 250, width = 1200)
