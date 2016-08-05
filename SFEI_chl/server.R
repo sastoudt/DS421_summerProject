@@ -40,6 +40,42 @@ shinyServer(function(input, output) {
     
   })
   
+  output$ylim12 <- renderUI({
+    
+    rngs <- range(dat()$chl,na.rm=T)
+    
+    numericInput("ylim12", 
+                 label = h3("Upper Limit for Y Plots 1 & 2"), 
+                 value = round(rngs[2]+10,2)) 
+    
+  
+    
+  })
+  
+  output$ylim34L <- renderUI({
+    
+    rngs <- range(log(dat()$chl),na.rm=T)
+    
+    numericInput("ylim34L", 
+                 label = h3("Lower Limit for Y Plots 3 & 4"), 
+                 value = round(rngs[1]-2,2)) 
+    
+    
+    
+  })
+  
+  output$ylim34U <- renderUI({
+    
+    rngs <- range(log(dat()$chl),na.rm=T)
+    
+    numericInput("ylim34U", 
+                 label = h3("Upper Limit for Y Plots 3 & 4"), 
+                 value = round(rngs[2]+2,2))
+    
+    
+    
+  })
+  
   ## plots
   
   
@@ -70,7 +106,7 @@ shinyServer(function(input, output) {
       geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
       ggtitle(paste(names(perStation)[index], "Fitted Values Parsimonious Model",sep=" "))+
       theme(legend.position='none')+
-      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
+      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
     
   }, height = 250, width = 1200)
@@ -118,13 +154,13 @@ shinyServer(function(input, output) {
         geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
         ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
         theme(legend.position='none')+ylim(0,160)+
-        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
+        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     }else{
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
         geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
         ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
         theme(legend.position='none')+
-        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
+        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     }
     
     
@@ -176,7 +212,7 @@ shinyServer(function(input, output) {
                                                                                   "dodgerblue","blue","purple")
         ) +
         ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
@@ -191,7 +227,7 @@ shinyServer(function(input, output) {
                                                                                                          "dodgerblue","forestgreen","blue","purple")
         ) +
         ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
   }, height = 250, width = 1200)
@@ -242,7 +278,7 @@ shinyServer(function(input, output) {
                                          "dodgerblue","blue","mediumturquoise","black")
         ) +
         ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(index==13){
       df <- data.frame()
@@ -283,7 +319,7 @@ shinyServer(function(input, output) {
                                                                        "grey","mediumturquoise","chocolate3","black")
         ) +
         ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
       
       toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
@@ -320,7 +356,7 @@ shinyServer(function(input, output) {
                                                                                          "grey","mediumturquoise","chocolate3")
         ) +
         ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
     

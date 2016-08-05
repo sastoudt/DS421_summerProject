@@ -65,6 +65,27 @@ shinyUI(fluidPage(
     #        
     # ),
     
+    column(2, 
+           
+           uiOutput("ylim12")
+           
+    ),
+    
+    column(2, 
+           
+           uiOutput("ylim34L")
+           
+    ),
+    
+    column(2, 
+           
+           uiOutput("ylim34U")
+           
+    ),
+ 
+    
+    
+    
     width = 12
     
   ),
