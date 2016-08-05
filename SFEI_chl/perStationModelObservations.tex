@@ -364,4 +364,15 @@ It looks like the pre-1990 is a "step" above the 1990s, and then the 2000s are b
 \item same for nh4
 \end{itemize}
 **NOTE** Looks like there is a "wave" in the chl data which I think is going to mess up the "centering" that the intercept is adding to the components.
+
+\section{Some Other Things}
+
+\begin{itemize}
+\item Sometimes there is a straight line jump in the late 90s. I tracked this pack to do.per being missing in this region.
+\item The fitted values for the parsimonious model are often better than those of the full model. This is not surprising since we mainly added variables into the full model because we are interested in them in context. The variables that looked to have a strong correlation to chl were included in the parsimonious model.
+\item I considered trying to smooth the components of each model, but I decided that would add too much subjective ``fiddling".
+\item Next steps: go back and look on the monthly scale, see if peak location in a year changes over time. Along these lines, I want to go back and fit quick models with just day of year and dec.time along with their interaction to allow the day of year trend to change over time. 
+\item Moving forward to the spatial model: parsimonious model but probably drop do.per. We see here that it often is similar to pheo but not as good.
+\item But we are still interested in all of these other variables even though they don't contribute much to the prediction of chlorophyll. Might need to take a step back and do simpler aggregations of the variables and compare to get at those questions. There could also be lag, but we didn't see any obvious evidence for this from the positions of the component predictions.
+\end{itemize}
 \end{document}
