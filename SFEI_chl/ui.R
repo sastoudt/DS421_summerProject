@@ -120,7 +120,7 @@ shinyUI(fluidPage(
     ## nested structure parsimonious
     ## fitted values full
     ## nested structure parsimonious
-    
+    plotOutput("mapPlot",height="100%"),
     plotOutput("fittedPars", height = "100%"),
     plotOutput("fittedFull", height = "100%"),
     plotOutput("nestedPlotPars", height = "100%"),

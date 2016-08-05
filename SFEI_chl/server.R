@@ -1,12 +1,13 @@
 # packages to use
 library(ggplot2)
-
+library(sp)
 
 # raw data
 load(file = "~/Desktop/sfei/perStation.Rda")
 load(file = "~/Desktop/sfei/perStationParsimoniousModels.Rda")
 load(file = "~/Desktop/sfei/perStationFullModels.Rda")
-
+load(file="~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data/delt_map.RData")
+full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 # Define server logic required to generate and plot data
 shinyServer(function(input, output) {
   
@@ -575,5 +576,10 @@ shinyServer(function(input, output) {
     
   }, height = 250, width = 1200)
   
+  output$mapPlot <- renderPlot({
+    wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
+    points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
+  },height=300,width=300)
   
 })
