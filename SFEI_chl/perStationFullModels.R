@@ -628,6 +628,8 @@ gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(pheo,bs="tp",k=1
             ti(sio2,bs="tp",k=9)+ti(tp,bs="tp",k=10)+ti(tss,bs="tp",k=15)+ti(nh4,bs="tp"),data=data,family=gaussian(link="log"))
 gam.check(gamP)  ## slower, not great but go with this
 
+
+
 perStationFullMod[[16]]=gamP
 
 ####

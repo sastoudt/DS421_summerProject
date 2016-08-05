@@ -113,6 +113,12 @@ shinyServer(function(input, output) {
     if(index==13){
       df <- data.frame()
       ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)
+    }else if(index==15){
+      ggplot(data,aes(x = Date, y = chl))+geom_point()+
+        geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
+        ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
+        theme(legend.position='none')+ylim(0,160)+
+        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")
     }else{
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
         geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
