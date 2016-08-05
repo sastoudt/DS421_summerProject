@@ -175,7 +175,7 @@ shinyServer(function(input, output) {
                                       "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
                                                                                   "dodgerblue","blue","purple")
         ) +
-        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
     }else{
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
@@ -190,7 +190,7 @@ shinyServer(function(input, output) {
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
                                                                                                          "dodgerblue","forestgreen","blue","purple")
         ) +
-        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
     }
     
@@ -241,7 +241,7 @@ shinyServer(function(input, output) {
                             values=c("red","orange",
                                          "dodgerblue","blue","mediumturquoise","black")
         ) +
-        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
       
     }else if(index==13){
@@ -282,7 +282,7 @@ shinyServer(function(input, output) {
                                                                        "dodgerblue","forestgreen","blue","purple","magenta",
                                                                        "grey","mediumturquoise","chocolate3","black")
         ) +
-        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
     }else{
       
@@ -319,7 +319,7 @@ shinyServer(function(input, output) {
                                                                                          "dodgerblue","forestgreen","blue","purple","magenta",
                                                                                          "grey","mediumturquoise","chocolate3")
         ) +
-        ggtitle(names(perStation)[index])+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")
     }
     
