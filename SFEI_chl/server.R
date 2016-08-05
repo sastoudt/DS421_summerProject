@@ -485,5 +485,95 @@ shinyServer(function(input, output) {
 
     }, height = 250, width = 1200)
   
+  output$nestedPlotFullJust2 <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data<-dat()
+    mod<-perStationFullMod[[index]]
+    
+    if(index %in% c(5,7)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
+                            "sal","Date")])
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)",
+               "ti(sal)",
+               "intercept")
+      toName=c("doy","date_dec","pheo","do_per","sal","date","intercept")
+      
+      byTerm=predict(mod,toUse,type="terms")
+      
+      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
+      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+      names(nestPred)=toName
+      
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
+        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
+                            ,values=c("red", "dodgerblue")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    }else if(index==13){
+      df <- data.frame()
+      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
+    }else if(index %in% c(17,18,21,22,23)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+                            "sio2","tp","tss","nh4","sal","Date")])
+      
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
+               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)","ti(sal)",
+               "intercept")
+      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","sal","date","intercept")
+      byTerm=predict(mod,toUse,type="terms")
+      
+      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
+      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+      names(nestPred)=toName
+      
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
+        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
+                            ,values=c("red", "dodgerblue")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    }else{
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+                            "sio2","tp","tss","nh4","Date")])
+      
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
+               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
+               "intercept")
+      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
+      byTerm=predict(mod,toUse,type="terms")
+
+  
+    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
+    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    names(nestPred)=toName
+    
+    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+      geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
+      geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+      scale_colour_manual(name = '',
+                          labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
+                          ,values=c("red", "dodgerblue")
+      ) +
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    }
+    
+    
+  }, height = 250, width = 1200)
+  
   
 })
