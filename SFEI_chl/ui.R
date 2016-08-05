@@ -82,7 +82,29 @@ shinyUI(fluidPage(
            uiOutput("ylim34U")
            
     ),
+    
+    column(2, 
+           
+           uiOutput("plot5choice1")
+           
+    ),
  
+    column(2, 
+           
+           uiOutput("plot5choice2")
+           
+    ),
+    column(2, 
+           
+           uiOutput("plot6choice1")
+           
+    ),
+    
+    column(2, 
+           
+           uiOutput("plot6choice2")
+           
+    ),
     
     
     
@@ -103,6 +125,7 @@ shinyUI(fluidPage(
     plotOutput("fittedFull", height = "100%"),
     plotOutput("nestedPlotPars", height = "100%"),
     plotOutput("nestedPlotFull",height="100%"),
+    #plotOutput("nestedPlotParsJust2",height="100%"),
     
     width = 9
     

@@ -76,6 +76,88 @@ shinyServer(function(input, output) {
     
   })
   
+  output$plot5choice1<- renderUI({
+    
+    
+    index=which(names(perStation)==input$stat)
+    
+    if(index %in% c(5,7,13)){
+      selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"))
+      
+    }else{
+      selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","tn","do_per"))
+      
+    }
+    
+
+  })
+  
+  output$plot5choice2<- renderUI({
+    
+    
+    index=which(names(perStation)==input$stat)
+    
+    if(index %in% c(5,7,13)){
+      selectInput("plot5choice2","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"))
+      
+    }else{
+      selectInput("plot5choice2","Select a variable in parsimonious model.",c("doy","date_dec","pheo","tn","do_per"))
+      
+    }
+    
+    
+  })
+  
+  output$plot6choice1<- renderUI({
+    
+    
+    index=which(names(perStation)==input$stat)
+    
+    if(index %in% c(5,7)){
+      selectInput("plot6choice1","Select a variable in full model.",c("doy","date_dec","pheo","do_per",
+                                                                              "sal"))
+      
+    }else if(index==13){
+      selectInput("plot6choice1","No variables to choose from for full model.",c())
+                                                                              
+    }else if(index %in% c(17, 18, 21, 22, 23)){
+      selectInput("plot6choice1","Select a variable in full model.",c("doy","date_dec","pheo","tn","do_per",
+                                                                      "sio2","tp","tss","nh4","sal"))
+    }else{
+      selectInput("plot6choice1","Select a variable in full model.",c("doy","date_dec","pheo","tn","do_per",
+                                                                      "sio2","tp","tss","nh4"))
+      
+    }
+    
+    
+  })
+  
+  output$plot6choice2<- renderUI({
+    
+    
+    index=which(names(perStation)==input$stat)
+    
+    if(index %in% c(5,7)){
+      selectInput("plot6choice2","Select a variable in full model.",c("doy","date_dec","pheo","do_per",
+                                                                      "sal"))
+      
+    }else if(index==13){
+      selectInput("plot6choice2","No variables to choose from for full model.",c())
+      
+    }else if(index %in% c(17, 18, 21, 22, 23)){
+      selectInput("plot6choice2","Select a variable in full model.",c("doy","date_dec","pheo","tn","do_per",
+                                                                      "sio2","tp","tss","nh4","sal"))
+    }else{
+      selectInput("plot6choice2","Select a variable in full model.",c("doy","date_dec","pheo","tn","do_per",
+                                                                      "sio2","tp","tss","nh4"))
+      
+    }
+    
+    
+  })
+  
+  
+  
   ## plots
   
   
@@ -359,11 +441,70 @@ shinyServer(function(input, output) {
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
+ 
+  }, height = 250, width = 1200)
+  
+  output$nestedPlotParsJust2 <- renderPlot({
     
+    # inputs
     
-   
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
     
-   
+    # data
+    data<-dat()
+    mod<-perStationParsMod[[index]]
+    
+    if(index %in% c(5,7,13)){
+      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
+      toName=c("doy","date_dec","pheo","do_per","date","intercept")
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
+      
+    }else{
+      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
+      toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
+      
+    }
+    
+    byTerm=predict(mod,toUse,type="terms")
+    
+    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    names(nestPred)=toName
+    if(index %in% c(5,7,13)){
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
+                                      "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
+                                                                                  "dodgerblue","blue","purple")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    }else{
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
+                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
+                                                                                                         "dodgerblue","forestgreen","blue","purple")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    }
     
   }, height = 250, width = 1200)
+  
+  
 })
