@@ -194,67 +194,154 @@
 \item no real variation in tss
 \item structure in nh4, matches "cyclic" structure pretty well, not so well on magnitude
 \end{itemize}
+
 \section{D4}
 \subsection{Data}
 \begin{itemize}
-\item
+\item center station
+\item big peaks until the end of 1980s, peak 1993ish, 2013ish
+\item zoom in (0,20): really low at the beginning of the 90s before the peak, then pretty consistent after the 1993ish peak
 \end{itemize}
 \subsection{Parsimonious Model}
+\begin{itemize}
+\item biggest "M" structure (probably just scale), don't match magnitude until after 1995, tracks minimum in, underestimates it early on
+\item pretty wiggly date_dec, matches magnitude more after 1990
+\item pheo: lots of variation, maintains magnitude throughout, underestimates a lot towards the end of the series, matches well before 1980
+\item no real variation in tn
+\item erratic variation in do_per, smaller order of magnitude than pheo
+\end{itemize}
 
 \subsection{Full Model}
+\begin{itemize}
+\item decent amount of variation in sio2, order of magnitude as do_per from parsimonious model, matches better after 1995
+\item no real variation in tp, a few peaks that don't really match
+\item same for tss
+\item nh4: small order of magnitude variation, matches better after 1995, severely underestimates before 1990
+\item salinity: variation on a decent order of magnitude, shape matches more after 1995, magnitude underestimates overall
+\end{itemize}
 
 \section{D41}
 \subsection{Data}
 \begin{itemize}
-\item
+\item far west station
+\item small amount of chl throughout, no real change in magnitude throughout
+
 \end{itemize}
 \subsection{Parsimonious Model}
-
+\begin{itemize}
+\item day of year: plateau cyclical structure, dips track lows
+\item no wiggle in date_dec
+\item pheo: not as useful as before tracking wise, magnitude of variability drops off after 2000
+\item no real variability in tn
+\item do_per: same order of magnitude as pheo, doesn't seem to track much
+\end{itemize}
 \subsection{Full Model}
+\begin{itemize}
+\item sio2: flat line
+\item same for tp
+\item neglible variation for tss
+\item nh4: same order of magnitude as do_per, doesn't seem to track anything
+\item sal: same behavior as nh4
+\end{itemize}
 
 \section{D6}
 \subsection{Data}
 \begin{itemize}
-\item
+\item towards the west
+\item not very much chl, but drops off even more around 1990
+\item zoom (0,10): doesn't really reveal anything else
 \end{itemize}
 \subsection{Parsimonious Model}
-
+\begin{itemize}
+\item doy: magnitude doesn't match until around 2000, breaks down matching center of peaks end of 1980s-beginning of 1990s
+\item very wiggly date_dec
+\item pheo: more variation until about 1990 then tapers off with a peak in 1993, tracks decently before 1980
+\item no real variation in tn
+\item do_per: same order of magnitude as pheo, doesn't really track anything
+\end{itemize}
 \subsection{Full Model}
+\begin{itemize}
+\item sio2: a little smaller magnitude than do_per in parsimonious model, no obvious tracking
+\item no real variation in tp
+\item same for tss
+\item nh4: like sio2
+\item sal: a little more structure, tracks the peaks, does better after 2000
+\end{itemize}
+
 
 \section{D7}
 \subsection{Data}
 \begin{itemize}
-\item
+\item midwest station, slightly higher latitude wise
+\item decent magnitude until the end of the 1990s, peak in 2000, relative peaks after 2010
+\item zoom in (0, 20): does seem to be an increase after 2010
 \end{itemize}
 \subsection{Parsimonious Model}
-
+\begin{itemize}
+\item doy: squiggle more than the "M" shape, underestimates everything
+\item really wiggly date_dec in 1990-2005, fairly straight before 1990
+\item pheo: lots of variation early on, smaller magnitude after 1990, underestimates everything
+\item no real variation in tn, but some peaks especially in the 2000s
+\item  do_per: more consistent magnitude, smaller than the start of pheo, doesn't seem to track anything
+\end{itemize}
 \subsection{Full Model}
-
+\begin{itemize}
+\item no real variation in sio2
+\item same for tp
+\item tss: same order of magnitude of do_per before, doesn't really track anything
+\item no real variation in nh4
+\item no real variation in sal except for end of 80s-beginning of 90s and after 2000 (plateau structure, seems to track peaks)
+\end{itemize}
+**NOTE** Figure out this underestimation thing. Artifact or lack of fit?
+It looks like the pre-1990 is a "step" above the 1990s, and then the 2000s are between the 90s level and the 80s level, so I can see why the "intercept" wouldn't really center this.
 \section{D8}
 \subsection{Data}
 \begin{itemize}
-\item
+\item center station
+\item plenty of reasonable sized peaks before the end of the 80s, then a drop off with relative peaks around 1993, 2000, and 2013
+\item zoom in (0,20): seems to be a bit of resurgence after 2000
 \end{itemize}
 \subsection{Parsimonious Model}
-
+\begin{itemize}
+\item day of year tracks peaks, magnitude matches better after 2000
+\item wide wiggles in date_dec
+\item pheo:  matches really well until about 1985, magnitude dampens around 1990
+\item tn: flat
+\item very little variability in do_per
+\end{itemize}
 \subsection{Full Model}
+\begin{itemize}
+\item not a large magnitude of variability for sio2 but does seem to track peaks
+\item flat tp
+\item flat tss
+\item small magnitude of variability for nh4 but does seem to track peaks
+\item sal: small variability, tracks more obviously after 2000
+\end{itemize}
 
 \section{MD10}
 \subsection{Data}
 \begin{itemize}
-\item
+\item 
 \end{itemize}
 \subsection{Parsimonious Model}
-
+\begin{itemize}
+\item 
+\end{itemize}
 \subsection{Full Model}
-
+\begin{itemize}
+\item
+\end{itemize}
 \section{P8}
 \subsection{Data}
 \begin{itemize}
 \item
 \end{itemize}
 \subsection{Parsimonious Model}
-
+\begin{itemize}
+\item
+\end{itemize}
 \subsection{Full Model}
-
+\begin{itemize}
+\item
+\end{itemize}
 \end{document}
