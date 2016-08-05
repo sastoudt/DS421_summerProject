@@ -112,7 +112,7 @@ shinyServer(function(input, output) {
     
     if(index==13){
       df <- data.frame()
-      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)
+      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
     }else if(index==15){
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
         geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
@@ -246,7 +246,7 @@ shinyServer(function(input, output) {
       
     }else if(index==13){
       df <- data.frame()
-      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)
+      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
     }else if(index %in% c(17,18,21,22,23)){
       toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
                             "sio2","tp","tss","nh4","sal","Date")])
