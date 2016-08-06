@@ -87,3 +87,5 @@ for(i in 1:length(dataNiceNoLag)){
 
 save(dataNiceNoLag,file="dataNice_nolag.RData")
 
+
+View(mods_nolag_mean$mod[[1]][which(!is.na(mods_nolag_mean$mod[[1]]$res)),])

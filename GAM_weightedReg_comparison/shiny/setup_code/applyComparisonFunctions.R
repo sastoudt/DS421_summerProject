@@ -9,8 +9,14 @@ source("getRegressionResults.R")
 load("data/dataNice_nolag.RData")
 load("data/modelsNoLag_Nested.RData")
 
+rn=c("rmse","rmseA1","rmseA2","rmseA3","rmseA4","rmseA5","rmseS1",
+     "rmseS2","rmseS3","rmseS4","rmseF1","rmseF2","rmseF3","rmseF4")
+
+nam=c("GAM","WRTDS")
 rmsePerStation=mapply(getSummaryRMSE,dataNiceNoLag,modelsNoLag_Nested,SIMPLIFY=F)
-names(rmsePerStation)
+rmsePerStation<- lapply(rmsePerStation, function(x){ row.names(x)<-rn; x})
+rmsePerStation<- lapply(rmsePerStation, function(x){ colnames(x)<-nam; x})
+
 rmsePerStation[[1]]
 
 devPerStation=mapply(getSummaryDeviance,dataNiceNoLag,modelsNoLag_Nested,SIMPLIFY=F)

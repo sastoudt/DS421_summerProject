@@ -1,85 +1,129 @@
 ## stay on log scale
 ## like table 2 Beck_and_Murphy_EMA
 getSummaryRMSE<-function(data,model){
-  data=data[!is.na(data$res),]
-  data=data[!is.na(data$flo),]
+  data=data[!is.nan(data$res),]
+  data=data[!is.nan(data$flo),]
   trueVal=data$res ## need to pass this in
-  predVal=model$fitted.values
-  rmse=sqrt(sum((trueVal-predVal)^2))
+  predValGAM=data$gamPred
+  predValWRTDS=data$wrtdsPred
+  
+  rmseGAM=sqrt(sum((trueVal-predValGAM)^2))
+  rmseWRTDS=sqrt(sum((trueVal-predValWRTDS)^2,na.rm=T))
+  
   data$month=as.numeric(strftime(data$date, '%m'))
   data$year=as.numeric(strftime(data$date, '%Y'))
   
   annual1=subset(data,year<1983 & year>=1976)
   annual1I=which(data$year<1983 & data$year>=1976)
-  annual1P=predVal[annual1I]
+  annual1PG=predValGAM[annual1I]
+  annual1PW=predValWRTDS[annual1I]
+  
   
   annual2=subset(data,year<1990 & year>=1983)
   annual2I=which(data$year<1990 & data$year>=1983)
-  annual2P=predVal[annual2I]
+  annual2PG=predValGAM[annual2I]
+  annual2PW=predValWRTDS[annual2I]
+  
   
   annual3=subset(data,year<1997 & year>=1990)
   annual3I=which(data$year<1997 & data$year>=1990)
-  annual3P=predVal[annual3I]
+  annual3PG=predValGAM[annual3I]
+  annual3PW=predValWRTDS[annual3I]
+  
   
   annual4=subset(data,year<2004 & year>=1997)
   annual4I=which(data$year<2004 & data$year>=1997)
-  annual4P=predVal[annual4I]
+  annual4PG=predValGAM[annual4I]
+  annual4PW=predValWRTDS[annual4I]
+  
   
   annual5=subset(data,year>=2004) ## has 2 extra years
   annual5I=which( data$year>=2004)
-  annual5P=predVal[annual5I]
+  annual5PG=predValGAM[annual5I]
+  annual5PW=predValWRTDS[annual5I]
   
-  rmseA1=sqrt(sum((annual1$res-annual1P)^2))
-  rmseA2=sqrt(sum((annual2$res-annual2P)^2))
-  rmseA3=sqrt(sum((annual3$res-annual3P)^2))
-  rmseA4=sqrt(sum((annual4$res-annual4P)^2))
-  rmseA5=sqrt(sum((annual5$res-annual5P)^2))
+  
+  rmseA1G=sqrt(sum((annual1$res-annual1PG)^2))
+  rmseA2G=sqrt(sum((annual2$res-annual2PG)^2))
+  rmseA3G=sqrt(sum((annual3$res-annual3PG)^2))
+  rmseA4G=sqrt(sum((annual4$res-annual4PG)^2))
+  rmseA5G=sqrt(sum((annual5$res-annual5PG)^2))
+  
+  rmseA1W=sqrt(sum((annual1$res-annual1PW)^2,na.rm=T))
+  rmseA2W=sqrt(sum((annual2$res-annual2PW)^2,na.rm=T))
+  rmseA3W=sqrt(sum((annual3$res-annual3PW)^2,na.rm=T))
+  rmseA4W=sqrt(sum((annual4$res-annual4PW)^2,na.rm=T))
+  rmseA5W=sqrt(sum((annual5$res-annual5PW)^2,na.rm=T))
   
   seasonal1=subset(data,month %in% c(1:3))
   seasonal1I=which(data$month %in% c(1:3))
-  seasonal1P=predVal[seasonal1I]
+  seasonal1PG=predValGAM[seasonal1I]
+  seasonal1PW=predValWRTDS[seasonal1I]
+  
   
   seasonal2=subset(data,month %in% c(4:6))
   seasonal2I=which(data$month %in% c(4:6))
-  seasonal2P=predVal[seasonal2I]
+  seasonal2PG=predValGAM[seasonal2I]
+  seasonal2PW=predValWRTDS[seasonal2I]
+  
   
   seasonal3=subset(data,month %in% c(7:9))
   seasonal3I=which(data$month %in% c(7:9))
-  seasonal3P=predVal[seasonal3I]
+  seasonal3PG=predValGAM[seasonal3I]
+  seasonal3PW=predValWRTDS[seasonal3I]
+  
   
   seasonal4=subset(data,month %in% c(10:12))
   seasonal4I=which(data$month %in% c(10:12))
-  seasonal4P=predVal[seasonal4I]
+  seasonal4PG=predValGAM[seasonal4I]
+  seasonal4PW=predValWRTDS[seasonal4I]
   
-  rmseS1=sqrt(sum((seasonal1$res-seasonal1P)^2))
-  rmseS2=sqrt(sum((seasonal2$res-seasonal2P)^2))
-  rmseS3=sqrt(sum((seasonal3$res-seasonal3P)^2))
-  rmseS4=sqrt(sum((seasonal4$res-seasonal4P)^2))
+  rmseS1G=sqrt(sum((seasonal1$res-seasonal1PG)^2))
+  rmseS2G=sqrt(sum((seasonal2$res-seasonal2PG)^2))
+  rmseS3G=sqrt(sum((seasonal3$res-seasonal3PG)^2))
+  rmseS4G=sqrt(sum((seasonal4$res-seasonal4PG)^2))
+  
+  rmseS1W=sqrt(sum((seasonal1$res-seasonal1PW)^2,na.rm=T))
+  rmseS2W=sqrt(sum((seasonal2$res-seasonal2PW)^2,na.rm=T))
+  rmseS3W=sqrt(sum((seasonal3$res-seasonal3PW)^2,na.rm=T))
+  rmseS4W=sqrt(sum((seasonal4$res-seasonal4PW)^2,na.rm=T))
   
   flow1=subset(data,flo<quantile(data$flo,.25))
   flow1I=which(data$flo<quantile(data$flo,0.25))
-  flow1P=predVal[flow1I]
+  flow1PG=predValGAM[flow1I]
+  flow1PW=predValWRTDS[flow1I]
   
   flow2=subset(data,flo>=quantile(data$flo,.25) & flo<quantile(data$flo,0.5))
   flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flo<quantile(data$flo,0.5))
-  flow2P=predVal[flow2I]
+  flow2PG=predValGAM[flow2I]
+  flow2PW=predValWRTDS[flow2I]
   
   flow3=subset(data,flo>=quantile(data$flo,.5) & flo<quantile(data$flo,0.75))
   flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flo<quantile(data$flo,0.75))
-  flow3P=predVal[flow3I]
+  flow3PG=predValGAM[flow3I]
+  flow3PW=predValWRTDS[flow3I]
   
   flow4=subset(data,flo>=quantile(data$flo,.75) )
   flow4I=which(data$flo>=quantile(data$flo,0.75))
-  flow4P=predVal[flow4I]
+  flow4PG=predValGAM[flow4I]
+  flow4PW=predValWRTDS[flow4I]
   
-  rmseF1=sqrt(sum((flow1$res-flow1P)^2))
-  rmseF2=sqrt(sum((flow2$res-flow2P)^2))
-  rmseF3=sqrt(sum((flow3$res-flow3P)^2))
-  rmseF4=sqrt(sum((flow4$res-flow4P)^2))
+  rmseF1G=sqrt(sum((flow1$res-flow1PG)^2))
+  rmseF2G=sqrt(sum((flow2$res-flow2PG)^2))
+  rmseF3G=sqrt(sum((flow3$res-flow3PG)^2))
+  rmseF4G=sqrt(sum((flow4$res-flow4PG)^2))
   
-  rmse=rbind(rmse,rmseA1,rmseA2,rmseA3,rmseA4,rmseA5,rmseS1,rmseS2,rmseS3,rmseS4,
-             rmseF1,rmseF2,rmseF3,rmseF4)
-  return(rmse)
+  rmseF1W=sqrt(sum((flow1$res-flow1PW)^2,na.rm=T))
+  rmseF2W=sqrt(sum((flow2$res-flow2PW)^2,na.rm=T))
+  rmseF3W=sqrt(sum((flow3$res-flow3PW)^2,na.rm=T))
+  rmseF4W=sqrt(sum((flow4$res-flow4PW)^2,na.rm=T))
+  
+  rmseG=rbind(rmseGAM,rmseA1G,rmseA2G,rmseA3G,rmseA4G,rmseA5G,rmseS1G,rmseS2G,rmseS3G,rmseS4G,
+             rmseF1G,rmseF2G,rmseF3G,rmseF4G)
+  
+  rmseW=rbind(rmseWRTDS,rmseA1W,rmseA2W,rmseA3W,rmseA4W,rmseA5W,rmseS1W,rmseS2W,rmseS3W,rmseS4W,
+              rmseF1W,rmseF2W,rmseF3W,rmseF4W)
+  return(cbind(rmseG,rmseW))
   # return(list(all=rmse,annual1=rmseA1,annual2=rmseA2,annual3=rmseA3,annual4=rmseA4,
   #             seasonal1=rmseS1, seasonal2=rmseS2, seasonal3=rmseS3, seasonal4=rmseS4,
   #             flow1=rmseF1,flow2=rmseF2,flow3=rmseF3,flow4=rmseF4))
