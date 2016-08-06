@@ -55,3 +55,14 @@ avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x$pc)<-nam; x})
 
 avgPCPerStation[[1]]
 
+regResultsPerStation=mapply(getRegressionResults,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
+regResultsPerStation[[1]]
+
+i=19
+getRegressionResults(dataNiceNoLag[[i]],i)
+
+missing<-c()
+for(i in 1:27){
+  missing<-c(missing,sum(is.na(dataNiceNoLag[[i]]$wrtdsPred))/nrow(dataNiceNoLag[[i]]))
+}
+missing

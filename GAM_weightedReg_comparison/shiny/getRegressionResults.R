@@ -3,22 +3,24 @@
 
 ## assume that model has gone through modfit and has an attribute $fits or $norms
 ## assume the predictions match up: order by date before making predictions
-getRegressionResults<-function(data,modGAM,modWRTDS,sigLevel){
-
+getRegressionResults<-function(data,index,sigLevel=.05){
+if(index %in% c(10:18)){
+  return(NA)
+}else{
   data=data[!is.na(data$res),]
   data=data[!is.na(data$flo),]
   data=data[order(data$date),]
   
-  toUse=ifelse("norms" %in% names(modWRTDS),"norms","fits")
+  #toUse=ifelse("norms" %in% names(modWRTDS),"norms","fits")
   
-  mod.lm=lm(modWRTDS[,toUse]~modGAM$fitted.values)
+  mod.lm=lm(data$wrtdsPred~data$gamPred)
   
   betas=unname(coefficients(mod.lm))
   pVals=unname(summary(mod.lm)$coefficients[,4])
   isSignificant=ifelse(pVals<sigLevel,1,0)
   
-  predValGAM=modGAM$fitted.values
-  predValWRTDS=modWRTDS[,toUse]
+  predValGAM=data$gamPred
+  predValWRTDS=data$wrtdsPred
   
   data$month=as.numeric(strftime(data$date, '%m'))
   data$year=as.numeric(strftime(data$date, '%Y'))
@@ -50,6 +52,12 @@ getRegressionResults<-function(data,modGAM,modWRTDS,sigLevel){
   annualPVals3=unname(summary(mod.annual3)$coefficients[,4])
   isSignificantAnnual3=ifelse(annualPVals3<sigLevel,1,0)
   
+  
+  if(index %in% c(19,20,21)){
+    annualBetas4=NA
+    annualPVals4=NA
+    isSignificantAnnual4=NA
+  }else{
   annual4=subset(data,year<2004 & year>=1997)
   annual4I=which(data$year<2004 & data$year>=1997)
   annual4PW=predValWRTDS[annual4I]
@@ -58,6 +66,7 @@ getRegressionResults<-function(data,modGAM,modWRTDS,sigLevel){
   annualBetas4=unname(coefficients(mod.annual4))
   annualPVals4=unname(summary(mod.annual4)$coefficients[,4])
   isSignificantAnnual4=ifelse(annualPVals4<sigLevel,1,0)
+  }
   
   annual5=subset(data,year>=2004) ## has 2 extra years
   annual5I=which( data$year>=2004)
@@ -152,7 +161,9 @@ isSignificant=rbind(isSignificant,isSignificantAnnual1,isSignificantAnnual2,
                     isSignificantSeasonal1,isSignificantSeasonal2,isSignificantSeasonal3,
                     isSignificantSeasonal4,isSignificantFlow1,isSignificantFlow2,
                     isSignificantFlow3,isSignificantFlow4)
-  
-  
+  colnames(betas)=c("intercept","slope")
+  colnames(pVals)=c("intercept","slope")
+  colnames(isSignificant)=c("intercept","slope")
   return(list(betas=betas,pVals=pVals,isSignificant=isSignificant))
+}
 }
