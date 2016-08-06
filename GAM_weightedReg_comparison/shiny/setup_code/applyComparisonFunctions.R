@@ -20,6 +20,9 @@ rmsePerStation<- lapply(rmsePerStation, function(x){ colnames(x)<-nam; x})
 rmsePerStation[[1]]
 
 devPerStation=mapply(getSummaryDeviance,dataNiceNoLag,modelsNoLag_Nested,SIMPLIFY=F)
+
+devPerStation<- lapply(devPerStation, function(x){ row.names(x)<-rn; x})
+devPerStation<- lapply(devPerStation, function(x){ colnames(x)<-nam; x})
 devPerStation[[1]]
 
 ### not officially tested yet without sample modelWRTDS
