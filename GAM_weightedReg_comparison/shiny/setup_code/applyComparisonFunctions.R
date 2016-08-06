@@ -34,5 +34,24 @@ devPerStation[[1]]
 #regressionPerStation=mapply(getRegressionResults,dataNiceNoLag,modelsNoLag_Nested,
 # rep(0.95,length(dataNiceNoLag)),SIMPLIFY=F)
 
+avgPCPerStation=mapply(getFlowNormalizedSummary,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
+avgPCPerStation[[1]]
+rn1=c("avgOverall","annual1M","annual2M","annual3M","annual4M","annual5M","seasonal1M",
+     "seasonal2M","seasonal3M","seasonal4M","flow1M","flow2M","flow3M","flow4M")
+rn2=c("percentChange","annual1PC","annual2PC","annual3PC","annual4PC","annual5PC","seasonal1PC",
+      "seasonal2PC","seasonal3PC","seasonal4PC","flow1PC","flow2PC","flow3PC","flow4PC")
 
+
+nam=c("GAM","WRTDS")
+avgPCPerStation<- lapply(avgPCPerStation, function(x){ row.names(x$avg)<-rn1; x})
+avgPCPerStation<- lapply(avgPCPerStation, function(x){ row.names(x$pc) <- rn2; x})
+
+# for(i in 1:length(avgPCPerStation)){
+#   row.names(avgPCPerStation[[i]]$pc)<-rn2
+# } ## i=19,20,21 missing annual4PCG
+
+avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x$avg)<-nam; x})
+avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x$pc)<-nam; x})
+
+avgPCPerStation[[1]]
 
