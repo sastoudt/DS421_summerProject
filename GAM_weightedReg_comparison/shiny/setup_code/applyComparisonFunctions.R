@@ -82,7 +82,7 @@ avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x)<-nam; x})
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
 for(i in c(1:9,19:27))
-print(xtable(avgPCPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable3&4.tex",append=T)
+print(xtable(avgPCPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable3_4.tex",append=T)
 
 
 regResultsPerStation=mapply(getRegressionResults,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
@@ -116,3 +116,18 @@ missing
 
 diffResultsPerStation=mapply(getSummaryDifference,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
 diffResultsPerStation[[10]]
+
+diffResultsPerStation=lapply(diffResultsPerStation,function(x){cbind(x$avgDiff,x$rmse)})
+diffResultsPerStation[[1]]
+nam=c("Avg Diff", "RMSE")
+diffResultsPerStation=lapply(diffResultsPerStation,function(x){colnames(x)=nam;x})
+rn1=c("overall","annual1","annual2","annual3","annual4","annual5","seasonal1",
+      "seasonal2","seasonal3","seasonal4","flow1","flow2","flow3","flow4")
+diffResultsPerStation=lapply(diffResultsPerStation,function(x){row.names(x)=rn1;x})
+diffResultsPerStation[[1]]
+
+toUse=gsub("_"," ",names(dataNiceNoLag))
+setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
+for(i in c(1:9,19:27))
+  print(xtable(diffResultsPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable5.tex",append=T)
+
