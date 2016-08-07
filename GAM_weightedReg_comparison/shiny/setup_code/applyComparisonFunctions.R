@@ -1,5 +1,5 @@
 ### apply comparisons per station
-
+require(xtable)
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny")
 source("getSummaryRMSE_Dev.R")
 source("getFlowNormalizedSummary.R")
@@ -19,9 +19,6 @@ rmsePerStation<- lapply(rmsePerStation, function(x){ colnames(x)<-nam; x})
 
 rmsePerStation[[1]]
 
-require(xtable)
-names(dataNiceNoLag)
-i=27
 print(xtable(rmsePerStation[[i]]))
 
 devPerStation=mapply(getSummaryDeviance,dataNiceNoLag,modelsNoLag_Nested,SIMPLIFY=F)
@@ -32,17 +29,8 @@ devPerStation<- lapply(devPerStation, function(x){ row.names(x)<-rn; x})
 devPerStation<- lapply(devPerStation, function(x){ colnames(x)<-nam; x})
 devPerStation[[1]]
 
-i=2
 print(xtable(devPerStation[[i]]))
 
-### not officially tested yet without sample modelWRTDS
-### but conceptually should work the same
-
-#methodDifferencePerStation=mapply(getSummaryDifference,dataNiceNoLag,modelsNoLag_Nested,
-#                                  modelsNoLag_WRTDS,SIMPLIFY=F)
-
-#regressionPerStation=mapply(getRegressionResults,dataNiceNoLag,modelsNoLag_Nested,
-# rep(0.95,length(dataNiceNoLag)),SIMPLIFY=F)
 
 avgPCPerStation=mapply(getFlowNormalizedSummary,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
 avgPCPerStation[[1]]
@@ -65,10 +53,25 @@ avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x$pc)<-nam; x})
 
 avgPCPerStation[[1]]
 
+
+avgPCPerStation<-lapply(avgPCPerStation,function(x){cbind(x$avg,x$pc)})
+rn1=c("overall","annual1","annual2","annual3","annual4","annual5","seasonal1",
+      "seasonal2","seasonal3","seasonal4","flow1","flow2","flow3","flow4")
+avgPCPerStation<- lapply(avgPCPerStation, function(x){ row.names(x)<-rn1; x})
+nam<-c("GAM_avg","WRTDS_avg","GAM_pc","WRTDS_pc")
+avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x)<-nam; x})
+
+
+toUse=gsub("_"," ",names(dataNiceNoLag))
+setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
+for(i in c(1:9,19:27))
+print(xtable(avgPCPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable2&3.tex",append=T)
+
+
 regResultsPerStation=mapply(getRegressionResults,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
 regResultsPerStation[[1]]
 
-i=19
+i=20
 getRegressionResults(dataNiceNoLag[[i]],i)
 
 missing<-c()
