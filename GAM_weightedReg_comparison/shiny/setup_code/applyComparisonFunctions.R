@@ -31,6 +31,24 @@ devPerStation[[1]]
 
 print(xtable(devPerStation[[i]]))
 
+rmseDevPerStation<-vector("list",27)
+for(i in 1:27){
+  rmseDevPerStation[[i]]=as.data.frame(cbind(rmsePerStation[[i]],devPerStation[[i]]))
+}
+
+rn=c("overall","A1","A2","A3","A4","A5","S1",
+     "S2","S3","S4","F1","F2","F3","F4")
+rmseDevPerStation<- lapply(rmseDevPerStation, function(x){ row.names(x)<-rn; x})
+nam<-c("GAM_rmse","WRTDS_rmse","GAM_dev","WRTDS_dev")
+rmseDevPerStation<- lapply(rmseDevPerStation, function(x){ colnames(x)<-nam; x})
+
+rmseDevPerStation[[1]]
+toUse=gsub("_"," ",names(dataNiceNoLag))
+setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
+for(i in c(1:9,19:27))
+  print(xtable(rmseDevPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable2.tex",append=T)
+
+
 
 avgPCPerStation=mapply(getFlowNormalizedSummary,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
 avgPCPerStation[[1]]
@@ -61,11 +79,10 @@ avgPCPerStation<- lapply(avgPCPerStation, function(x){ row.names(x)<-rn1; x})
 nam<-c("GAM_avg","WRTDS_avg","GAM_pc","WRTDS_pc")
 avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x)<-nam; x})
 
-
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
 for(i in c(1:9,19:27))
-print(xtable(avgPCPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable2&3.tex",append=T)
+print(xtable(avgPCPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable3&4.tex",append=T)
 
 
 regResultsPerStation=mapply(getRegressionResults,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
@@ -73,6 +90,23 @@ regResultsPerStation[[1]]
 
 i=20
 getRegressionResults(dataNiceNoLag[[i]],i)
+
+
+nam=c("intercept","interceptSignificant","slope","slopeSignificant")
+## Note slope significant from zero not one
+fullRegResPerStation=vector("list",27)
+for(i in c(1:9,19:27)){
+  fullRegResPerStation[[i]]=as.data.frame(cbind(regResultsPerStation[[i]]$betas[,1],regResultsPerStation[[i]]$isSignificant[,1],
+        regResultsPerStation[[i]]$betas[,2],regResultsPerStation[[i]]$isSignificant[,2]))
+  names(fullRegResPerStation[[i]])=nam
+}
+## apply wasn't working
+toUse=gsub("_"," ",names(dataNiceNoLag))
+setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
+for(i in c(1:9,19:27))
+  print(xtable(fullRegResPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable6.tex",append=T)
+
+
 
 missing<-c()
 for(i in 1:27){
