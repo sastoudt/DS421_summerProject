@@ -1,6 +1,7 @@
 source("getFlowNormalized.R")
 source("nestedPlot.R")
 source("spatialResultsPlot.R")
+source("comparePlot.R")
 #load("data/delt_dat.RData")
 #load("data/delt_map.RData")
 
@@ -562,6 +563,30 @@ shinyServer(function(input, output) {
     
     
   }, height = 250, width = 1200)
+  
+  output$comparePlot <- renderPlot({
+    
+    # inputs
+    dt_rng <- input$dt_rng
+    #taus <- input$tau
+    
+    # scale argument
+    logspace <- FALSE
+    if(input$scl == 'linear') logspace <- TRUE
+    ## if true, need to untransform
+    
+    # aggregation period
+    annuals <- TRUE
+    if(input$annuals == 'observed') annuals <- FALSE
+    
+    
+    dat=dataNiceNoLag[[dat()]]
+    
+    # create plot
+   comparePlot(dat,xlim=dt_rng,scale=logspace,annual=annuals)
+    
+  }, height = 250, width = 1200)
+  
   
   output$dynagamP <- renderPlot({
     
