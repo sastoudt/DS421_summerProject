@@ -22,13 +22,13 @@ locationLookUp=as.data.frame(cbind(unique(delt_dat$Site_Code),
                                    unique(delt_dat$Longitude)))
 names(locationLookUp)=c("site","lat","long")
 
-makeSpatialPlot<-function(fn,data,mod,responseVar,locationLookup){
+makeSpatialPlotG<-function(fn,data,mod,responseVar,locationLookup){
   rbPal<-colorRampPalette(c("red","blue"))
   processing=preProcessSpatialPlot(fn,data,mod,responseVar,locationLookup)
   coordsRef=processing$coordsRef
-  ofInterest=processing$ofInterest
-  col=processing$col
-  cuts=processing$cuts
+  ofInterest=processing$ofInterestG
+  col=processing$colG
+  cuts=processing$cutsG
   #pdf(paste("spatialDistn","_",responseVar,"_",fn,".pdf",sep=""),height=12,width=16)
   par(mfrow=c(3,5),mar=c(rep(2,4))) ## fill by row, extra with frame()
   counter=1
@@ -36,8 +36,8 @@ makeSpatialPlot<-function(fn,data,mod,responseVar,locationLookup){
   while(counter<14){
     if(counter %in% 1:5){
       plot(delt_map,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))## title is tight on top row
-      points(coordsRef$lon,coordsRef$lat,col=col[counter+1,],pch=19,cex=2)
-      legend(legend=round(cuts[2:5],2),fill=rbPal(4),"right")
+      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
       counter=counter+1
       counter2=counter2+1
     }else if(counter2 %in% c(10,15)){
@@ -49,8 +49,8 @@ makeSpatialPlot<-function(fn,data,mod,responseVar,locationLookup){
       #counter=counter+1
     }else{ ## need to do \n everywhere, need to make a counter, skip over 10 and 15
       plot(delt_map,main=paste("\n",row.names(ofInterest)[counter+1],sep=""))
-      points(coordsRef$lon,coordsRef$lat,col=col[counter+1,],pch=19,cex=2)
-      legend(legend=round(cuts[2:5],2),fill=rbPal(4),"right")
+      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
       counter=counter+1
       counter2=counter2+1
     }
@@ -59,20 +59,74 @@ makeSpatialPlot<-function(fn,data,mod,responseVar,locationLookup){
 
 }
 
+makeSpatialPlotW<-function(fn,data,mod,responseVar,locationLookup){
+  rbPal<-colorRampPalette(c("red","blue"))
+  processing=preProcessSpatialPlot(fn,data,mod,responseVar,locationLookup)
+  #processing=preProcessSpatialPlot("getSummaryRMSE",dataNiceNoLag,rep(1,length(dataNiceNoLag)),"din",locationLookup)
+  
+  coordsRef=processing$coordsRef
+  ofInterest=processing$ofInterestW
+  col=processing$colW
+  cuts=processing$cutsW
+  #pdf(paste("spatialDistn","_",responseVar,"_",fn,".pdf",sep=""),height=12,width=16)
+  #pdf("test.pdf",height=10,width=10)
+  par(mfrow=c(3,5),mar=c(rep(2,4))) ## fill by row, extra with frame()
+  counter=1
+  counter2=1
+  while(counter<14){
+    if(counter %in% 1:5){
+      plot(delt_map,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))## title is tight on top row
+      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
+      counter=counter+1
+      counter2=counter2+1
+    }else if(counter2 %in% c(10,15)){
+      frame()
+      if(counter2==10){
+        legend("center",legend=paste(responseVar,fn,sep="_"))
+      }
+      counter2=counter2+1
+      #counter=counter+1
+    }else{ ## need to do \n everywhere, need to make a counter, skip over 10 and 15
+      plot(delt_map,main=paste("\n",row.names(ofInterest)[counter+1],sep=""))
+      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
+      counter=counter+1
+      counter2=counter2+1
+    }
+  }
+  #dev.off()
+  
+}
+
 
 preProcessSpatialPlot=function(fn,data,mod,responseVar,locationLookup){
+  ## don't really need mod now
   perStation=mapply(fn,data,mod,SIMPLIFY=F)
   rbPal<-colorRampPalette(c("red","blue"))
   station=unlist(lapply(names(perStation),function(x){strsplit(x,"_")[[1]][1]}))
   response=unlist(lapply(names(perStation),function(x){strsplit(x,"_")[[1]][2]}))
   
   ofInterest=do.call(cbind,perStation[which(response==responseVar)[order(station[which(response==responseVar)])]])
-  cuts=quantile(ofInterest,c(0,0.25,0.5,0.75,1))
-  col=apply(ofInterest,c(1,2),function(x){rbPal(4)[as.numeric(cut(x,breaks=cuts))]})
+
+  ofInterestG=ofInterest[,seq(1,ncol(ofInterest),by=2)]
+  ofInterestW=ofInterest[,seq(2,ncol(ofInterest),by=2)]
   
-  ## makes minimum NA
-  col[which(is.na(col))]=rbPal(4)[1]
+  cutsG=apply(ofInterestG,1,function(x){quantile(x,c(0,0.25,0.5,0.75,1))})
+  cutsW=apply(ofInterestW,1,function(x){quantile(x,c(0,0.25,0.5,0.75,1))})
   
+  #cuts=quantile(ofInterest,c(0,0.25,0.5,0.75,1))
+
+  
+  colG=c()
+  colW=c()
+  for(i in 1:nrow(ofInterestG)){
+    colG=cbind(colG,rbPal(4)[as.numeric(cut(ofInterestG[i,],breaks=cutsG[,i],include.lowest=T))])
+    colW=cbind(colW,rbPal(4)[as.numeric(cut(ofInterestW[i,],breaks=unique(cutsW[,i]),include.lowest=T))])
+    
+  }
+  
+
   ## now need to associate columns with coordinates
   ourStations=as.data.frame(unique(station))
   names(ourStations)="site"
@@ -81,7 +135,7 @@ preProcessSpatialPlot=function(fn,data,mod,responseVar,locationLookup){
   coordsRef$lat=as.numeric(as.character(coordsRef$lat))
   coordsRef$lon=as.numeric(as.character(coordsRef$lon))
   
-  return(list(ofInterest=ofInterest,cuts=cuts,col=col,coordsRef=coordsRef))
+  return(list(ofInterestG=ofInterestG,ofInterestW=ofInterestW,cutsG=cutsG,cutsW=cutsW,colG=colG,colW=colW,coordsRef=coordsRef))
   
 }
 
