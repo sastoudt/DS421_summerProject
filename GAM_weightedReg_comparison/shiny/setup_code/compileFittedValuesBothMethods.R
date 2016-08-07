@@ -89,3 +89,27 @@ save(dataNiceNoLag,file="dataNice_nolag.RData")
 
 
 View(mods_nolag_mean$mod[[1]][which(!is.na(mods_nolag_mean$mod[[1]]$res)),])
+
+####
+missing<-c()
+for(i in 1:27){
+  missing<-c(missing,sum(is.na(dataNiceNoLag[[i]]$wrtdsPred))/nrow(dataNiceNoLag[[i]]))
+}
+missing ## whar are so many missing in the middle
+
+View((mods_nolag_mean$mod[[11]]))
+
+tmp <- mods_nolag_mean$data[[10]] %>%
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>%
+  rename(
+    res = resval,
+    flo = flolag,
+    date = Date
+  )
+View(tmp)
+
+testMerge=merge(tmp,mods_nolag_mean$mod[[10]],by.x="date",by.y="date",all.x=T)
+View(testMerge)
