@@ -1,6 +1,7 @@
 comparePlot=function(data,xlim=range(data$date),scale=F,annual=F){
   ylabel=with(lablk, lngs[shrt == data$resdup[1]])
   if(scale){
+    
     data$res=exp(data$res)
     data$gamPred=exp(data$gamPred)
     data$wrtdsPred=exp(data$wrtdsPred)
@@ -53,10 +54,14 @@ comparePlot=function(data,xlim=range(data$date),scale=F,annual=F){
       xlab("")+
       ylab(ylabel)+
       scale_colour_manual(name = '', 
-                          labels = c('GAM'="darkblue", 'WRTDS'="orange"), 
+                          labels = c("darkblue"="GAM", "orange"="WRTDS"), 
                           values =c('darkblue','orange')
       ) + 
       ggtitle(txt)
   }
+  # scale_colour_manual(name = '', 
+  #                     labels = c('GAM'="darkblue", 'WRTDS'="orange"), 
+  #                     values =c('darkblue','orange')
+  # )
   
 }
