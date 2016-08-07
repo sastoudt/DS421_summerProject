@@ -21,14 +21,19 @@ rmsePerStation[[1]]
 
 require(xtable)
 names(dataNiceNoLag)
-i=2
+i=27
 print(xtable(rmsePerStation[[i]]))
 
-# devPerStation=mapply(getSummaryDeviance,dataNiceNoLag,modelsNoLag_Nested,SIMPLIFY=F)
+devPerStation=mapply(getSummaryDeviance,dataNiceNoLag,modelsNoLag_Nested,SIMPLIFY=F)
+rn=c("dev","devA1","devA2","devA3","devA4","devA5","devS1",
+     "devS2","devS3","devS4","devF1","devF2","devF3","devF4")
 
 devPerStation<- lapply(devPerStation, function(x){ row.names(x)<-rn; x})
 devPerStation<- lapply(devPerStation, function(x){ colnames(x)<-nam; x})
 devPerStation[[1]]
+
+i=2
+print(xtable(devPerStation[[i]]))
 
 ### not officially tested yet without sample modelWRTDS
 ### but conceptually should work the same
