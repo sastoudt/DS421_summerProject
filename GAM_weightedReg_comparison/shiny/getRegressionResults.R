@@ -197,3 +197,5 @@ isSignificant=rbind(isSignificant,isSignificantAnnual1,isSignificantAnnual2,
   return(list(betas=betas,pVals=pVals,isSignificant=isSignificant))
 }
 }
+
+##https://www.researchgate.net/post/Does_anyone_know_how_to_test_the_significant_difference_between_a_line_slopeeg_081_and_1_by_using_R_or_SPSS
