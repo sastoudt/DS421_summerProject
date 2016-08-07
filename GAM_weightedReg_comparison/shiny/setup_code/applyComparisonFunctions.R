@@ -66,3 +66,6 @@ for(i in 1:27){
   missing<-c(missing,sum(is.na(dataNiceNoLag[[i]]$wrtdsPred))/nrow(dataNiceNoLag[[i]]))
 }
 missing
+
+diffResultsPerStation=mapply(getSummaryDifference,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)
+diffResultsPerStation[[10]]
