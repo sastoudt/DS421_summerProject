@@ -35,9 +35,11 @@ makeSpatialPlotG<-function(fn,data,mod,responseVar,locationLookup){
   counter2=1
   while(counter<14){
     if(counter %in% 1:5){
-      plot(delt_map,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))## title is tight on top row
-      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
-      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
+      #plot(delt_map,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))## title is tight on top row
+      plot(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))
+      
+      #points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"bottomleft")
       counter=counter+1
       counter2=counter2+1
     }else if(counter2 %in% c(10,15)){
@@ -48,9 +50,11 @@ makeSpatialPlotG<-function(fn,data,mod,responseVar,locationLookup){
       counter2=counter2+1
       #counter=counter+1
     }else{ ## need to do \n everywhere, need to make a counter, skip over 10 and 15
-      plot(delt_map,main=paste("\n",row.names(ofInterest)[counter+1],sep=""))
-      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
-      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
+      #plot(delt_map,main=paste("\n",row.names(ofInterest)[counter+1],sep=""))
+      #points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      plot(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))
+      
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"bottomleft")
       counter=counter+1
       counter2=counter2+1
     }
@@ -75,9 +79,11 @@ makeSpatialPlotW<-function(fn,data,mod,responseVar,locationLookup){
   counter2=1
   while(counter<14){
     if(counter %in% 1:5){
-      plot(delt_map,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))## title is tight on top row
-      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
-      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
+     # plot(delt_map,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))## title is tight on top row
+    #  points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      plot(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))
+      
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"bottomleft",cex=.75,bty="n")
       counter=counter+1
       counter2=counter2+1
     }else if(counter2 %in% c(10,15)){
@@ -88,9 +94,11 @@ makeSpatialPlotW<-function(fn,data,mod,responseVar,locationLookup){
       counter2=counter2+1
       #counter=counter+1
     }else{ ## need to do \n everywhere, need to make a counter, skip over 10 and 15
-      plot(delt_map,main=paste("\n",row.names(ofInterest)[counter+1],sep=""))
-      points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
-      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"right")
+      #plot(delt_map,main=paste("\n",row.names(ofInterest)[counter+1],sep=""))
+      #points(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2)
+      plot(coordsRef$lon,coordsRef$lat,col=col[,counter+1],pch=19,cex=2,main=paste("\n ",row.names(ofInterest)[counter+1],sep=""))
+      
+      legend(legend=round(cuts[2:5,counter],2),fill=rbPal(4),"bottomleft",cex=.75,bty="n")
       counter=counter+1
       counter2=counter2+1
     }

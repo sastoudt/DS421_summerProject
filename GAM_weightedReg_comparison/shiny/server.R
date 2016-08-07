@@ -621,10 +621,10 @@ shinyServer(function(input, output) {
   }, height = 800, width = 1200
   )
   
-  # output$spatialPlotRMSEW <- renderPlot({
-  #   replayPlot(spatPlot()$plotW)
-  # }, height = 800, width = 1200
-  # )
+  output$spatialPlotRMSEW <- renderPlot({
+    replayPlot(spatPlot()$plotW)
+  }, height = 800, width = 1200
+  )
   spatPlot <- reactive({
     
     # inputs
@@ -656,11 +656,11 @@ shinyServer(function(input, output) {
     spatPlotG=recordPlot()
     dev.off()
     
-    #makeSpatialPlotW("getSummaryRMSE",dataNiceNoLag,modelsNoLag_Nested,input$res,locationLookUp)
-    #spatPlotW=recordPlot()
-    #dev.off()
-   #return(list(plotG=spatPlotG,plotW=spatPlotW))
-    return(list(plotG=spatPlotG))
+   makeSpatialPlotW("getSummaryRMSE",dataNiceNoLag,modelsNoLag_Nested,input$res,locationLookUp)
+   spatPlotW=recordPlot()
+   dev.off()
+   return(list(plotG=spatPlotG,plotW=spatPlotW))
+   # return(list(plotG=spatPlotG))
   })
     
 })

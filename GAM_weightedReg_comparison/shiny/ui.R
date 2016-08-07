@@ -74,7 +74,7 @@ shinyUI(fluidPage(
     plotOutput("dynagamP",height="100%"),
     h5("Below All on Log Scale Always: RMSE per Station for Chosen Response"),
     plotOutput("spatialPlotRMSEG",height="100%"),
-  #  plotOutput("spatialPlotRMSEW",height="100%"),
+   plotOutput("spatialPlotRMSEW",height="100%"),
     
     width = 9
     
