@@ -78,6 +78,7 @@ rn1=c("overall","annual1","annual2","annual3","annual4","annual5","seasonal1",
 avgPCPerStation<- lapply(avgPCPerStation, function(x){ row.names(x)<-rn1; x})
 nam<-c("GAM_avg","WRTDS_avg","GAM_pc","WRTDS_pc")
 avgPCPerStation<- lapply(avgPCPerStation, function(x){ colnames(x)<-nam; x})
+avgPCPerStation[[1]]
 
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")

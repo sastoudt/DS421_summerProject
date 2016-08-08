@@ -9,14 +9,40 @@ getFlowNormalizedSummary<-function(data,index){
   avgOverallG=mean(data$gamPred)
   avgOverallW=mean(data$wrtdsPred,na.rm=T)
   
-  minDate=which.min(data$date)
-  maxDate=which.max(data$date)
-  #percentChange=(model$fitted.values[maxDate]-model$fitted.values[minDate])/model$fitted.values[minDate]
-  percentChangeG=(data$gamPred[maxDate]-data$gamPred[minDate])/data$gamPred[minDate]
-  percentChangeW=(data$wrtdsPred[maxDate]-data$wrtdsPred[minDate])/data$wrtdsPred[minDate]
-  
   data$month=as.numeric(strftime(data$date, '%m'))
   data$year=as.numeric(strftime(data$date, '%Y'))
+  
+  minDate=which.min(data$date)
+  maxDate=which.max(data$date)
+  
+  firstG=mean(subset(data,year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data,year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data,year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data,year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data,year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data,year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data,year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data,year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data,year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data,year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data,year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data,year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  #percentChange=(model$fitted.values[maxDate]-model$fitted.values[minDate])/model$fitted.values[minDate]
+  #percentChangeG=(data$gamPred[maxDate]-data$gamPred[minDate])/data$gamPred[minDate]
+  #percentChangeW=(data$wrtdsPred[maxDate]-data$wrtdsPred[minDate])/data$wrtdsPred[minDate]
+  percentChangeG=(meanUG-meanLG)/meanLG
+  percentChangeW=(meanUW-meanLW)/meanLW
   
   annual1=subset(data,year<1983 & year>=1976)
   annual1I=which(data$year<1983 & data$year>=1976)
@@ -30,13 +56,41 @@ getFlowNormalizedSummary<-function(data,index){
   annual1MG=mean(data$gamPred[annual1I])
   annual1MW=mean(data$wrtdsPred[annual1I],na.rm=T)
   
+  
+  firstG=mean(subset(data[annual1I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[annual1I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[annual1I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[annual1I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[annual1I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[annual1I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data,year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data,year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data,year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data,year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data,year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data,year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  annual1PCG=(meanUG-meanLG)/meanLG
+  annual1PCW=(meanUW-meanLW)/meanLW
+  
  
-  annual1PCG=(data$gamPred[maxDate]-
-               data$gamPred[minDate])/
-    data$gamPred[minDate]
-  annual1PCW=(data$wrtdsPred[maxDate]-
-                data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  # annual1PCG=(data$gamPred[maxDate]-
+  #              data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # annual1PCW=(data$wrtdsPred[maxDate]-
+  #               data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   annual2=subset(data,year<1990 & year>=1983)
   annual2I=which(data$year<1990 & data$year>=1983)
@@ -45,13 +99,40 @@ getFlowNormalizedSummary<-function(data,index){
   annual2MG=mean(data$gamPred[annual2I])
   annual2MW=mean(data$wrtdsPred[annual2I],na.rm=T)
   
+  firstG=mean(subset(data[annual2I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[annual2I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[annual2I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
   
-  annual2PCG=(data$gamPred[maxDate]-
-                data$gamPred[minDate])/
-    data$gamPred[minDate]
-  annual2PCW=(data$wrtdsPred[maxDate]-
-                data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  lastG=mean(subset(data[annual2I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[annual2I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[annual2I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(firstG,secondG,thirdG,na.rm=T)
+  meanUG=mean(lastG,last2G,last3G,na.rm=T)
+  
+  
+  firstW=mean(subset(data[annual2I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[annual2I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[annual2I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[annual2I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[annual2I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[annual2I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  annual2PCG=(meanUG-meanLG)/meanLG
+  annual2PCW=(meanUW-meanLW)/meanLW
+  
+  
+  # annual2PCG=(data$gamPred[maxDate]-
+  #               data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # annual2PCW=(data$wrtdsPred[maxDate]-
+  #               data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   annual3=subset(data,year<1997 & year>=1990)
   annual3I=which(data$year<1997 & data$year>=1990)
@@ -60,13 +141,40 @@ getFlowNormalizedSummary<-function(data,index){
   annual3MG=mean(data$gamPred[annual3I])
   annual3MW=mean(data$wrtdsPred[annual3I],na.rm=T)
   
+  firstG=mean(subset(data[annual3I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[annual3I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[annual3I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
   
-  annual3PCG=(data$gamPred[maxDate]-
-                data$gamPred[minDate])/
-    data$gamPred[minDate]
-  annual3PCW=(data$wrtdsPred[maxDate]-
-                data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  lastG=mean(subset(data[annual3I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[annual3I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[annual3I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[annual3I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[annual3I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[annual3I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[annual3I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[annual3I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[annual3I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  annual3PCG=(meanUG-meanLG)/meanLG
+  annual3PCW=(meanUW-meanLW)/meanLW
+  
+  
+  # annual3PCG=(data$gamPred[maxDate]-
+  #               data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # annual3PCW=(data$wrtdsPred[maxDate]-
+  #               data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   if(index %in% c(19,20,21)){ ## data missing in this period
     annual4MG=NA
     annual4MW=NA
@@ -80,14 +188,41 @@ getFlowNormalizedSummary<-function(data,index){
   annual4MG=mean(data$gamPred[annual4I])
   annual4MW=mean(data$wrtdsPred[annual4I],na.rm=T)
   
+  firstG=mean(subset(data[annual4I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[annual4I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[annual4I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
   
-  annual4PCG=(data$gamPred[maxDate]-
-                data$gamPred[minDate])/
-    data$gamPred[minDate]
-  annual4PCW=(data$wrtdsPred[maxDate]-
-                data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
-  }
+  lastG=mean(subset(data[annual4I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[annual4I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[annual4I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[annual4I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[annual4I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[annual4I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[annual4I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[annual4I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[annual4I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+ annual4PCG=(meanUG-meanLG)/meanLG
+  annual4PCW=(meanUW-meanLW)/meanLW
+  
+  
+  # annual4PCG=(data$gamPred[maxDate]-
+  #               data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # annual4PCW=(data$wrtdsPred[maxDate]-
+  #               data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
+   }
   annual5=subset(data,year>=2004) ## has 2 extra years
   annual5I=which( data$year>=2004)
   minDate=which.min(annual1$date)
@@ -95,14 +230,40 @@ getFlowNormalizedSummary<-function(data,index){
   annual5MG=mean(data$gamPred[annual5I])
   annual5MW=mean(data$wrtdsPred[annual5I],na.rm=T)
   
+  firstG=mean(subset(data[annual5I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[annual5I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[annual5I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
   
-  annual5PCG=(data$gamPred[maxDate]-
-                data$gamPred[minDate])/
-    data$gamPred[minDate]
-  annual5PCW=(data$wrtdsPred[maxDate]-
-                data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  lastG=mean(subset(data[annual5I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[annual5I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[annual5I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
   
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[annual5I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[annual5I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[annual5I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[annual5I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[annual5I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[annual5I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  annual5PCG=(meanUG-meanLG)/meanLG
+  annual5PCW=(meanUW-meanLW)/meanLW
+  
+  # annual5PCG=(data$gamPred[maxDate]-
+  #               data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # annual5PCW=(data$wrtdsPred[maxDate]-
+  #               data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
+  # 
   seasonal1=subset(data,month %in% c(1:3))
   seasonal1I=which(data$month %in% c(1:3))
   minDate=which.min(seasonal1$date)
@@ -114,12 +275,40 @@ getFlowNormalizedSummary<-function(data,index){
   
   seasonal1MG=mean(data$gamPred[seasonal1I])
   seasonal1MW=mean(data$gamPred[seasonal1I],na.rm=T)
-  seasonal1PCG=(data$gamPred[maxDate]-
-                  data$gamPred[minDate])/
-    data$gamPred[minDate]
-  seasonal1PCW=(data$wrtdsPred[maxDate]-
-                  data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  
+  firstG=mean(subset(data[seasonal1I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[seasonal1I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[seasonal1I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[seasonal1I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[seasonal1I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[seasonal1I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  firstW=mean(subset(data[seasonal1I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[seasonal1I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[seasonal1I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[seasonal1I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[seasonal1I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[seasonal1I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  seasonal1PCG=(meanUG-meanLG)/meanLG
+  seasonal1PCW=(meanUW-meanLW)/meanLW
+  
+  
+  # seasonal1PCG=(data$gamPred[maxDate]-
+  #                 data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # seasonal1PCW=(data$wrtdsPred[maxDate]-
+  #                 data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   seasonal2=subset(data,month %in% c(4:6))
   seasonal2I=which(data$month %in% c(4:6))
@@ -127,12 +316,41 @@ getFlowNormalizedSummary<-function(data,index){
   maxDate=which.max(seasonal2$date)
   seasonal2MG=mean(data$gamPred[seasonal2I])
   seasonal2MW=mean(data$gamPred[seasonal2I],na.rm=T)
-  seasonal2PCG=(data$gamPred[maxDate]-
-                  data$gamPred[minDate])/
-    data$gamPred[minDate]
-  seasonal2PCW=(data$wrtdsPred[maxDate]-
-                  data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  
+  firstG=mean(subset(data[seasonal2I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[seasonal2I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[seasonal2I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[seasonal2I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[seasonal2I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[seasonal2I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[seasonal2I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[seasonal2I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[seasonal2I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[seasonal2I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[seasonal2I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[seasonal2I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  seasonal2PCG=(meanUG-meanLG)/meanLG
+  seasonal2PCW=(meanUW-meanLW)/meanLW
+  
+  
+  # seasonal2PCG=(data$gamPred[maxDate]-
+  #                 data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # seasonal2PCW=(data$wrtdsPred[maxDate]-
+  #                 data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   seasonal3=subset(data,month %in% c(7:9))
   seasonal3I=which(data$month %in% c(7:9))
@@ -140,12 +358,42 @@ getFlowNormalizedSummary<-function(data,index){
   maxDate=which.max(seasonal3$date)
   seasonal3MG=mean(data$gamPred[seasonal3I])
   seasonal3MW=mean(data$gamPred[seasonal3I],na.rm=T)
-  seasonal3PCG=(data$gamPred[maxDate]-
-                  data$gamPred[minDate])/
-    data$gamPred[minDate]
-  seasonal3PCW=(data$wrtdsPred[maxDate]-
-                  data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  
+  firstG=mean(subset(data[seasonal3I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[seasonal3I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[seasonal3I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[seasonal3I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[seasonal3I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[seasonal3I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[seasonal3I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[seasonal3I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[seasonal3I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[seasonal3I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[seasonal3I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[seasonal3I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  seasonal3PCG=(meanUG-meanLG)/meanLG
+  seasonal3PCW=(meanUW-meanLW)/meanLW
+  
+  
+  
+  # seasonal3PCG=(data$gamPred[maxDate]-
+  #                 data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # seasonal3PCW=(data$wrtdsPred[maxDate]-
+  #                 data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   seasonal4=subset(data,month %in% c(10:12))
   seasonal4I=which(data$month %in% c(10:12))
@@ -153,12 +401,41 @@ getFlowNormalizedSummary<-function(data,index){
   maxDate=which.max(seasonal4$date)
   seasonal4MG=mean(data$gamPred[seasonal4I])
   seasonal4MW=mean(data$gamPred[seasonal4I],na.rm=T)
-  seasonal4PCG=(data$gamPred[maxDate]-
-                  data$gamPred[minDate])/
-    data$gamPred[minDate]
-  seasonal4PCW=(data$wrtdsPred[maxDate]-
-                  data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+ 
+  firstG=mean(subset(data[seasonal4I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[seasonal4I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[seasonal4I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[seasonal4I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[seasonal4I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[seasonal4I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[seasonal4I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[seasonal4I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[seasonal4I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[seasonal4I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[seasonal4I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[seasonal4I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  seasonal4PCG=(meanUG-meanLG)/meanLG
+  seasonal4PCW=(meanUW-meanLW)/meanLW
+  
+  
+  #  seasonal4PCG=(data$gamPred[maxDate]-
+  #                 data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # seasonal4PCW=(data$wrtdsPred[maxDate]-
+  #                 data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   flow1=subset(data,flo<quantile(data$flo,.25))
   flow1I=which(data$flo<quantile(data$flo,0.25))
@@ -169,15 +446,44 @@ getFlowNormalizedSummary<-function(data,index){
  #                model$fitted.values[which(data$date==minDate)])/
   #  model$fitted.values[which(data$date==minDate)]
   
-  flow1MG=mean(data$gamPred[flow1I])
+  flow1MG=mean(data$gamPred[flow1I],na.rm=T)
   flow1MW=mean(data$wrtdsPred[flow1I],na.rm=T)
   
-  flow1PCG=(data$gamPred[maxDate]-
-              data$gamPred[minDate])/
-    data$gamPred[minDate]
-  flow1PCW=(data$wrtdsPred[maxDate]-
-              data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  ## does this still make sense for flow?
+  
+  firstG=mean(subset(data[flow1I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[flow1I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[flow1I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[flow1I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[flow1I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[flow1I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[flow1I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[flow1I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[flow1I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[flow1I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[flow1I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[flow1I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  flow1PCG=(meanUG-meanLG)/meanLG
+  flow1PCW=(meanUW-meanLW)/meanLW
+  
+  # flow1PCG=(data$gamPred[maxDate]-
+  #             data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # flow1PCW=(data$wrtdsPred[maxDate]-
+  #             data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   flow2=subset(data,flo>=quantile(data$flo,.25) & data$flo<quantile(data$flo,0.5))
   flow2I=which(data$flo>=quantile(data$flo,0.25)& data$flo<quantile(data$flo,0.5))
@@ -186,12 +492,41 @@ getFlowNormalizedSummary<-function(data,index){
   flow2MG=mean(data$gamPred[flow2I])
   flow2MW=mean(data$wrtdsPred[flow2I])
   
-  flow2PCG=(data$gamPred[maxDate]-
-              data$gamPred[minDate])/
-    data$gamPred[minDate]
-  flow2PCW=(data$wrtdsPred[maxDate]-
-              data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  
+  firstG=mean(subset(data[flow2I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[flow2I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[flow2I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[flow2I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[flow2I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[flow2I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[flow2I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[flow2I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[flow2I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[flow2I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[flow2I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[flow2I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  flow2PCG=(meanUG-meanLG)/meanLG
+  flow2PCW=(meanUW-meanLW)/meanLW
+  
+  
+  # flow2PCG=(data$gamPred[maxDate]-
+  #             data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # flow2PCW=(data$wrtdsPred[maxDate]-
+  #             data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   flow3=subset(data,flo>=quantile(data$flo,.5) & data$flo<quantile(data$flo,0.75))
   flow3I=which(data$flo>=quantile(data$flo,0.5)& data$flo<quantile(data$flo,0.75))
@@ -200,12 +535,39 @@ getFlowNormalizedSummary<-function(data,index){
   flow3MG=mean(data$gamPred[flow3I])
   flow3MW=mean(data$wrtdsPred[flow3I])
   
-  flow3PCG=(data$gamPred[maxDate]-
-              data$gamPred[minDate])/
-    data$gamPred[minDate]
-  flow3PCW=(data$wrtdsPred[maxDate]-
-              data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  firstG=mean(subset(data[flow3I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[flow3I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[flow3I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[flow3I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[flow3I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[flow3I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[flow3I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[flow3I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[flow3I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[flow3I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[flow3I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[flow3I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  flow3PCG=(meanUG-meanLG)/meanLG
+  flow3PCW=(meanUW-meanLW)/meanLW
+  
+  # flow3PCG=(data$gamPred[maxDate]-
+  #             data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # flow3PCW=(data$wrtdsPred[maxDate]-
+  #             data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   flow4=subset(data,flo>=quantile(data$flo,.75) )
   flow4I=which(data$flo>=quantile(data$flo,0.75))
@@ -214,12 +576,39 @@ getFlowNormalizedSummary<-function(data,index){
   flow4MG=mean(data$gamPred[flow4I])
   flow4MW=mean(data$wrtdsPred[flow4I])
   
-  flow4PCG=(data$gamPred[maxDate]-
-              data$gamPred[minDate])/
-    data$gamPred[minDate]
-  flow4PCW=(data$wrtdsPred[maxDate]-
-              data$wrtdsPred[minDate])/
-    data$wrtdsPred[minDate]
+  firstG=mean(subset(data[flow4I,],year==min(year,na.rm=T))$gamPred,na.rm=T)
+  secondG=mean(subset(data[flow4I,],year==(min(year,na.rm=T)+1))$gamPred,na.rm=T)
+  thirdG=mean(subset(data[flow4I,],year==(min(year,na.rm=T)+2))$gamPred,na.rm=T)
+  
+  lastG=mean(subset(data[flow4I,],year==max(year,na.rm=T))$gamPred,na.rm=T)
+  last2G=mean(subset(data[flow4I,],year==(max(year,na.rm=T)-1))$gamPred,na.rm=T)
+  last3G=mean(subset(data[flow4I,],year==(max(year,na.rm=T)-2))$gamPred,na.rm=T)
+  
+  meanLG=mean(na.omit(c(firstG,secondG,thirdG)))
+  meanUG=mean(na.omit(c(lastG,last2G,last3G)))
+  
+  
+  firstW=mean(subset(data[flow4I,],year==min(year,na.rm=T))$wrtdsPred,na.rm=T)
+  secondW=mean(subset(data[flow4I,],year==(min(year,na.rm=T)+1))$wrtdsPred,na.rm=T)
+  thirdW=mean(subset(data[flow4I,],year==(min(year,na.rm=T)+2))$wrtdsPred,na.rm=T)
+  
+  lastW=mean(subset(data[flow4I,],year==max(year,na.rm=T))$wrtdsPred,na.rm=T)
+  last2W=mean(subset(data[flow4I,],year==(max(year,na.rm=T)-1))$wrtdsPred,na.rm=T)
+  last3W=mean(subset(data[flow4I,],year==(max(year,na.rm=T)-2))$wrtdsPred,na.rm=T)
+  
+  meanLW=mean(na.omit(c(firstW,secondW,thirdW)))
+  meanUW=mean(na.omit(c(lastW,last2W,last3W)))
+  
+  
+  flow4PCG=(meanUG-meanLG)/meanLG
+  flow4PCW=(meanUW-meanLW)/meanLW
+  
+  # flow4PCG=(data$gamPred[maxDate]-
+  #             data$gamPred[minDate])/
+  #   data$gamPred[minDate]
+  # flow4PCW=(data$wrtdsPred[maxDate]-
+  #             data$wrtdsPred[minDate])/
+  #   data$wrtdsPred[minDate]
   
   avgG=rbind(avgOverallG,annual1MG,annual2MG,annual3MG,annual4MG,annual5MG,
             seasonal1MG,seasonal2MG,seasonal3MG,seasonal4MG,
