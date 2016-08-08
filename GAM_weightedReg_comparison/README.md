@@ -22,6 +22,8 @@ This work is a portion of my summer project for the DS421 program and is joint w
 	4. ggplot2
 	5. tidyr
 	6. lubridate
+	7. xtable
+	8. shiny
 
 
 ## Run Shiny App
