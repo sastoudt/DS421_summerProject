@@ -32,6 +32,22 @@ This is created by using https://beckmw.shinyapps.io/sf_trends/ as a framework.
 
 Or view it online: https://sastoudt.shinyapp.io/GAM_Delta
 
+## Progress as of 8/7/16
+
+- working with the mean model response values of WRTDS from Marcus: https://github.com/fawda123/sf_trends/blob/master/data/mods_nolag_mean.RData
+- adjusted all summary functions to work with WRTDS predictions
+- writing summaries straight to TeX tables from R
+- briefly comment on summary results in compareModels
+- update Shiny to include a plot comparing the fitted values of WRTDS and GAMs
+- update Shiny map plots to make loading faster, include maps for WRTDS
+- updated hosted Shiny to reflect all of the changes
+
+Next Steps
+
+- figure out missingness in fitted values of WRTDS in several stations
+- think about the results in context (in terms of the spatial location of each station and the different response variables)
+- reread Beck and Murphy paper to get a feel for things I should be looking for
+
 ## Progress as of 6/14/16
 
 - Fixed Flow Normalization: getFlowNormalized.R
