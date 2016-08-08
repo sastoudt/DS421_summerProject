@@ -121,7 +121,61 @@ perStationIntMod[[7]]=gamP
 ####
 
 data=perStation[[11]]
+## try this again
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(doy,date_dec),data=data,family=gaussian(link="log"))
+gam.check(gamP)
 
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=15)+ti(doy,date_dec),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=15)+ti(doy,date_dec,k=c(8,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(doy,date_dec,k=c(8,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=30)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=23)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=22)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP) #warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=18)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,10)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## taking too long, giving up
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(11,11)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,11)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,12)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=16)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,11)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=21)+ti(doy,date_dec,k=c(10,11)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## go with this
+
+perStationIntMod[[11]]=gamP
+
+##
 gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(doy,date_dec),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
@@ -280,7 +334,64 @@ perStationIntMod[[13]]=gamP
 
 ####
 data=perStation[[15]]
+## try this again
+gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(doy,date_dec),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
 
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(doy,date_dec),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(doy,date_dec,k=c(8,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(doy,date_dec,k=c(7,7)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(doy,date_dec,k=c(6,6)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=15)+ti(doy,date_dec,k=c(6,6)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(doy,date_dec,k=c(6,6)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,6)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,7)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,7)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,7)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=30)+ti(doy,date_dec,k=c(6,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,9)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=25)+ti(doy,date_dec,k=c(6,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=28)+ti(doy,date_dec,k=c(6,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=28)+ti(doy,date_dec,k=c(7,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=25)+ti(date_dec,bs="tp",k=28)+ti(doy,date_dec,k=c(6,8)),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## this is the best we can get
+
+perStationIntMod[[15]]=gamP
+
+##
 gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(doy,date_dec),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## warning
 
@@ -641,6 +752,8 @@ gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=40)+ti(doy,date_dec,k=c
 gam.check(gamP)
 
 perStationIntMod[[40]]=gamP
+
+save(perStationIntMod,file="perStationInteractionModels.Rda")
 
 check<-c()
 for(i in 1:length(perStation)){
