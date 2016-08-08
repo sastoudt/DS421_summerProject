@@ -123,8 +123,10 @@ shinyUI(fluidPage(
     plotOutput("mapPlot",height="100%"),
     plotOutput("fittedPars", height = "100%"),
     plotOutput("fittedFull", height = "100%"),
+    plotOutput("fittedInt",height="100%"),
     plotOutput("nestedPlotPars", height = "100%"),
     plotOutput("nestedPlotFull",height="100%"),
+    plotOutput("nestedPlotInt",height="100%"),
     plotOutput("nestedPlotParsJust2",height="100%"),
     plotOutput("nestedPlotFullJust2",height="100%"),
     width = 9

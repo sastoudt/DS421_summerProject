@@ -6,6 +6,7 @@ library(sp)
 load(file = "~/Desktop/sfei/perStation.Rda")
 load(file = "~/Desktop/sfei/perStationParsimoniousModels.Rda")
 load(file = "~/Desktop/sfei/perStationFullModels.Rda")
+load(file="~/Desktop/sfei/perStationInteractionModels.Rda")
 load(file="~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data/delt_map.RData")
 full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 # Define server logic required to generate and plot data
@@ -248,6 +249,33 @@ shinyServer(function(input, output) {
     
     
     
+    
+    
+  }, height = 250, width = 1200)
+  
+  
+  output$fittedInt<- renderPlot({
+    
+    # inputs
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data<-dat()
+    mod<-perStationIntMod[[index]]
+    
+   
+    toUse=na.omit(data[,c("doy","date_dec","Date")])
+    
+    fullPred=predict(mod,toUse,type="response")
+    toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+    names(toUse)[ncol(toUse)]="fitted.values"
+    ggplot(data,aes(x = Date, y = chl))+geom_point()+
+      geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
+      ggtitle(paste(names(perStation)[index], "Fitted Values Interaction Model",sep=" "))+
+      theme(legend.position='none')+
+      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
     
   }, height = 250, width = 1200)
@@ -581,5 +609,40 @@ shinyServer(function(input, output) {
 plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
     points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
   },height=300,width=300)
+  
+  
+  output$nestedPlotInt <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data<-dat()
+    mod<-perStationIntMod[[index]]
+    toUse=na.omit(data[,c("doy","date_dec","Date")])
+    byTerm=predict(mod,toUse,type="terms")
+    toName=c("doy","date_dec","interaction","date","intercept")
+    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    names(nestPred)=toName
+   terms<-c("ti(doy)","ti(date_dec)","ti(doy,date_dec)","intercept")
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = interaction, color = 'ti(doy,date_dec)'), lwd=1)+
+        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'=terms[1],"dodgerblue"=terms[2],
+                                      "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
+                                                                                  "dodgerblue","forestgreen","purple")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Interaction Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    
+    
+  }, height = 250, width = 1200)
+  
   
 })
