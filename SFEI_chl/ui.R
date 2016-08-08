@@ -106,6 +106,24 @@ shinyUI(fluidPage(
            
     ),
     
+    column(2,
+
+           selectInput(inputId = 'intVar1',
+                       label = 'Select a variable in the interaction model',
+                       choices = c('doy', 'date_dec', 'interaction'),
+                       selected = 'doy')
+
+    ),
+    
+    column(2,
+           
+           selectInput(inputId = 'intVar2',
+                       label = 'Select a variable in the interaction model',
+                       choices = c('doy', 'date_dec', 'interaction'),
+                       selected = 'date_dec')
+           
+    ),
+
     
     
     width = 12
@@ -129,6 +147,7 @@ shinyUI(fluidPage(
     plotOutput("nestedPlotInt",height="100%"),
     plotOutput("nestedPlotParsJust2",height="100%"),
     plotOutput("nestedPlotFullJust2",height="100%"),
+    plotOutput("nestedPlotIntJust2",height="100%"),
     width = 9
     
   )

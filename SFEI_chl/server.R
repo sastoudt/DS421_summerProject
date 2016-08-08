@@ -160,6 +160,8 @@ shinyServer(function(input, output) {
   
   
   
+  
+  
   ## plots
   
   
@@ -644,5 +646,36 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     
   }, height = 250, width = 1200)
   
+  output$nestedPlotIntJust2 <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data<-dat()
+    mod<-perStationIntMod[[index]]
+    toUse=na.omit(data[,c("doy","date_dec","Date")])
+    toName=c("doy","date_dec","interaction","date","intercept")
+    terms<-c("ti(doy)","ti(date_dec)","ti(doy,date_dec)","intercept")
+    
+    byTerm=predict(mod,toUse,type="terms")
+    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
+    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    names(nestPred)=toName
+    
+    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+      geom_line(data=nestPred,aes_string(x="date",y = input$intVar1, color = "as.character(input$intVar1)"),lwd=1)+
+      geom_line(data=nestPred,aes_string(x="date",y = input$intVar2, color = "as.character(input$intVar2)"),lwd=1)+
+      scale_colour_manual(name = '',
+                          labels =c('red'=input$intVar1,"dodgerblue"=input$intVar2)
+                          ,values=c("red", "dodgerblue")
+      ) +
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    
+  }, height = 250, width = 1200)
   
 })
