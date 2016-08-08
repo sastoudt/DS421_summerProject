@@ -107,6 +107,7 @@ setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
 for(i in c(1:9,19:27))
   print(xtable(fullRegResPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable6.tex",append=T)
 
+##BE CAREFUL, WHEN RERUN DELETE FIRST SINCE APPEND = TRUE
 
 
 missing<-c()
