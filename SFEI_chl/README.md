@@ -47,7 +47,17 @@ Stations [16/41] To Focus On (full/almost full record)
 - MD10
 - P8
  
+Week 1 Update- completed all of the main goals for this week including:
 
+- parsimonious, full, and interaction models made for each station (after discarding some stations for lack of complete data)
+- Shiny app displays all of this including nesting structure and "pick two" to better see what is going on
+- observations noted about all of the models (including which variables explain the most variability)
+- also worked a bit on the WRTDS/GAM comparisons, see that README
+
+To Do
+
+- host Shiny app online
+- go through interaction model results and comment
 
 ## Week 2 Goals
 
