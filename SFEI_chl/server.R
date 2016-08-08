@@ -608,8 +608,13 @@ shinyServer(function(input, output) {
   
   output$mapPlot <- renderPlot({
     wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+    
+    allData<- do.call("rbind", perStation[wholeSeries])
+    
 plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
     points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
+   # plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
+    #points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
   },height=300,width=300)
   
   
