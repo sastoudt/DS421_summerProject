@@ -69,6 +69,7 @@ Computational Update
 - I anticipated correctly, but there are a few options that look promising for not having to break things up.
 - bam (multiple thread gam, huge improvement in speed with 4 threads and I have a max of 8 on my computer)
 - put everything up on the cluster (figured out all of the steps to do this [moving files back and forth, submitting jobs])
+- I also just switched my linear algebra package to be vecLib version of BLAS which can give up to a linear time improvement
 
 - chunk into regions
 - chunk based on correlation of chl between stations?
