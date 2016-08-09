@@ -81,3 +81,18 @@ gam.check(gamP2) ## a little over 8 min
 ## save this for now
 mod4=gamP
 save(mod4,file="mod4Spatial.RData")
+
+load("mod1Spatial.RData")
+load("mod2Spatial.RData")
+load("mod3Spatial.RData")
+load("mod4Spatial.RData")
+allData$mod1Pred=predict(mod1,allData,type="response")
+allData$mod2Pred=predict(mod2,allData,type="response")
+allData$mod3Pred=predict(mod3,allData,type="response")
+allData$mod4Pred=predict(mod4,allData,type="response")
+
+length(mod1$fitted.values)
+nrow(allData)
+
+getwd()
+write.csv(allData,"allData.csv",row.names=F)
