@@ -143,3 +143,30 @@ gam.check(gamP)
 
 ## so here we have the constraints on my laptop, going to run really big models on the cluster, save them,
 ## and then move them back to check, hopefully won't have to do this too many times. 
+
+
+## try parallel GAM
+## https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/mgcv-parallel.html
+ctrl <- list(nthreads=4)
+ptm <- proc.time()
+gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=80),data=allData,family=gaussian(link="log"),control=ctrl)
+proc.time() - ptm ## a little over a minute
+gam.check(gamP)
+
+ptm <- proc.time()
+gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",by=as.factor(Station),k=20)+
+            ti(doy,date_dec,by=as.factor(Station),k=7),data=g1,family=gaussian(link="log"),control=ctrl)
+proc.time() - ptm ## a little more than a minute
+
+## This is promising, have 8 total threads
+
+## first thing I put on cluster
+ptm <- proc.time()
+gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",k=150)+ti(date_dec,bs="tp",k=150),data=allData,family=gaussian(link="log"),control=ctrl)
+proc.time() - ptm ## ## error
+gam.check(gamP)
+
+ptm <- proc.time()
+gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=120),data=allData,family=gaussian(link="log"),control=ctrl)
+proc.time() - ptm ## 2 minutes
+gam.check(gamP)
