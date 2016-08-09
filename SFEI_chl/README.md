@@ -57,13 +57,18 @@ Week 1 Update- completed all of the main goals for this week including:
 To Do
 
 - host Shiny app online
-- go through interaction model results and comment
+- go through interaction model results and comment DONE
 
 ## Week 2 Goals
 
 - incorporate space into the GAM
 
 I anticipate computational problems when adding all stations into one model.
+
+Computational Update
+- I anticipated correctly, but there are a few options that look promising for not having to break things up.
+- bam (multiple thread gam, huge improvement in speed with 4 threads and I have a max of 8 on my computer)
+- put everything up on the cluster (figured out all of the steps to do this [moving files back and forth, submitting jobs])
 
 - chunk into regions
 - chunk based on correlation of chl between stations?
