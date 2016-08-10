@@ -52,7 +52,7 @@ shinyServer(function(input, output) {
     rngs <- range(dat()$chl,na.rm=T)
     
     numericInput("ylim12", 
-                 label = h3("Upper Limit for Y Plots 1 & 2"), 
+                 label = h3("Upper Limit for Y Fitted Value Plots"), 
                  value = round(rngs[2]+10,2)) 
     
   
@@ -64,7 +64,7 @@ shinyServer(function(input, output) {
     rngs <- range(log(dat()$chl),na.rm=T)
     
     numericInput("ylim34L", 
-                 label = h3("Lower Limit for Y Plots 3 & 4"), 
+                 label = h3("Lower Limit for Y Nested Plots"), 
                  value = round(rngs[1]-2,2)) 
     
     
@@ -76,7 +76,7 @@ shinyServer(function(input, output) {
     rngs <- range(log(dat()$chl),na.rm=T)
     
     numericInput("ylim34U", 
-                 label = h3("Upper Limit for Y Plots 3 & 4"), 
+                 label = h3("Upper Limit for Y Nested Plots"), 
                  value = round(rngs[2]+2,2))
     
     
@@ -731,8 +731,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     data<-subset(allData,Station==stat)
     indices<-which(allData$Station==stat)
     data$Date=as.Date(data$Date)
-    print(indices)
-    print(dim(predict(mod1,data,type="terms")))
+    
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
       toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
@@ -757,7 +756,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDate_Dec"){
@@ -790,7 +789,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
@@ -821,7 +820,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                             labels =c('red'="station","dodgerblue"="ti(doy_Station)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
@@ -856,7 +855,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                                       "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
                                                   "forestgreen","purple")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }
