@@ -9,9 +9,9 @@ load(file = "~/Desktop/sfei/perStationFullModels.Rda")
 load(file="~/Desktop/sfei/perStationInteractionModels.Rda")
 load(file="~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data/delt_map.RData")
 load(file="~/Desktop/sfei/mod1Spatial.RData")
-#load(file="~/Desktop/sfei/mod2Spatial.RData")
-#load(file="~/Desktop/sfei/mod3Spatial.RData")
-#load(file="~/Desktop/sfei/mod4Spatial.RData")
+load(file="~/Desktop/sfei/mod2Spatial.RData")
+load(file="~/Desktop/sfei/mod3Spatial.RData")
+load(file="~/Desktop/sfei/mod4Spatial.RData")
 full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 allData=read.csv("~/Desktop/sfei/allData.csv")
 # Define server logic required to generate and plot data
@@ -717,6 +717,105 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
       ) +
       ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    
+  }, height = 250, width = 1200)
+  
+  output$nestedPlotSpat <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    data<-subset(allData,Station==stat)
+    indices<-which(allData$Station==stat)
+    data$Date=as.Date(data$Date)
+    if(input$spatMod=="spatIntercept"){
+      ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
+      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms")[indices,],data$Date))
+      names(toPlot)=c("station","doy","date_dec","date")
+      toPlot$station=toPlot$station+mod1$coefficients[1]
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+        
+        scale_colour_manual(name = '',
+                            labels =c('red'="station","dodgerblue"="ti(doy)",
+                                      "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
+    }else if(input$spatMod=="spatDate_Dec"){
+   
+      
+      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms")[indices,],data$Date))
+     findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+      index=which(findS==stat)+2
+      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
+      
+      names(toPlot)=c("station","doy","date_decStation","date")
+      
+      toPlot$station=toPlot$station+mod2$coefficients[1]
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+        
+        scale_colour_manual(name = '',
+                            labels =c('red'="station","dodgerblue"="ti(doy)",
+                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
+    }else if(input$spatMod=="spatDOY"){
+      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms")[indices,],data$Date))
+      findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+      index=which(findS==stat)+1
+      toPlot=toPlot[,c(1,index,ncol(toPlot))]
+      
+      names(toPlot)=c("station","doy_Station","date_decStation","date")
+      
+      toPlot$station=toPlot$station+mod3$coefficients[1]
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+        
+        scale_colour_manual(name = '',
+                            labels =c('red'="station","dodgerblue"="ti(doy_Station)",
+                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
+    }else if(input$spatMod=="spatinteraction"){
+      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms")[indices,],data$Date))
+      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+      index=which(findS==stat)+2
+      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
+      
+      names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
+      
+      toPlot$station=toPlot$station+mod4$coefficients[1]
+      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+        geom_line(data=toPlot,aes(x=date,y=interactionStation, color = 'ti(date_dec,doy_Station)'), lwd=1)+
+        scale_colour_manual(name = '',
+                            labels =c('red'="station","dodgerblue"="ti(doy)",
+                                      "forestgreen"="ti(date_dec,Station)",
+                                      "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
+                                                  "forestgreen","purple")
+        ) +
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
+    }
     
   }, height = 250, width = 1200)
   
