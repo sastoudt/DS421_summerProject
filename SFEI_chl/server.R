@@ -731,9 +731,11 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     data<-subset(allData,Station==stat)
     indices<-which(allData$Station==stat)
     data$Date=as.Date(data$Date)
+    print(indices)
+    print(dim(predict(mod1,data,type="terms")))
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
-      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms")[indices,],data$Date))
+      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
       names(toPlot)=c("station","doy","date_dec","date")
       if(stat=="C10"){
       toPlot$station=toPlot$station+mod1$coefficients[1]
@@ -761,7 +763,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     }else if(input$spatMod=="spatDate_Dec"){
    
       
-      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms")[indices,],data$Date))
+      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms"),data$Date))
      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
       index=which(findS==stat)+2
       toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
@@ -792,7 +794,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms")[indices,],data$Date))
+      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms"),data$Date))
       findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
       index=which(findS==stat)+1
       toPlot=toPlot[,c(1,index,ncol(toPlot))]
@@ -823,7 +825,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms")[indices,],data$Date))
+      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms"),data$Date))
       findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
       index=which(findS==stat)+2
       toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
