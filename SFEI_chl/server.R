@@ -8,7 +8,12 @@ load(file = "~/Desktop/sfei/perStationParsimoniousModels.Rda")
 load(file = "~/Desktop/sfei/perStationFullModels.Rda")
 load(file="~/Desktop/sfei/perStationInteractionModels.Rda")
 load(file="~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data/delt_map.RData")
+load(file="~/Desktop/sfei/mod1Spatial.RData")
+#load(file="~/Desktop/sfei/mod2Spatial.RData")
+#load(file="~/Desktop/sfei/mod3Spatial.RData")
+#load(file="~/Desktop/sfei/mod4Spatial.RData")
 full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
+allData=read.csv("~/Desktop/sfei/allData.csv")
 # Define server logic required to generate and plot data
 shinyServer(function(input, output) {
   
@@ -281,6 +286,38 @@ shinyServer(function(input, output) {
     
     
   }, height = 250, width = 1200)
+  
+  output$fittedSpat<- renderPlot({
+    
+    # inputs
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    #index=which(names(perStation)==stat)
+    
+    # data
+    data<-subset(allData,Station==stat)
+    data$Date=as.Date(data$Date)
+    if(input$spatMod=="spatIntercept"){
+      index=38
+    }else if(input$spatMod=="spatDate_Dec"){
+      index=39
+    }else if(input$spatMod=="spatDOY"){
+      index=40
+    }else if(input$spatMod=="spatinteraction"){
+      index=41
+    }
+   
+    ggplot(data,aes(x = Date, y = chl))+geom_point()+
+      #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
+      geom_line(data=data,aes_string(x="Date",y = names(data)[index], color = shQuote("red")),lwd=1)+
+      
+      ggtitle(paste(input$spatMod, "Fitted Values Interaction Model",sep=" "))+
+      theme(legend.position='none')+
+      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
+    
+    
+  }, height = 250, width = 1200)
+  
   
   
   output$nestedPlotPars <- renderPlot({

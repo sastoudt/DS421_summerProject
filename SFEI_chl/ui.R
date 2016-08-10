@@ -124,6 +124,14 @@ shinyUI(fluidPage(
            
     ),
 
+    column(2,
+           
+           selectInput(inputId = 'spatMod',
+                       label = 'Select a spatial model.',
+                       choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
+                       selected = 'date_dec')
+           
+    ),
     
     
     width = 12
@@ -142,6 +150,7 @@ shinyUI(fluidPage(
     plotOutput("fittedPars", height = "100%"),
     plotOutput("fittedFull", height = "100%"),
     plotOutput("fittedInt",height="100%"),
+    plotOutput("fittedSpat",height="100%"),
     plotOutput("nestedPlotPars", height = "100%"),
     plotOutput("nestedPlotFull",height="100%"),
     plotOutput("nestedPlotInt",height="100%"),
