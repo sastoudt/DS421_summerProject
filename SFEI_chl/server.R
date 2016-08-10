@@ -735,7 +735,17 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
       toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms")[indices,],data$Date))
       names(toPlot)=c("station","doy","date_dec","date")
+      if(stat=="C10"){
       toPlot$station=toPlot$station+mod1$coefficients[1]
+      toPlot$doy=toPlot$doy+mod1$coefficients[1]
+      toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]
+      }else{
+       findS= unlist(lapply(names(mod1$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+       indexS=which(findS==stat) 
+       toPlot$station=toPlot$station+mod1$coefficients[1]+mod1$coefficients[indexS]
+        toPlot$doy=toPlot$doy+mod1$coefficients[1]+mod1$coefficients[indexS]
+        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]+mod1$coefficients[indexS]
+      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
         geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
@@ -745,7 +755,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDate_Dec"){
@@ -758,7 +768,17 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
       
       names(toPlot)=c("station","doy","date_decStation","date")
       
+      if(stat=="C10"){
       toPlot$station=toPlot$station+mod2$coefficients[1]
+      toPlot$doy=toPlot$doy+mod2$coefficients[1]
+      toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]
+      }else{
+        findS= unlist(lapply(names(mod2$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+        indexS=which(findS==stat) 
+        toPlot$station=toPlot$station+mod2$coefficients[1]+mod2$coefficients[indexS]
+        toPlot$doy=toPlot$doy+mod2$coefficients[1]+mod2$coefficients[indexS]
+        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]+mod2$coefficients[indexS]
+      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
         geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
@@ -768,7 +788,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
@@ -779,7 +799,17 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
       
       names(toPlot)=c("station","doy_Station","date_decStation","date")
       
+      if(stat=="C10"){
       toPlot$station=toPlot$station+mod3$coefficients[1]
+      toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]
+      toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]
+      }else{
+        findS= unlist(lapply(names(mod3$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+        indexS=which(findS==stat) 
+        toPlot$station=toPlot$station+mod3$coefficients[1]+mod3$coefficients[indexS]
+        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]+mod3$coefficients[indexS]
+        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]+mod3$coefficients[indexS]
+      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
         geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
@@ -789,7 +819,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                             labels =c('red'="station","dodgerblue"="ti(doy_Station)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
@@ -800,7 +830,19 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
       
       names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
       
+      if(stat=="C10"){
       toPlot$station=toPlot$station+mod4$coefficients[1]
+      toPlot$doy=toPlot$doy+mod4$coefficients[1]
+      toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]
+      toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]
+      }else{
+        findS= unlist(lapply(names(mod4$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
+        indexS=which(findS==stat) 
+        toPlot$station=toPlot$station+mod4$coefficients[1]+mod4$coefficients[indexS]
+        toPlot$doy=toPlot$doy+mod4$coefficients[1]+mod4$coefficients[indexS]
+        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]+mod4$coefficients[indexS]
+        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]+mod4$coefficients[indexS]
+      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
         geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
@@ -812,7 +854,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                                       "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
                                                   "forestgreen","purple")
         ) +
-        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center.",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }
