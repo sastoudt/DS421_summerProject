@@ -233,6 +233,14 @@ Mod4:
 \item definite "cyclical" structure, matches peak location, not magnitude
 \end{itemize}
 
+\subsection{Spatial Models}
+\begin{itemize}
+\item Mod 1 does not get nearly enough height, mod 2,3,4 gets some height, 3 and 4 more smooth with 3 being the smoothest
+\item one long wave in date.dec per station, doy maintains magnitude, a bit more regular
+\item doy by station is M shaped, another big wave for date.dec
+\item interaction term and doy very similar, interaction term less smooth, same order of magnitude though
+\end{itemize}
+
 \section{D28A}
 \subsection{Data}
 \begin{itemize}
@@ -257,12 +265,14 @@ Mod4:
 \end{itemize}
 
 \subsection{Spatial Models}
+
 \begin{itemize}
-\item Mod 1 does not get nearly enough height, mod 2,3,4 gets some height, 3 and 4 more smooth with 3 being the smoothest
-\item one long wave in date.dec per station, doy maintains magnitude, a bit more regular
-\item doy by station is M shaped, another big wave for date.dec
-\item interaction term and doy very similar, interaction term less smooth, same order of magnitude though
+\item fitted values get smoother from mod1 to mod4, same general shape and magnitude
+\item same big wave pattern in date.dec per station for both mod2 and 3
+\item doy by station has smaller magnitude, still maintains bumps instead of a completely smooth oscillations
+\item interaction term never bigger in magnitude than doy, out of phase until about 1995, smaller magnitude increases to match doy at the end 
 \end{itemize}
+
 
 
 \section{D4}
@@ -290,6 +300,13 @@ Mod4:
 \item salinity: variation on a decent order of magnitude, shape matches more after 1995, magnitude underestimates overall
 \end{itemize}
 
+\subsection{Spatial Models}
+
+\begin{itemize}
+\item 
+\end{itemize}
+
+
 \section{D41}
 \subsection{Data}
 \begin{itemize}
@@ -313,6 +330,16 @@ Mod4:
 \item nh4: same order of magnitude as do.per, doesn't seem to track anything
 \item sal: same behavior as nh4
 \end{itemize}
+
+\subsection{Spatial Models}
+
+\begin{itemize}
+\item Mod 1 fitted values have a lot of variation, but peaks don't match up with data, gets the most relative height so far though, same for Mod 2, but better matching up with data, basically a flat line for mod3, mod4 is a consistent oscillation
+\item Mod 3 both doy by station and date.dec by station are flat
+\item Mod 2 slightly downward line for date.dec by station, doy maintains roughness and magnitude, just more regular than mod 1
+\item Mod 4 interaction term large in magnitude at beginning and end, small in the middle, peaks off center from doy
+\end{itemize}
+
 
 \section{D6}
 \subsection{Data}
