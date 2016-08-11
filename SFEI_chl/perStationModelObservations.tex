@@ -83,6 +83,7 @@ Mod4:
 \subsection{Spatial Models}
 
 \begin{itemize}
+\item fitted values are best for model 1, all the rest don't seem to change much with the data
 \item When date.dec can vary by station, very flat (not straight across though) compared to the wiggly overall in mod1.
 \item When doy can vary by station, very small, smooth oscillations as opposed to the larger magnitude more jaggedy oscillations in mod1.
 \item In interaction model, date.dec by station is downward sloping line, doy is a regular oscillation, peaks a little after the peaks in the data, interaction is triangular oscillation, changes magnitude throughout, large at beginning and end, smaller in middle of series.
@@ -108,6 +109,15 @@ Mod4:
 \item sal: doesn't match much until after 2000, sort of matches peakedness
 \end{itemize}
 
+\subsection{Spatial Models}
+
+\begin{itemize}
+\item Mod2 is best for fitted values, then mod1, 3 and 4 more just consistent oscillations that change magnitude rather than actually "fitting" the data.
+\item When date.dec is allowed to vary by station, less wiggly.
+\item When doy is allowed to vary by station, smaller magnitude oscillations, smoother than mod1. 
+\item Interaction model, increasing in magnitude triangular oscillations for interaction term, date.dec by station term is one wide wiggle, more noticeable than in mod2 and mod3.
+\end{itemize}
+
 
 \section{D12}
 \subsection{Data}
@@ -127,6 +137,17 @@ Mod4:
 \begin{itemize}
 \item sal: no real variation
 \end{itemize}
+
+\subsection{Spatial Models}
+
+\begin{itemize}
+\item Mod 1 and 2 very similar, the best at matching, but not great. Mod 3 and 4 similar, again just oscillations, no real variability. 
+\item Date.dec much flatter when it can differ by station, more consistent doy.
+\item Much smaller and more regular oscillations for doy when it can differ by station.
+\item interaction term never bigger than doy term, out of phase until mid 1990s.
+\end{itemize}
+
+
 \section{D19}
 \subsection{Data}
 \begin{itemize}
@@ -151,6 +172,15 @@ Mod4:
 \item nh4 does a good job of capturing the "cyclic" structure, better at matching magnitude after the break than before
 \end{itemize}
 
+\subsection{Spatial Models}
+
+\begin{itemize}
+\item Models 2,3,4 very similar fitted values.
+\item matches behavior of D12
+\end{itemize}
+
+
+
 \section{D22}
 \subsection{Data}
 \begin{itemize}
@@ -168,6 +198,15 @@ Mod4:
 \subsection{Full Model}
 \begin{itemize}
 \ite no additional variables available for the full model
+\end{itemize}
+
+\subsection{Spatial Models}
+
+\begin{itemize}
+\item mod1 has most texture, the rest are smooth oscillations
+\item no real slope in flat line in date.dec by station, more regular doy but still has some texture and magnitude
+\item very small oscillations doy by station and another flat date.dec
+\item interaction triangular oscillations, larger at ends of series, very small in middle, flat date.dec by station, regulary doy seems to match data phase wise
 \end{itemize}
 
 \section{D26}
@@ -216,6 +255,15 @@ Mod4:
 \item no real variation in tss
 \item structure in nh4, matches "cyclic" structure pretty well, not so well on magnitude
 \end{itemize}
+
+\subsection{Spatial Models}
+\begin{itemize}
+\item Mod 1 does not get nearly enough height, mod 2,3,4 gets some height, 3 and 4 more smooth with 3 being the smoothest
+\item one long wave in date.dec per station, doy maintains magnitude, a bit more regular
+\item doy by station is M shaped, another big wave for date.dec
+\item interaction term and doy very similar, interaction term less smooth, same order of magnitude though
+\end{itemize}
+
 
 \section{D4}
 \subsection{Data}
