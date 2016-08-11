@@ -1,6 +1,12 @@
 require(ggplot2)
 
-## what data to load in
+setwd("~/Desktop/sfei")
+
+allData=read.csv("allData.csv")
+load(file="mod1Spatial.RData")
+load(file="mod2Spatial.RData")
+load(file="mod3Spatial.RData")
+load(file="mod4Spatial.RData")
 
 
 forMap=allData[,c("Longitude","Latitude","Station")]
@@ -161,3 +167,91 @@ grid.arrange(g1,g2,g3,g4)
 
 ## so that one station is really the cause of all the problems with the other models
 ## otherwise very similar across the models
+
+setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data")
+load("delt_map.RData")
+plot(delt_map)
+points(allData$Longitude,allData$Latitude,pch=19)
+
+### rmse per station in individual models
+
+setwd("~/Desktop/sfei")
+load("perStationParsimoniousModels.Rda")
+load("perStation.Rda")
+load("perStationFullModels.Rda")
+dim(perStation[[1]])
+length(perStationParsMod[[1]]$fitted.values)
+wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+
+rmsePerStationSep<-c()
+for(i in wholeSeries){
+  true=perStation[[i]]$chl
+  fitted=predict(perStationParsMod[[i]],perStation[[i]],type="response")
+ rmsePerStationSep=c(rmsePerStationSep, sqrt(sum((true-fitted)^2,na.rm=T)/sum(is.na(!fitted))))
+} ## although not really a fair comparison, other covariates in there
+
+rmsePerStationSep
+
+load("perStationInteractionModels.Rda")
+rmsePerStationSepPlain<-c()
+for(i in wholeSeries){
+  true=perStation[[i]]$chl
+  fitted=as.vector(predict(perStationIntMod[[i]],perStation[[i]],type="response"))
+  rmsePerStationSepPlain=c(rmsePerStationSepPlain, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
+}
+
+rmsePerStationSepPlain
+
+
+rmsePerStationFull<-c()
+for(i in wholeSeries){
+  true=perStation[[i]]$chl
+  fitted=predict(perStationFullMod[[i]],perStation[[i]],type="response")
+  rmsePerStationFull=c(rmsePerStationFull, sqrt(sum((true-fitted)^2,na.rm=T)/sum(is.na(!fitted))))
+} ## although not really a fair comparison, other covariates in there
+
+rmsePerStationFull
+
+names(perStation)[wholeSeries]
+
+rmseSep=as.data.frame(cbind(names(perStation)[wholeSeries],rmsePerStationFull,rmsePerStationSepPlain,rmsePerStationSep))
+names(rmseSep)=c("station","rmseFull","rmseInt","rmsePars")
+rmseSep$rmseFull=as.numeric(as.character(rmseSep$rmseFull))
+rmseSep$rmseInt=as.numeric(as.character(rmseSep$rmseInt))
+rmseSep$rmsePars=as.numeric(as.character(rmseSep$rmsePars))
+
+rmseSep
+
+testMerge5=merge(testMerge3,rmseSep,by.x="Station",by.y="station")
+
+g1<-ggplot(testMerge5,aes(x = Longitude, y = Latitude,colour=rmse1,cex=2))+geom_point()+
+  ggtitle("Spatial Model 1 RMSE by Station")+scale_size(guide=F)
+
+g2<-ggplot(testMerg5,aes(x = Longitude, y = Latitude,colour=rmse2,cex=2))+geom_point()+
+  ggtitle("Spatial Model 2 RMSE by Station")+scale_size(guide=F)
+
+g3<-ggplot(testMerge5,aes(x = Longitude, y = Latitude,colour=rmseInt,cex=2))+geom_point()+
+  ggtitle("Interaction Model RMSE by Station")+scale_size(guide=F)
+
+g4<-ggplot(testMerge5,aes(x = Longitude, y = Latitude,colour=rmsePars,cex=2))+geom_point()+
+  ggtitle("Parsimonious Model RMSE Intercepts by Station")+scale_size(guide=F)
+
+grid.arrange(g1,g2,g3,g4)
+
+which(testMerge$Latitude<37.8)
+
+testMerge6=testMerge5[-1,]
+
+g1<-ggplot(testMerge6,aes(x = Longitude, y = Latitude,colour=rmse1,cex=2))+geom_point()+
+  ggtitle("Spatial Model 1 RMSE by Station")+scale_size(guide=F)
+
+g2<-ggplot(testMerge6,aes(x = Longitude, y = Latitude,colour=rmse2,cex=2))+geom_point()+
+  ggtitle("Spatial Model 2 RMSE by Station")+scale_size(guide=F)
+
+g3<-ggplot(testMerge6,aes(x = Longitude, y = Latitude,colour=rmseInt,cex=2))+geom_point()+
+  ggtitle("Interaction Model RMSE by Station")+scale_size(guide=F)
+
+g4<-ggplot(testMerge6,aes(x = Longitude, y = Latitude,colour=rmsePars,cex=2))+geom_point()+
+  ggtitle("Parsimonious Model RMSE Intercepts by Station")+scale_size(guide=F)
+
+grid.arrange(g1,g2,g3,g4)
