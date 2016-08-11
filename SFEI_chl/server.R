@@ -311,7 +311,7 @@ shinyServer(function(input, output) {
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
       geom_line(data=data,aes_string(x="Date",y = names(data)[index], color = shQuote("red")),lwd=1)+
       
-      ggtitle(paste(input$spatMod, "Fitted Values Interaction Model",sep=" "))+
+      ggtitle(paste(input$spatMod, "Fitted Values Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
