@@ -256,3 +256,16 @@ g4<-ggplot(testMerge6,aes(x = Longitude, y = Latitude,colour=rmsePars,cex=2))+ge
   ggtitle("Parsimonious Model RMSE Intercepts by Station")+scale_size(guide=F)
 
 grid.arrange(g1,g2,g3,g4)
+
+####
+## benefit from date.dec by station
+which(testMerge5$Station %in% c("D10","D26","D6","D7","D8","D4","P8","D12","D19","D22","D28A"))
+
+plot(testMerge5$Longitude,testMerge5$Latitude, pch=19)
+points(testMerge5[which(testMerge5$Station %in% c("D10","D26","D6","D7","D8","D4",
+           "P8","D12","D19","D22","D28A","MD10")),"Longitude"],testMerge5[which(testMerge5$Station %in% c("D10","D26","D6","D7","D8","D4",
+                                   "P8","D12","D19","D22","D28A","MD10")),"Latitude"],col="red",pch=19)
+     
+
+
+
