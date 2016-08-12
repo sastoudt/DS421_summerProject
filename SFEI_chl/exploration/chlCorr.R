@@ -150,3 +150,13 @@ names(decideLag)[1]="combo"
 decideLag$station1=toCheck[1,decideLag$combo]
 decideLag$station2=toCheck[2,decideLag$combo]
 View(decideLag)
+
+## go through and see which are actually significant benefits above lag 0
+
+View(decideLag[which(abs(decideLag$zeroLagCorr-decideLag$bestLagCorr)>.1),])
+
+lookInto<-decideLag[which(abs(decideLag$zeroLagCorr-decideLag$bestLagCorr)>.1),]
+dim(lookInto)
+
+unique(c(lookInto$station1,lookInto$station2))
+## "D41"  "D6"   "D7"   "D8"   "D10"  "D4"   "D12"  "D22"  "D19"  "C3"   "MD10" "C10"  "P8"
