@@ -267,5 +267,8 @@ points(testMerge5[which(testMerge5$Station %in% c("D10","D26","D6","D7","D8","D4
                                    "P8","D12","D19","D22","D28A","MD10")),"Latitude"],col="red",pch=19)
      
 
+## 
 
-
+names(testMerge5)
+testMerge5[,c("rmse1","rmse2","rmse3","rmse4")]
+testMerge5[,c("rmse2","rmseInt")]
