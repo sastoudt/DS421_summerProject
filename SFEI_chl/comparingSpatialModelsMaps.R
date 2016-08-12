@@ -119,9 +119,10 @@ rmsePerStation4<-summarise(byStation,stp1=sum(resid4,na.rm=T),count=n())
 rmse4=sqrt(as.vector(rmsePerStation4$stp1)/rmsePerStation4$count)
 
 ## get matching station names
-RMSE=as.data.frame(cbind(rmsePerStation2$station, rmse1, rmse2, rmse3,rmse4))
+RMSE=as.data.frame(cbind.data.frame(rmsePerStation2$station, rmse1, rmse2, rmse3,rmse4))
 names(RMSE)[1]="station"
 
+testMerge$Station=as.character(testMerge$Station)
 testMerge3=merge(testMerge,RMSE,by.x="Station",by.y="station")
 
 testMerge3
@@ -227,7 +228,7 @@ testMerge5=merge(testMerge3,rmseSep,by.x="Station",by.y="station")
 g1<-ggplot(testMerge5,aes(x = Longitude, y = Latitude,colour=rmse1,cex=2))+geom_point()+
   ggtitle("Spatial Model 1 RMSE by Station")+scale_size(guide=F)
 
-g2<-ggplot(testMerg5,aes(x = Longitude, y = Latitude,colour=rmse2,cex=2))+geom_point()+
+g2<-ggplot(testMerge5,aes(x = Longitude, y = Latitude,colour=rmse2,cex=2))+geom_point()+
   ggtitle("Spatial Model 2 RMSE by Station")+scale_size(guide=F)
 
 g3<-ggplot(testMerge5,aes(x = Longitude, y = Latitude,colour=rmseInt,cex=2))+geom_point()+
