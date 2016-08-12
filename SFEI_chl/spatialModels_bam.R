@@ -82,6 +82,49 @@ gam.check(gamP2) ## a little over 8 min
 mod4=gamP
 save(mod4,file="mod4Spatial.RData")
 
+
+#### 
+## need something to be comparable to interaction model
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station))+
+                        ti(doy,date_dec,by=as.factor(Station)),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## ## stopped at 8 minutes
+
+## How about this
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station))+
+                        ti(doy,date_dec),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## a little over 3 minutes
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station),k=10)+
+                        ti(doy,date_dec),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## a little over a minute
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station),k=10)+
+                        ti(doy,date_dec,k=7),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## a little over 2 minutes
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station),k=10)+
+                        ti(doy,date_dec,k=9),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP)  ## stopped after 9 minutes
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station),k=15)+
+                        ti(doy,date_dec),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## 3.5 minutes
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=10)+ti(date_dec,bs="tp",by=as.factor(Station),k=15)+
+                        ti(doy,date_dec),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## stopped after 6.5 minutes
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station))+ti(date_dec,bs="tp",by=as.factor(Station),k=15)+
+                        ti(doy,date_dec,k=8),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## a little under 4 minutes
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=8)+ti(date_dec,bs="tp",by=as.factor(Station),k=15)+
+                        ti(doy,date_dec,k=8),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP)  ## almost 7 minutes
+
+## pause for now and try another approach
+
 load("mod1Spatial.RData")
 load("mod2Spatial.RData")
 load("mod3Spatial.RData")
