@@ -39,7 +39,7 @@ i=1
   tmp=tmp[!is.na(tmp$flo),]
   gamDEFAULT <- gam(res ~ ti(dec_time,bs="tp")+ti(doy,bs="cc")+ti(flo,bs="tp")+ti(dec_time,doy,bs=c("tp","cc"))+ti(dec_time,flo,bs=c("tp","tp"))+ti(doy,flo,bs=c("cc","tp"))+ti(dec_time,doy,flo,bs = c("tp", "cc", "tp")), data = tmp)
   #gamDEFAULTnoflow <- gam(res ~ te(dec_time, doy, bs = c("tp", "cc")), data = tmp)
-  
+  pen.edf(gamDEFAULT)
   #  gamtmp <- gam(res ~ te(dec_time, doy, flo, bs = c("tp", "cc", "tp")), k = c(5, 8, 5), data = tmp, knots = list(doy = c(1, 366)))
   
   summary(mod1$fitted.values-gamDEFAULT$fitted.values)
