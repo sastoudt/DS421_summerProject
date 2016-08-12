@@ -71,9 +71,9 @@ Computational Update
 - put everything up on the cluster (figured out all of the steps to do this [moving files back and forth, submitting jobs])
 - I also just switched my linear algebra package to be vecLib version of BLAS which can give up to a linear time improvement.
 
-- chunk into regions
-- chunk based on correlation of chl between stations?
-- investigate lags in this correlation?
+- chunk into regions (no longer necessary when we are using bam)
+- chunk based on correlation of chl between stations (don't need to chunk, just investigate and see whether we are leveraging extra information from other stations in a full spatial model or whether building a seperate model per station is really best)
+- investigate lags in this correlation
 
 ## Week 3 Goals
 
