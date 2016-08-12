@@ -44,10 +44,10 @@
 
 \subsection{Spatial Models}
 
-Mod1:
-Mod2:
-Mod3:
-Mod4:
+Mod1: Intercept changes by station, smooth doy, smooth date.dec
+Mod2: Intercept changes by station, smooth doy, smooth date.dec allowed to vary by station
+Mod3: Intercept changes by station, smooth doy and date.dec allowed to vary by station
+Mod4: Intercept changes by station, smooth doy, date.dec allowed to vary by station, interaction between doy and date.dec allowed to vary by station
 
 \begin{itemize}
 \item For fitted values, model 1 does best, model 4 does the worst, both model 2 and model 3 do okay but don't reach as high of magnitude for peaks as necessary.
@@ -536,4 +536,19 @@ It looks like the pre-1990 is a "step" above the 1990s, and then the 2000s are b
 \begin{itemize}
 \item It looks like there is some benefit of having a per station date.dec term for some stations, and others it doesn't really help that much. The doy term by station doesn't seem to help any of the stations, and similarly for the interaction term, it is just overkill.
 \item Need to investigate if there are patterns in the stations for which it helps to have separate date.dec terms.
+\end{itemize}
+
+\section{Comparing Spatial Models}
+\begin{itemize}
+\item Lowest Station (C10) is an outlier for intercept by station (in absolute value, the largest) and RMSE per station
+\item Intercepts very similar for spatial models 1, 2, and 4, model 3 has larger intercepts in general
+\item intercepts do tend to be similar at nearby stations, rightmost two, leftmost two, and then the ones in the center, the northern most matches magnitude of leftmost two
+\item The deviance explained goes down as the models get more complicated (mode1 to model4)
+\item fREML score goes up (``good" because it is like the likelihood which we are trying to maximize) as the model gets more complicated, which makes sense since we are adding more complexity.
+\item About the same range of RMSEs per station (about 3-10) across the four spatial models. The RMSEs stay in about the same relative ordering by station across the four spatial models.
+\item Do better on left most stations (and the north most station), worse on stations to the right (including most southern station). 
+\item Lowest Station has worst RMSE even in interaction model and parsimonious model.
+\item The interaction model by station has the smallest RMSE values. The parsimonious model has similar RMSE values to Spatial Models 1 and 2.
+\item Same relative ordering of the RMSE by station across Spatial Models 1 and 2 and the interaction and parsimonious models. However, the stations on the right do less poorly in the parsimonious model, suggesting that the extra covariates are helping there.
+
 \end{itemize}
