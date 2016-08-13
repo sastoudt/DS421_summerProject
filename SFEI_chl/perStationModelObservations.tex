@@ -558,7 +558,10 @@ It looks like the pre-1990 is a "step" above the 1990s, and then the 2000s are b
 \item When comparing the RMSEs of by station doy/date.dec model and doy/date.dec/interaction model, 8 stations have better RMSEs for interaction model, 7 stations have better RMSEs for simpler model. Mostly, not a huge difference between the two, $<$1ish for most.
 \item Interaction better: C10, D10, D12, D19, D22, D41, D6, D7
 \item Simpler model better: C3, D26, D28A, D4, D8, MD10, P8
+\item can see this at least a little bit in the amount of variation in the interaction term shown in the Shiny, tends to be larger magnitude for the interaction better stations
 \item Towards the left plus south most, interaction better. Towards the right plus north most simple better. See figure RMSE_int.
+\item doy by station, date.dec by station, add pheo and tn seperately (can't easily get these by station) same k values, pheo does better in RMSE per station for all of the stations, not a huge discrepancy but enough
+\item both pheo, tn are better than spatial model 3 (comparable model), sometimes cuts RMSE in half (if large), other times (smaller RMSE) pretty close
 \item Another way to get at this question is to see how the chl values at each station correlate with the chl values at the other stations. Maybe there is a lag?
 \end{itemize}
 \subsection{Investigating Correlation of Chl Between Stations}

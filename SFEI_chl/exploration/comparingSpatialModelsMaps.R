@@ -89,15 +89,20 @@ mod4
 require(dplyr)
 
 ####
-sum(is.na(allData$resid1)) ## 490
-sum(is.na(allData$resid2))
-sum(is.na(allData$resid3))
-sum(is.na(allData$resid4))
-
-View(allData[which(is.na(allData$resid1)),]) ## places where chl is missing, fine
+# sum(is.na(allData$resid1)) ## 490
+# sum(is.na(allData$resid2))
+# sum(is.na(allData$resid3))
+# sum(is.na(allData$resid4))
+# 
+# View(allData[which(is.na(allData$resid1)),]) ## places where chl is missing, fine
 
 
 allData<-allData[!is.na(allData$chl),]
+allData$mod1Pred=predict(mod1,allData)
+allData$mod2Pred=predict(mod2,allData)
+allData$mod3Pred=predict(mod3,allData)
+allData$mod4Pred=predict(mod4,allData)
+
 
 allData$resid1=(allData$chl-allData$mod1Pred)^2
 allData$resid2=(allData$chl-allData$mod2Pred)^2
