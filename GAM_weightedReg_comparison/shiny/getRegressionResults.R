@@ -4,9 +4,9 @@
 ## assume that model has gone through modfit and has an attribute $fits or $norms
 ## assume the predictions match up: order by date before making predictions
 getRegressionResults<-function(data,index,sigLevel=.05){
-if(index %in% c(10:18)){
-  return(NA)
-}else{
+# if(index %in% c(10:18)){
+#   return(NA)
+# }else{
   data=data[!is.na(data$res),]
   data=data[!is.na(data$flo),]
   data=data[order(data$date),]
@@ -195,7 +195,7 @@ isSignificant=rbind(isSignificant,isSignificantAnnual1,isSignificantAnnual2,
   colnames(pVals)=c("intercept","slope")
   colnames(isSignificant)=c("intercept","slope")
   return(list(betas=betas,pVals=pVals,isSignificant=isSignificant))
-}
+#}
 }
 
 ##https://www.researchgate.net/post/Does_anyone_know_how_to_test_the_significant_difference_between_a_line_slopeeg_081_and_1_by_using_R_or_SPSS

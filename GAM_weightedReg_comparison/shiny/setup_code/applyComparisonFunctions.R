@@ -45,7 +45,8 @@ rmseDevPerStation<- lapply(rmseDevPerStation, function(x){ colnames(x)<-nam; x})
 rmseDevPerStation[[1]]
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
-for(i in c(1:9,19:27))
+#for(i in c(1:9,19:27))
+for(i in 1:27)
   print(xtable(rmseDevPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable2.tex",append=T)
 
 
@@ -82,7 +83,8 @@ avgPCPerStation[[1]]
 
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
-for(i in c(1:9,19:27))
+#for(i in c(1:9,19:27))
+for(i in 1:27)
 print(xtable(avgPCPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable3_4.tex",append=T)
 
 
@@ -96,7 +98,8 @@ getRegressionResults(dataNiceNoLag[[i]],i)
 nam=c("intercept","interceptSignificant","slope","slopeSignificant")
 ## Note slope significant from zero not one
 fullRegResPerStation=vector("list",27)
-for(i in c(1:9,19:27)){
+#for(i in c(1:9,19:27)){
+for(i in 1:27){
   fullRegResPerStation[[i]]=as.data.frame(cbind(regResultsPerStation[[i]]$betas[,1],regResultsPerStation[[i]]$isSignificant[,1],
         regResultsPerStation[[i]]$betas[,2],regResultsPerStation[[i]]$isSignificant[,2]))
   names(fullRegResPerStation[[i]])=nam
@@ -104,7 +107,8 @@ for(i in c(1:9,19:27)){
 ## apply wasn't working
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
-for(i in c(1:9,19:27))
+#for(i in c(1:9,19:27))
+for(i in 1:27)
   print(xtable(fullRegResPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable6.tex",append=T)
 
 ##BE CAREFUL, WHEN RERUN DELETE FIRST SINCE APPEND = TRUE
@@ -130,6 +134,7 @@ diffResultsPerStation[[1]]
 
 toUse=gsub("_"," ",names(dataNiceNoLag))
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
-for(i in c(1:9,19:27))
+#for(i in c(1:9,19:27))
+for(i in 1:27)
   print(xtable(diffResultsPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable5.tex",append=T)
 
