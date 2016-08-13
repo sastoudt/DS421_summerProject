@@ -76,6 +76,19 @@ Computational Update
 - put everything up on the cluster (figured out all of the steps to do this [moving files back and forth, submitting jobs])
 - I also just switched my linear algebra package to be vecLib version of BLAS which can give up to a linear time improvement.
 
+Week 2 Update- completed all of the main goals for this week including:
+
+- investigated different spatial models including the inclusion of some promising covariates from the parsimonious model
+- made progress assessing which is better, full spatial model or fitting a seperate model per station
+- set up correlation investigation
+- found computational tricks to speeding things up
+
+To Do
+
+- host Shiny app online (need to slim it down a bit)
+- waiting for expanded model 3 to run on cluster to get fairer comparison of full model v. one model per station
+
+
 ## Week 3 Goals
 
 - think about ways to incorporate flow/flow structure

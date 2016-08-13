@@ -62,3 +62,5 @@ rmsePerStation<-summarise(byStation,stp1=sum(resid),count=n())
 rmseTn=sqrt(as.vector(rmsePerStation$stp1)/rmsePerStation$count)
 
 cbind(rmsePheo,rmseTn)
+
+cbind(rmsePheo, rmseTn, testMerge3$rmse3) ## from comparingSpatialModelsMaps
