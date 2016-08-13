@@ -39,3 +39,155 @@ system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=40)+ti(doy,bs="cc",k=20)+ti
 gam.check(gamDEFAULT)
 ## still only about 5 seconds, can't expand too much because then not enough data to identify model
 bigModels[[1]]=gamDEFAULT
+
+
+#####
+i=17
+tmp <- mods_nolag$data[[i]] %>% 
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>% 
+  rename(
+    res = resval, 
+    flo = flolag,
+    date = Date
+  )
+tmp=tmp[!is.na(tmp$res),]
+tmp=tmp[!is.na(tmp$flo),]
+tmp=tmp[order(tmp$date),]
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                                ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                                ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                                    bs=c("cc","tp","tp"),k=c(4,4,4)), data = tmp))
+## only about 3 seconds
+gam.check(gamDEFAULT)
+
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=40)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=50)+
+                                ti(flo,doy,bs=c("tp","cc"),k=8)+ti(flo,dec_time,bs=c("tp","tp"),k=8)+
+                                ti(doy,dec_time,bs=c("cc","tp"),k=8)+ti(doy,dec_time,flo,
+                                                                        bs=c("cc","tp","tp")), data = tmp))
+## 20ish seconds
+gam.check(gamDEFAULT)
+bigModels[[2]]=gamDEFAULT
+
+####
+
+i=18
+tmp <- mods_nolag$data[[i]] %>% 
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>% 
+  rename(
+    res = resval, 
+    flo = flolag,
+    date = Date
+  )
+tmp=tmp[!is.na(tmp$res),]
+tmp=tmp[!is.na(tmp$flo),]
+tmp=tmp[order(tmp$date),]
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                                ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                                ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                                    bs=c("cc","tp","tp"),k=c(4,4,4)), data = tmp))
+## < 1 second
+gam.check(gamDEFAULT)
+
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=40)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=50)+
+                                ti(flo,doy,bs=c("tp","cc"),k=8)+ti(flo,dec_time,bs=c("tp","tp"),k=8)+
+                                ti(doy,dec_time,bs=c("cc","tp"),k=8)+ti(doy,dec_time,flo,
+                                                                        bs=c("cc","tp","tp")), data = tmp))
+## 6 seconds
+gam.check(gamDEFAULT)
+bigModels[[3]]=gamDEFAULT
+
+####
+i=19
+tmp <- mods_nolag$data[[i]] %>% 
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>% 
+  rename(
+    res = resval, 
+    flo = flolag,
+    date = Date
+  )
+tmp=tmp[!is.na(tmp$res),]
+tmp=tmp[!is.na(tmp$flo),]
+tmp=tmp[order(tmp$date),]
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=15)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                    ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                        bs=c("cc","tp","tp")), data = tmp)) ##i=19,20
+## 3 sec
+gam.check(gamDEFAULT)
+
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=20)+
+                                ti(flo,doy,bs=c("tp","cc"),k=10)+ti(flo,dec_time,bs=c("tp","tp"),k=8)+
+                                ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                                    bs=c("cc","tp","tp"),k=6), data = tmp))
+## <30 seconds
+## biggest we can get
+bigModels[[4]]=gamDEFAULT
+
+####
+i=20
+tmp <- mods_nolag$data[[i]] %>% 
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>% 
+  rename(
+    res = resval, 
+    flo = flolag,
+    date = Date
+  )
+tmp=tmp[!is.na(tmp$res),]
+tmp=tmp[!is.na(tmp$flo),]
+tmp=tmp[order(tmp$date),]
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=15)+
+                                ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                                ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                                    bs=c("cc","tp","tp")), data = tmp)) ##i=19,20
+## 
+gam.check(gamDEFAULT)
+
+system.time(gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=20)+
+                                ti(flo,doy,bs=c("tp","cc"),k=10)+ti(flo,dec_time,bs=c("tp","tp"),k=8)+
+                                ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                                    bs=c("cc","tp","tp"),k=6), data = tmp))
+gam.check(gamDEFAULT)
+## <30 seconds
+## biggest we can get
+bigModels[[5]]=gamDEFAULT
+
+####
+i=21
+tmp <- mods_nolag$data[[i]] %>% 
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>% 
+  rename(
+    res = resval, 
+    flo = flolag,
+    date = Date
+  )
+tmp=tmp[!is.na(tmp$res),]
+tmp=tmp[!is.na(tmp$flo),]
+tmp=tmp[order(tmp$date),]
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=15)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=22)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                    ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,bs=c("cc","tp","tp")),data=tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=20)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=22)+
+                    ti(flo,doy,bs=c("tp","cc"),k=10)+ti(flo,dec_time,bs=c("tp","tp"),k=10)+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=8)+ti(doy,dec_time,flo,bs=c("cc","tp","tp"),k=6),data=tmp)
+gam.check(gamDEFAULT)
+bigModels[[6]]=gamDEFAULT
+
+setwd("~/Desktop/sfei")
+save(bigModels,file="bigModels.RData")
