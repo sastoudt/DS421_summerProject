@@ -65,20 +65,21 @@ To Do
 
 I anticipate computational problems when adding all stations into one model.
 
+- chunk into regions (no longer necessary when we are using bam)
+- chunk based on correlation of chl between stations (don't need to chunk, just investigate and see whether we are leveraging extra information from other stations in a full spatial model or whether building a seperate model per station is really best)
+- investigate lags in this correlation (perhaps save trying to incorporate the results of this exploration for Week 3, has to do with flow structure)
+
 Computational Update
 - I anticipated correctly, but there are a few options that look promising for not having to break things up.
 - bam (multiple thread gam, huge improvement in speed with 4 threads and I have a max of 8 on my computer)
 - put everything up on the cluster (figured out all of the steps to do this [moving files back and forth, submitting jobs])
 - I also just switched my linear algebra package to be vecLib version of BLAS which can give up to a linear time improvement.
 
-- chunk into regions (no longer necessary when we are using bam)
-- chunk based on correlation of chl between stations (don't need to chunk, just investigate and see whether we are leveraging extra information from other stations in a full spatial model or whether building a seperate model per station is really best)
-- investigate lags in this correlation
-
 ## Week 3 Goals
 
 - think about ways to incorporate flow/flow structure
 - volumetric data
+- think about correlation network and optimization of lags of other stations per station
 
 ## Week 4 Goals
 
