@@ -218,3 +218,9 @@ for(i in toRedo){
 }
 
 save(dataNiceNoLag,file="dataNice_nolag.RData")
+
+grep("D7",names(dataNiceNoLag))
+sum(!is.na(dataNiceNoLag[[16]]$wrtdsPred))
+sum(!is.na(dataNiceNoLag[[17]]$wrtdsPred))
+sum(!is.na(dataNiceNoLag[[18]]$wrtdsPred))
+
