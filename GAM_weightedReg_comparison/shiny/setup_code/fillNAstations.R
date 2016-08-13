@@ -210,6 +210,9 @@ for(i in toRedo){
     
   }
   tryThis=modfit(tomod,resp_type="mean")
-  dataNiceNoLag[[i]]$wrtdsPred=tryThis$fit0.5 ## this works
+  
+  test=merge(dataNiceNoLag[[i]],tryThis[,c("date","fit0.5")],by.x="date",by.y="date",all.x=T)
+  
+  dataNiceNoLag[[i]]$wrtdsPred=test$fit0.5 ## this works
   
 }
