@@ -65,6 +65,15 @@ gam.check(gamP) # a little over a minute
 system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=15)+ti(date_dec,bs="tp",by=as.factor(Station),k=15),data=allData,family=gaussian(link="log"),control=ctrl))
 gam.check(gamP) ## a little over 7 minutes
 
+length(unique(allData$Station)) ## 15
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=c(20,rep(10,14)))+ti(date_dec,bs="tp",by=as.factor(Station),k=c(20,rep(10,14))),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## doesn't actually do what I want with k
+
+system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=15)+ti(date_dec,bs="tp",by=as.factor(Station),k=20),data=allData,family=gaussian(link="log"),control=ctrl))
+gam.check(gamP) ## trying to expand to make sure fairest comparison, stopped at 20 minutes
+## need to put on cluster
+
+
 mod3=gamP
 save(mod3,file="mod3Spatial.RData")
 

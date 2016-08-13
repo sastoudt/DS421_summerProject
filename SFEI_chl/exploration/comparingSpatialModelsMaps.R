@@ -287,3 +287,13 @@ for(i in wholeSeries){
   rmsePerStationCompare=c(rmsePerStationCompare, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
 }
 rmsePerStationCompare
+
+testMerge5
+
+cbind(testMerge5$rmse3,rmsePerStationCompare)
+
+testMerge5$Station[5]
+
+gam.check(mod3)
+gam.check(perStationMod3Compare[[5]])
+## might not be fair yet
