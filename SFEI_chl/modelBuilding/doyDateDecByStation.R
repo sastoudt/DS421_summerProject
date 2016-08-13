@@ -638,3 +638,4 @@ perStationMod3Compare[[40]]=gamP
 
 setwd("~/Desktop/sfei")
 save(perStationMod3Compare,file="perStationMod3Compare.RData")
+

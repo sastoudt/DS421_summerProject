@@ -188,7 +188,7 @@ rmsePerStationSep<-c()
 for(i in wholeSeries){
   true=perStation[[i]]$chl
   fitted=predict(perStationParsMod[[i]],perStation[[i]],type="response")
- rmsePerStationSep=c(rmsePerStationSep, sqrt(sum((true-fitted)^2,na.rm=T)/sum(is.na(!fitted))))
+ rmsePerStationSep=c(rmsePerStationSep, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
 } ## although not really a fair comparison, other covariates in there
 
 rmsePerStationSep
@@ -206,10 +206,14 @@ rmsePerStationSepPlain
 
 rmsePerStationFull<-c()
 for(i in wholeSeries){
+  if(i==13){
+    rmsePerStationFull=c(rmsePerStationFull,NA)
+  }else{
   true=perStation[[i]]$chl
   fitted=predict(perStationFullMod[[i]],perStation[[i]],type="response")
-  rmsePerStationFull=c(rmsePerStationFull, sqrt(sum((true-fitted)^2,na.rm=T)/sum(is.na(!fitted))))
-} ## although not really a fair comparison, other covariates in there
+  rmsePerStationFull=c(rmsePerStationFull, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
+}
+  } ## although not really a fair comparison, other covariates in there
 
 rmsePerStationFull
 
@@ -270,5 +274,16 @@ points(testMerge5[which(testMerge5$Station %in% c("D10","D26","D6","D7","D8","D4
 ## 
 
 names(testMerge5)
-testMerge5[,c("rmse1","rmse2","rmse3","rmse4")]
+apply(testMerge5[,c("rmse1","rmse2","rmse3","rmse4")],1,which.min)
 testMerge5[,c("rmse2","rmseInt")]
+
+
+####
+load(file="perStationMod3Compare.RData")
+rmsePerStationCompare<-c()
+for(i in wholeSeries){
+  true=perStation[[i]]$chl
+  fitted=predict(perStationMod3Compare[[i]],perStation[[i]],type="response")
+  rmsePerStationCompare=c(rmsePerStationCompare, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
+}
+rmsePerStationCompare
