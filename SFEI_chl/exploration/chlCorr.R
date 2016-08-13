@@ -158,5 +158,10 @@ View(decideLag[which(abs(decideLag$zeroLagCorr-decideLag$bestLagCorr)>.1),])
 lookInto<-decideLag[which(abs(decideLag$zeroLagCorr-decideLag$bestLagCorr)>.1),]
 dim(lookInto)
 
-unique(c(lookInto$station1,lookInto$station2))
+lookIntoS=unique(c(lookInto$station1,lookInto$station2))
 ## "D41"  "D6"   "D7"   "D8"   "D10"  "D4"   "D12"  "D22"  "D19"  "C3"   "MD10" "C10"  "P8"
+
+## where are these stations?
+plot(allData$Longitude,allData$Latitude,pch=19)
+points(allData$Longitude[which(allData$Station %in% lookIntoS)],allData$Latitude[which(allData$Station %in% lookIntoS)],col="red",pch=19)
+

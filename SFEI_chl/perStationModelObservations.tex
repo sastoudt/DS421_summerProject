@@ -555,3 +555,83 @@ It looks like the pre-1990 is a "step" above the 1990s, and then the 2000s are b
 \item RMSEs across the four spatial models: most of the stations have the lowest RMSE for model 3 which allows for a different doy and date.dec pattern by station. This makes sense since this allows for the most flexibility. Model 4 should probably be doy by station, date.dec by station and interaction by station to be really comparable. This would be like the interaction model that we built per station. Should do this to really see if there is a benefit of doing a full spatial model (are we leveraging any information from other stations in the full model?) But this model is slow to fit even with the parallel version of GAMS.
 \item Another way to get at this question is to see how the chl values at each station correlate with the chl values at the other stations. Maybe there is a lag?
 \end{itemize}
+\subsection{Investigating Correlation of Chl Between Stations}
+
+\begin{itemize}
+\item did not consider correlations calculated from less than 100 pairs
+\item ignored NAs pairwise
+\item see corrNetwork figures in "figure folder"
+\end{itemize}
+
+\begin{itemize}
+\item Absolute value of 0.5 threshold: 
+
+D6 to D7, D22, D4
+
+D7 to D8, D10, D12
+
+D8 to D10, D4
+
+D10 to D12, D4
+
+D4 to D22, D19
+
+D22 to D19
+
+D12 to D19
+
+D19 to D28A
+
+D28A to D26
+\item Absolute value of 0.6 threshold:
+
+D6 to D7, D4
+
+D7 to D8, D10, D12
+
+D8 to D10, D4
+
+D10 to D4
+
+D12 to D19
+
+D22 to D19
+
+D19 to D28A
+
+D26 to D28A
+
+\item Absolute value of 0.7 threshold:
+
+D7 to D8, D10, D12
+
+D8 to D10
+
+D10 to D4
+
+D12 to D19
+
+D22 to D19
+
+D19 to D28A
+
+D26 to D28A
+
+
+\item Absolute value of 0.8 threshold:
+
+D7 to D8, D10
+
+D10 to D4
+
+D12 to D19
+
+D19 to D28A
+
+D26 to D28A
+
+\item 23 station pairs whose correlation can be improved by 0.1 or better by using a lag other than zero
+\item stations involved are D41, D6, D7, D8, D10, D4, D12, D22, D19, C3, MD10, C10, P8
+(all but two and includes extreme stations)
+
+\end{itemize}
