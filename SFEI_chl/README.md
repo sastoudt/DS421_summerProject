@@ -68,6 +68,7 @@ I anticipate computational problems when adding all stations into one model.
 - chunk into regions (no longer necessary when we are using bam)
 - chunk based on correlation of chl between stations (don't need to chunk, just investigate and see whether we are leveraging extra information from other stations in a full spatial model or whether building a seperate model per station is really best)
 - investigate lags in this correlation (perhaps save trying to incorporate the results of this exploration for Week 3, has to do with flow structure)
+- try to incorporate pheo and/or tn if possible (compare same for each station and by station)
 
 Computational Update
 - I anticipated correctly, but there are a few options that look promising for not having to break things up.
