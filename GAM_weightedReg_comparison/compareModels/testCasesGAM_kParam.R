@@ -191,3 +191,82 @@ bigModels[[6]]=gamDEFAULT
 
 setwd("~/Desktop/sfei")
 save(bigModels,file="bigModels.RData")
+
+test=predict(bigModels[[1]],dataNiceNoLag[[16]])
+length(test)
+dim(dataNiceNoLag[[16]])
+
+for(i in 1:6){
+  dataNiceNoLag[[15+i]]$gamPredExpand=predict(bigModels[[i]],dataNiceNoLag[[15+i]])
+  
+}
+setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data")
+save(dataNiceNoLag,file="dataNice_nolag.RData")
+
+ggplot(dataNiceNoLag[[16]], aes(x = date, y = res))+geom_point()+
+  geom_line(data=dataNiceNoLag[[16]],aes(y = gamPred, color = 'GAM'),lwd=1)+
+  geom_line(data=dataNiceNoLag[[16]],aes(y = gamPredExpand, color = 'GAM expand'), lwd=1)+
+  geom_line(data=dataNiceNoLag[[16]],aes(y = wrtdsPred, color = 'WRTDS'), lwd=1)+
+
+  scale_colour_manual(name = '',
+                      labels = c('darkblue'='GAM', 'dodgerblue'='GAM expand','red'='WRTDS'),
+                      values =c('darkblue','dodgerblue','red')
+  ) 
+
+ggplot(dataNiceNoLag[[17]], aes(x = date, y = res))+geom_point()+
+  geom_line(data=dataNiceNoLag[[17]],aes(y = gamPred, color = 'GAM'),lwd=1)+
+  geom_line(data=dataNiceNoLag[[17]],aes(y = gamPredExpand, color = 'GAM expand'), lwd=1)+
+  geom_line(data=dataNiceNoLag[[17]],aes(y = wrtdsPred, color = 'WRTDS'), lwd=1)+
+  
+  scale_colour_manual(name = '',
+                      labels = c('darkblue'='GAM', 'dodgerblue'='GAM expand','red'='WRTDS'),
+                      values =c('darkblue','dodgerblue','red')
+  )
+
+ggplot(dataNiceNoLag[[18]], aes(x = date, y = res))+geom_point()+
+  geom_line(data=dataNiceNoLag[[18]],aes(y = gamPred, color = 'GAM'),lwd=1)+
+  geom_line(data=dataNiceNoLag[[18]],aes(y = gamPredExpand, color = 'GAM expand'), lwd=1)+
+  geom_line(data=dataNiceNoLag[[18]],aes(y = wrtdsPred, color = 'WRTDS'), lwd=1)+
+  
+  scale_colour_manual(name = '',
+                      labels = c('darkblue'='GAM', 'dodgerblue'='GAM expand','red'='WRTDS'),
+                      values =c('darkblue','dodgerblue','red')
+  )
+
+ggplot(dataNiceNoLag[[19]], aes(x = date, y = res))+geom_point()+
+  geom_line(data=dataNiceNoLag[[19]],aes(y = gamPred, color = 'GAM'),lwd=1)+
+  geom_line(data=dataNiceNoLag[[19]],aes(y = gamPredExpand, color = 'GAM expand'), lwd=1)+
+  geom_line(data=dataNiceNoLag[[19]],aes(y = wrtdsPred, color = 'WRTDS'), lwd=1)+
+  
+  scale_colour_manual(name = '',
+                      labels = c('darkblue'='GAM', 'dodgerblue'='GAM expand','red'='WRTDS'),
+                      values =c('darkblue','dodgerblue','red')
+  )
+
+ggplot(dataNiceNoLag[[20]], aes(x = date, y = res))+geom_point()+
+  geom_line(data=dataNiceNoLag[[20]],aes(y = gamPred, color = 'GAM'),lwd=1)+
+  geom_line(data=dataNiceNoLag[[20]],aes(y = gamPredExpand, color = 'GAM expand'), lwd=1)+
+  geom_line(data=dataNiceNoLag[[20]],aes(y = wrtdsPred, color = 'WRTDS'), lwd=1)+
+  
+  scale_colour_manual(name = '',
+                      labels = c('darkblue'='GAM', 'dodgerblue'='GAM expand','red'='WRTDS'),
+                      values =c('darkblue','dodgerblue','red')
+  )
+
+
+ggplot(dataNiceNoLag[[21]], aes(x = date, y = res))+geom_point()+
+  geom_line(data=dataNiceNoLag[[21]],aes(y = gamPred, color = 'GAM'),lwd=1)+
+  geom_line(data=dataNiceNoLag[[21]],aes(y = gamPredExpand, color = 'GAM expand'), lwd=1)+
+  geom_line(data=dataNiceNoLag[[21]],aes(y = wrtdsPred, color = 'WRTDS'), lwd=1)+
+  
+  scale_colour_manual(name = '',
+                      labels = c('darkblue'='GAM', 'dodgerblue'='GAM expand','red'='WRTDS'),
+                      values =c('darkblue','dodgerblue','red')
+  )
+
+## Looks like overall GAM and GAM expand are pretty similar
+##(makes sense, can't actually expand that much due to identifiability constraints), 
+## WRTDS less extreme then GAM predictions
+## so if GAM is always winning, it means it gets high/low enough in the right places
+## (not losing big by being large in magnitude when it shouldn't)
+

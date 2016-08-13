@@ -193,3 +193,7 @@ modelsNoLag_NoFlow_Nested[[i]]=gamDEFAULTnoflow
 names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
 
 save(modelsNoLag_NoFlow_Nested,file="data/modelsNoLag_NoFlow_Nested.RData")
+
+names(dataNiceNoLag[[1]])
+
+
