@@ -17,9 +17,13 @@
 \maketitle
 %\tableofcontents
 
-Note: Skipping D4din, D4nh, D4no23, D6din, D6nh, D6no23, D7din, D7nh, D7no23 for now since most of the fitted values for WRTDS are missing.
+Note: Filled in D4din, D4nh, D4no23, D6din, D6nh, D6no23, D7din, D7nh, D7no23 by building a mean model on the corresponding dataNiceNoLag data and using fit0.5.
+
+Explanation of the NAs from Marcus: ``The issue is that the flow variable (in this case salinity) used to create the model predictions was slightly different from the flow variable used to fit the model.  It’s actually the same time series in both cases but one was monthly aggregated and the other was not. I had to do some data tweaking early on to make the models comparable.  The NA values occur when the observation date for the flow variable used for prediction did not match the observation date for the aggregated monthly response, i.e., predicting response variables with ‘new’ data."
 
 \section{Like Table 2 in Beck and Murphy EMA}
+
+
 
 
 \input{likeTable2.tex}

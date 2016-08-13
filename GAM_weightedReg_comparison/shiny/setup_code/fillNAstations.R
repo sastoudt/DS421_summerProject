@@ -216,3 +216,5 @@ for(i in toRedo){
   dataNiceNoLag[[i]]$wrtdsPred=test$fit0.5 ## this works
   
 }
+
+save(dataNiceNoLag,file="dataNice_nolag.RData")
