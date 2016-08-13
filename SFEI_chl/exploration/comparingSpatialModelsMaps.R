@@ -297,3 +297,18 @@ testMerge5$Station[5]
 gam.check(mod3)
 gam.check(perStationMod3Compare[[5]])
 ## might not be fair yet
+
+names(testMerge5)
+cbind(testMerge5$rmseInt,rmsePerStationCompare)
+
+table(apply(cbind(testMerge5$rmseInt,rmsePerStationCompare),1,which.min))
+cbind(apply(cbind(testMerge5$rmseInt,rmsePerStationCompare),1,which.min),abs(testMerge5$rmseInt-rmsePerStationCompare))
+cbind(testMerge5$Station,apply(cbind(testMerge5$rmseInt,rmsePerStationCompare),1,which.min))
+
+interactionW=c("C10", "D10", "D12", "D19", "D22", "D41", "D6", "D7")
+simpleW=c( "C3", "D26", "D28A", "D4", "D8", "MD10", "P8")
+
+plot(testMerge5$Longitude,testMerge5$Latitude, pch=19,xlab="Longitude",ylab="Latitude",main="Comparing RMSE Per Station")
+points(testMerge5[which(testMerge5$Station %in% interactionW),"Longitude"],testMerge5[which(testMerge5$Station %in% interactionW),"Latitude"],col="red",pch=19)
+points(testMerge5[which(testMerge5$Station %in% simpleW),"Longitude"],testMerge5[which(testMerge5$Station %in% simpleW),"Latitude"],col="blue",pch=19)
+legend("topleft",col=c("red","blue"),lty=1,lwd=2,c("interaction better","simple better"))
