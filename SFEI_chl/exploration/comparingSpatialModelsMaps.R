@@ -317,3 +317,16 @@ plot(testMerge5$Longitude,testMerge5$Latitude, pch=19,xlab="Longitude",ylab="Lat
 points(testMerge5[which(testMerge5$Station %in% interactionW),"Longitude"],testMerge5[which(testMerge5$Station %in% interactionW),"Latitude"],col="red",pch=19)
 points(testMerge5[which(testMerge5$Station %in% simpleW),"Longitude"],testMerge5[which(testMerge5$Station %in% simpleW),"Latitude"],col="blue",pch=19)
 legend("topleft",col=c("red","blue"),lty=1,lwd=2,c("interaction better","simple better"))
+
+setwd("~/Desktop/tmpSpatGam")
+load("spatialModel3Expand.RData")
+gam.check(gamP)
+allData$mod3ePred=predict(gamP,allData)
+allData$resid3e=(allData$chl-allData$mod3ePred)^2
+byStation<-group_by(allData,Station)
+rmsePerStation3e<-summarise(byStation,stp1=sum(resid3e,na.rm=T),count=n(),station=Station[1])
+rmse3e=sqrt(as.vector(rmsePerStation3e$stp1)/rmsePerStation3e$count)
+rmse3e
+
+cbind(testMerge5$rmse3,rmsePerStationCompare,rmse3e)
+### still the per station is much better

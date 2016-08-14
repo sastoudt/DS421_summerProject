@@ -86,7 +86,7 @@ Week 2 Update- completed all of the main goals for this week including:
 To Do
 
 - host Shiny app online (need to slim it down a bit)
-- waiting for expanded model 3 to run on cluster to get fairer comparison of full model v. one model per station
+- waiting for expanded model 3 to run on cluster to get fairer comparison of full model v. one model per station DONE
 
 
 ## Week 3 Goals
