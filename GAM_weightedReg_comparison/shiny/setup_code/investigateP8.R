@@ -24,6 +24,14 @@ modNoFlow=modelsNoLag_NoFlow_Nested[[7]]
   data$month=as.numeric(strftime(data$date, '%m'))
   data$year=as.numeric(strftime(data$date, '%Y'))
   monthly<-group_by(data,month)
+  
+  countTest=summarise(monthly,count=n())
+  View(countTest)
+  yearly<-group_by(data,year)
+  countTest2=summarise(yearly,count=n())
+  View(countTest2)
+  ## not a missingness issue
+  
   monthFlow<-summarise(monthly,meanFlow=mean(flo,na.rm=T))
   monthFlow=as.data.frame(monthFlow)
   names(monthFlow)=c("month","avgFlow")
