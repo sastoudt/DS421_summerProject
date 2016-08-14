@@ -69,5 +69,16 @@ Explanation of the NAs from Marcus: ``The issue is that the flow variable (in th
 \item Overall significant (so most): C10din, C10no23, C3din, C3nh, C3no23, P8din, P8nh, P8no23, D19din, D19nh, D19no23, D26din, D26nh, D26no23, D28din, D28nh, D28no23
 \end{itemize}
 
+\subsection{Observations on Results of Different Parameter Experiment }
+\begin{itemize}
+\item Stations of interest: D7, D19 chosen to be fairly represent (in the center portion)
+\item Expand k: visually the predictions look similar to those of the GAM model with the original choices of k
+\item WRTDS predictions are less extreme than the GAM predictions: so if GAM is always "winning" it means it gets high/low enough in the right places and isn't losing big by being large in magnitude when it shouldn't
+\item expanded k version always has smaller RMSE breakdown than the original GAM model which means it still has smaller RMSE than WRTDS
+\item can't expand k any further because of identifiability constraints
+\item Original window sizes (0.5, 10, 0.5) try smaller window sizes (0.25, 5, 0.25), bigger window sizes (0.75, 15, 0.75) and an even bigger widows size (1,20,1)
+\item Still overall the expanded GAM does better than all of the WRTDS models
+\item of the WRTDS models, the smaller window model generally does better, with a few breakdown categories having the original WRTDS model being the best
+\end{itemize}
 
 \end{document}
