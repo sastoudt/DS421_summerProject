@@ -36,7 +36,7 @@ comparePlot=function(data,xlim=range(data$date),scale=F,annual=F){
       xlab("")+
       ylab(ylabel)+
       scale_colour_manual(name = '',
-                          labels = c('GAM'='darkblue', 'WRTDS'="orange"),
+                          labels = c('darkblue'='GAM', "orange"='WRTDS'),
                           values =c('darkblue','orange')
       ) +
       ggtitle(txt)
