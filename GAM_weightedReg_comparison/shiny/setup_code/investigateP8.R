@@ -6,7 +6,10 @@ grep("P8",names(dataNiceNoLag)) ## 7, 8, 9
 load("modelsNoLag_NoFlow_Nested.RData") ##modelsNoLag_NoFlow_Nested
 load("modelsNoLag_Nested.RData") ##modelsNoLag_Nested
 
-flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F){
+data=dataNiceNoLag[[7]]
+mod=modelsNoLag_Nested[[7]]
+modNoFlow=modelsNoLag_NoFlow_Nested[[7]]
+
   ylabel=with(lablk, lngs[shrt == data$resdup[1]])
   # if(scale){
   #   data$res=exp(data$res)
@@ -29,6 +32,12 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
   
   normVal=getFlowNormalized(mod,data,monthFlow$avgFlow)
   normValNoFlow=getFlowNormalized(modNoFlow,data,monthFlow$avgFlow)
+  
+  checkSub=subset(normVal,year>1990 & year<2010)
+  checkSub2=subset(normValNoFlow,year>1990 & year<2010)
+  
+  cbind(checkSub$year,checkSub$res,checkSub2$res) ## Yup, color coded right
+  
   
   normVal$date=as.Date(paste(normVal$year,normVal$month,"01",sep="-"))
   normValNoFlow$date=as.Date(paste(normValNoFlow$year,normValNoFlow$month,"01",sep="-"))
@@ -133,5 +142,5 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
 }
 
 
-dat=dataNiceNoLag[[dat()]]
-flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_Nested[[mod()]],modelsNoLag_Nested[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
+dat=dataNiceNoLag[[7]]
+flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_Nested[[7]],modelsNoLag_Nested[[7]],annual=T)
