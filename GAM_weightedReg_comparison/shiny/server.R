@@ -195,7 +195,7 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F)
       xlab("")+
       ylab(ylabel)+
       scale_colour_manual(name = '',
-                          labels = c('With Flow'='darkblue', 'No Flow'="orange"),
+                          labels = c('darkblue'='With Flow', "orange"='No Flow'),
                           values =c('darkblue','orange')
       ) +
       ggtitle(txt)
@@ -213,7 +213,7 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F)
     xlab("")+
     ylab(ylabel)+
   scale_colour_manual(name = '', 
-    labels = c('With Flow'="darkblue", 'No Flow'="orange"), 
+    labels = c("darkblue"='With Flow', "orange"='No Flow'), 
     values =c('darkblue','orange')
     ) + 
   ggtitle(txt)
