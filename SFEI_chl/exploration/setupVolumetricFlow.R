@@ -37,3 +37,41 @@ volFlow$TIME=as.Date(as.character(volFlow$TIME),format="%d-%B-%y")
 head(volFlow$TIME)
 class(volFlow$TIME)
 
+
+View(volFlow)
+## mean of each column by month/year
+
+volFlow$year=year(volFlow$TIME)
+volFlow$month=month(volFlow$TIME)
+
+head(volFlow[,c("year","month")])
+
+require(dplyr)
+
+byMonYr<-group_by(volFlow,year,month)
+
+test=summarise(byMonYr,mean(D10.AG))
+head(test)
+
+aggdata <-aggregate(volFlow[,-1], by=list(volFlow$year,volFlow$month), 
+                    FUN=mean, na.rm=TRUE)
+
+
+### get a feel for yearly cycle one station
+
+aggdata <-aggregate(volFlow[,c(3:8)], by=list(volFlow$month), 
+                    FUN=mean, na.rm=TRUE)
+
+
+toPlot=as.table(t(aggdata[,-1]))
+#colnames(toPlot)=c(1:12)
+
+barplot(as.matrix(toPlot))
+
+library(reshape2)
+toPlot$row<-seq_len(6)
+toPlot2<-melt(toPlot,id.vars="row")
+
+require(ggplot2)
+
+ggplot(toPlot2,aes(x=variable,y=value,fill="row"))+geom_bar(stat="identity")
