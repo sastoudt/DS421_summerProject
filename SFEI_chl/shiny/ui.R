@@ -133,32 +133,32 @@ shinyUI(fluidPage(
            
     ),
     
-    column(2,
-           
-           selectInput(inputId = 'spatMod2',
-                       label = 'Select a spatial model.',
-                       choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
-                       selected = 'spatDate_Dec')
-           
-    ),
-    
-    column(2,
-           
-           selectInput(inputId = 'spatMod3',
-                       label = 'Select a spatial model.',
-                       choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
-                       selected = 'spatDOY')
-           
-    ),
-    
-    column(2,
-           
-           selectInput(inputId = 'spatMod4',
-                       label = 'Select a spatial model.',
-                       choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
-                       selected = 'spatinteraction')
-           
-    ),
+    # column(2,
+    #        
+    #        selectInput(inputId = 'spatMod2',
+    #                    label = 'Select a spatial model.',
+    #                    choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
+    #                    selected = 'spatDate_Dec')
+    #        
+    # ),
+    # 
+    # column(2,
+    #        
+    #        selectInput(inputId = 'spatMod3',
+    #                    label = 'Select a spatial model.',
+    #                    choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
+    #                    selected = 'spatDOY')
+    #        
+    # ),
+    # 
+    # column(2,
+    #        
+    #        selectInput(inputId = 'spatMod4',
+    #                    label = 'Select a spatial model.',
+    #                    choices = c('spatIntercept', 'spatDate_Dec',"spatDOY" ,'spatinteraction'),
+    #                    selected = 'spatinteraction')
+    #        
+    # ),
     
     
     width = 12
@@ -182,12 +182,13 @@ shinyUI(fluidPage(
     plotOutput("nestedPlotFull",height="100%"),
     plotOutput("nestedPlotInt",height="100%"),
     plotOutput("nestedPlotSpat",height="100%"),
-    plotOutput("nestedPlotSpat2",height="100%"),
-    plotOutput("nestedPlotSpat3",height="100%"),
-    plotOutput("nestedPlotSpat4",height="100%"),
+    #plotOutput("nestedPlotSpat2",height="100%"),
+    #plotOutput("nestedPlotSpat3",height="100%"),
+    #plotOutput("nestedPlotSpat4",height="100%"),
     plotOutput("nestedPlotParsJust2",height="100%"),
     plotOutput("nestedPlotFullJust2",height="100%"),
     plotOutput("nestedPlotIntJust2",height="100%"),
+    plotOutput("flowInput",height="100%"),
     width = 9
     
   )

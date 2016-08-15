@@ -1,6 +1,7 @@
 # packages to use
 library(ggplot2)
 library(sp)
+library(gridExtra)
 
 # raw data
 load(file = "~/Desktop/sfei/perStation.Rda")
@@ -14,7 +15,29 @@ load(file="~/Desktop/sfei/mod3Spatial.RData")
 load(file="~/Desktop/sfei/mod4Spatial.RData")
 full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 allData=read.csv("~/Desktop/sfei/allData.csv")
+volFlow=read.csv("~/Desktop/sfei/VolFingerPrintsMaster.csv")
 # Define server logic required to generate and plot data
+
+makeCompChart=function(data,stationID,month=T){
+  toPlot=as.data.frame(data)
+  
+  if(month){
+    names(toPlot)=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec")
+  }else{
+    names(toPlot)=c(1991:2006)
+  }
+  
+  toPlot$row<-seq_len(nrow(toPlot))
+  toPlot2<-melt(toPlot,id.vars="row")
+  
+  ggplot(toPlot2,aes(x=variable,y=value,fill=as.factor(row)))+geom_bar(stat="identity")+
+    scale_fill_discrete("Volumetric Fingerprint",labels=c("AG","East","Jones","MTZ","SAC","SJR"))+
+    xlab("")+ylab("% contribution")+
+    ggtitle(paste("Average Composition of",stationID,sep=" "))
+  
+}
+
+
 shinyServer(function(input, output) {
   
   ##
@@ -1288,5 +1311,31 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     }
     
   }, height = 250, width = 1200)
+  
+  
+  output$flowInput <- renderPlot({
+    
+    stat <- input$stat
+    
+    if(stat %in% c("D6","D7","D8","D10","D4","D12","D22","D26","D28A",
+                   "MD10","P8")){
+     
+      aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$year), 
+                          FUN=mean, na.rm=TRUE)
+      gY<-makeCompChart(t(aggdata[,-1]),stat,F)
+      
+      aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$month), 
+                          FUN=mean, na.rm=TRUE)
+      gM<-makeCompChart(t(aggdata[,-1]),stat)
+      
+      grid.arrange(gY,gM)
+      
+    }else{
+      df <- data.frame()
+      ggplot(df) + geom_point() +ggtitle("no volumetric flow data for this station")
+    }
+    
+    
+  }, height = 800, width = 800)
   
 })
