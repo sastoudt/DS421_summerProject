@@ -165,3 +165,37 @@ lookIntoS=unique(c(lookInto$station1,lookInto$station2))
 plot(allData$Longitude,allData$Latitude,pch=19)
 points(allData$Longitude[which(allData$Station %in% lookIntoS)],allData$Latitude[which(allData$Station %in% lookIntoS)],col="red",pch=19)
 
+###
+## find best station/lag combo for each
+## maybe do best station lag 0
+## and then another one that optimizes lag
+## put data together
+## add that series as "flow" smooth variable in gam
+flatCorr=flattenCorrMatrix(result$r)
+
+flatCorr
+class(flatCorr$row)
+flatCorr$row=as.character(flatCorr$row)
+flatCorr$column=as.character(flatCorr$column)
+
+length(unique(c(flatCorr$row,flatCorr$column)))
+length(wholeSeries)
+
+keepTrack<-c()
+for(i in names(perStation)[wholeSeries]){
+  find=grep(i,flatCorr$row)
+  find2=grep(i,flatCorr$column)
+  ind=unique(c(find,find2))[which.max(abs(flatCorr[unique(c(find,find2)),"cor"]))]
+  
+ keepTrack=rbind(keepTrack,flatCorr[ind,])
+}
+
+keepTrack=unique(keepTrack)
+
+## Not same dates
+for(i in 1:nrow(keepTrack)){
+  find=grep(keepTrack[i,1],names(perStation))
+  find2=grep(keepTrack[i,2],names(perStation))
+  
+  testMerge1=merge(perStation[[find]],perStation[[find2]][,c("Date",)])
+}

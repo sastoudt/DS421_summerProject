@@ -145,3 +145,17 @@ aggdata <-aggregate(volFlow[,c(62:67)], by=list(volFlow$month),
                     FUN=mean, na.rm=TRUE)
 
 toPlot=t(aggdata[,-1])
+
+
+### order by a certain flow, infer a direction?
+## but we can probably get this more specifically from the correlation and "best" lags
+
+sort(compareOverall[grepl("AG",names(compareOverall))]) ## left to right
+
+sort(compareOverall[grepl("EAST",names(compareOverall))]) ## more or less left to right
+
+sort(compareOverall[grepl("JONES",names(compareOverall))]) ## all so small, jumbled
+sort(compareOverall[grepl("MTZ",names(compareOverall))])  ## right to left
+sort(compareOverall[grepl("SAC",names(compareOverall))]) ## not really ordered, clumped though
+
+sort(compareOverall[grepl("SJR",names(compareOverall))] ) ## sort of left to right
