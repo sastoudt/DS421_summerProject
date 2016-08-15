@@ -123,6 +123,7 @@ toCheck=combn(unique(c(relevant$row,relevant$column)), 2)
 bestLag<-c()
 zeroLagCorr<-c()
 bestLagCorr<-c()
+numUsed<-c()
 for(i in c(1:9,11,13:24,26:47,49:57)){
  test= ccf(testMerge[,which(names(testMerge)==toCheck[1,i])], 
       testMerge[,which(names(testMerge)==toCheck[2,i])  ], lag.max=5, plot=F,na.action=na.exclude)
@@ -130,6 +131,7 @@ for(i in c(1:9,11,13:24,26:47,49:57)){
  bestLag<-c(bestLag,test$lag[which.max(test$acf)] )
  zeroLagCorr<-c(zeroLagCorr,test$acf[which(test$lag==0)])
  bestLagCorr<-c(bestLagCorr,test$acf[which.max(test$acf)])
+ numUsed<-c(numUsed,test$n.used)
  print(i)
 }
 
@@ -141,15 +143,20 @@ for(i in 59:ncol(toCheck)){
   bestLag<-c(bestLag,test$lag[which.max(test$acf)] )
   zeroLagCorr<-c(zeroLagCorr,test$acf[which(test$lag==0)])
   bestLagCorr<-c(bestLagCorr,test$acf[which.max(test$acf)])
+  numUsed<-c(numUsed,test$n.used)
+  
   print(i)
 }
 
-decideLag=as.data.frame(cbind(c(1:9,11,13:24,26:47,49:57,59:ncol(toCheck)),bestLag,zeroLagCorr,bestLagCorr))
+decideLag=as.data.frame(cbind(c(1:9,11,13:24,26:47,49:57,59:ncol(toCheck)),bestLag,zeroLagCorr,bestLagCorr,numUsed))
 names(decideLag)[1]="combo"
 
 decideLag$station1=toCheck[1,decideLag$combo]
 decideLag$station2=toCheck[2,decideLag$combo]
 View(decideLag)
+
+length(unique(c(decideLag$station1,decideLag$station2)))
+length(wholeSeries) ## every station has something
 
 ## go through and see which are actually significant benefits above lag 0
 
@@ -235,3 +242,40 @@ for(i in wholeSeries){
 
 wholeSeries
 ncol(perStation[[3]]) ## successfully added 2 to every station of interest (match date, and chl value)
+
+### now look for lags
+
+
+## don't trust the -1 and 1s
+
+decideLag=decideLag[-unique(which(abs(decideLag$zeroLagCorr)==1),
+which(abs(decideLag$bestLagCorr)==1)),]
+
+length(which(decideLag$numUsed<100)) ## over half
+
+decideLag=decideLag[-which(decideLag$numUsed<100),]
+
+keepTrack2<-c()
+for(i in names(perStation)[wholeSeries]){
+  find=grep(i,decideLag$station1)
+  find2=grep(i,decideLag$station2)
+  ind=unique(c(find,find2))[which.max(abs(decideLag[unique(c(find,find2)),"bestLagCorr"]))]
+  ind2=unique(c(find,find2))[which.max(abs(decideLag[unique(c(find,find2)),"zeroLagCorr"]))]
+  
+  
+  if(abs(decideLag[ind,"bestLagCorr"])<abs(decideLag[ind2,"zeroLagCorr"])){
+    keepTrack2=rbind(keepTrack2,decideLag[ind2,])
+    
+  }else{
+    keepTrack2=rbind(keepTrack2,decideLag[ind,])
+  }
+}
+keepTrack2
+keepTrack2=unique(keepTrack2)
+
+## keepTrack2 doesn't match keepTrack because in keepTrack we cut off values that were calculated
+## with not enough data
+## went back and fixed this in keepTrack2
+
+## only C10 and C3 benefit from a lag, lag on the end of the spectrum that I checked, so just 
+## go with zero lag for now
