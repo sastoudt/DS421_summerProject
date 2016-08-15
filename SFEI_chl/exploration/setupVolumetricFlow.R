@@ -81,3 +81,29 @@ ggplot(toPlot2,aes(x=variable,y=value,fill=as.factor(row)))+geom_bar(stat="ident
   xlab("")+ylab("% contribution")+
   ggtitle("Average Composition of D10")
 
+
+makeCompChart=function(data,stationID,month=T){
+  toPlot=as.data.frame(data)
+ 
+  if(month){
+  names(toPlot)=c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec")
+  }else{
+    names(toPlot)=c(1991:2006)
+  }
+  
+  toPlot$row<-seq_len(nrow(toPlot))
+  toPlot2<-melt(toPlot,id.vars="row")
+  
+  ggplot(toPlot2,aes(x=variable,y=value,fill=as.factor(row)))+geom_bar(stat="identity")+
+    scale_fill_discrete("Volumetric Fingerprint",labels=c("East","Jones","MTZ","SAC","SJR","AG"))+
+    xlab("")+ylab("% contribution")+
+    ggtitle(paste("Average Composition of",stationID,sep=" "))
+  
+}
+
+makeCompChart(t(aggdata[,-1]),"D10")
+
+
+aggdata <-aggregate(volFlow[,c(3:8)], by=list(volFlow$year), 
+                    FUN=mean, na.rm=TRUE)
+makeCompChart(t(aggdata[,-1]),"D10",F)
