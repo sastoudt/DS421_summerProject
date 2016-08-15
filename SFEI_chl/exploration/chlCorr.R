@@ -205,6 +205,10 @@ library(data.table)
 ## Not same dates
 ## use this cool trick to find nearest date
 ## http://stackoverflow.com/questions/28072542/merge-nearest-date-and-related-variables-from-a-another-dataframe-by-group
+
+perStationAdd<- vector(mode = "list", length = length(perStation))
+
+
 for(i in 1:nrow(keepTrack)){
   find=grep(paste("^",keepTrack[i,1],"$",sep=""),names(perStation))
   find2=grep(paste("^",keepTrack[i,2],"$",sep=""),names(perStation))
@@ -219,8 +223,8 @@ for(i in 1:nrow(keepTrack)){
   
   test=as.data.frame(test)
 
-  test=test[,c(1:38, 47)]
-  perStation[[find]]=test
+  test=test[,c(1:38,which(names(test)=="i.chl"))]
+  perStationAdd[[find]]=test
   
   setDT(perStation[[find2]])
   setDT(perStation[[find]])
@@ -232,12 +236,13 @@ for(i in 1:nrow(keepTrack)){
   test=as.data.frame(test)
   
   test=test[,c(1:38, 47)]
-  perStation[[find2]]=test
+  perStationAdd[[find2]]=test
   print(i)
 }
+save(perStationAdd,file="perStationAdd.Rda")
 
 for(i in wholeSeries){
-  print(ncol(perStation[[i]]))
+  print(names(perStation[[i]]))
 }
 
 wholeSeries
