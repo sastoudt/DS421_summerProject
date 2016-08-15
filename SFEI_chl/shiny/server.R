@@ -1320,6 +1320,17 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     if(stat %in% c("D6","D7","D8","D10","D4","D12","D22","D26","D28A",
                    "MD10","P8")){
      
+      if(stat=="D10"){
+        aggdata <-aggregate(volFlow[,grepl(paste(stat,"\\.",sep=""),names(volFlow))], by=list(volFlow$year), 
+                            FUN=mean, na.rm=TRUE)
+        gY<-makeCompChart(t(aggdata[,-1]),stat,F)
+        
+        aggdata <-aggregate(volFlow[,grepl(paste(stat,"\\.",sep=""),names(volFlow))], by=list(volFlow$month), 
+                            FUN=mean, na.rm=TRUE)
+        gM<-makeCompChart(t(aggdata[,-1]),stat)
+        
+        grid.arrange(gY,gM)
+      }else{
       aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$year), 
                           FUN=mean, na.rm=TRUE)
       gY<-makeCompChart(t(aggdata[,-1]),stat,F)
@@ -1329,7 +1340,7 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
       gM<-makeCompChart(t(aggdata[,-1]),stat)
       
       grid.arrange(gY,gM)
-      
+      }
     }else{
       df <- data.frame()
       ggplot(df) + geom_point() +ggtitle("no volumetric flow data for this station")
