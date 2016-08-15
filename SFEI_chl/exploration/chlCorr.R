@@ -192,10 +192,46 @@ for(i in names(perStation)[wholeSeries]){
 
 keepTrack=unique(keepTrack)
 
+library(data.table)
+
+
 ## Not same dates
+## use this cool trick to find nearest date
+## http://stackoverflow.com/questions/28072542/merge-nearest-date-and-related-variables-from-a-another-dataframe-by-group
 for(i in 1:nrow(keepTrack)){
-  find=grep(keepTrack[i,1],names(perStation))
-  find2=grep(keepTrack[i,2],names(perStation))
+  find=grep(paste("^",keepTrack[i,1],"$",sep=""),names(perStation))
+  find2=grep(paste("^",keepTrack[i,2],"$",sep=""),names(perStation))
   
-  testMerge1=merge(perStation[[find]],perStation[[find2]][,c("Date",)])
+  setDT(perStation[[find]])
+  setDT(perStation[[find2]])
+  
+  setkey(perStation[[find2]], Date)[, dateMatch:=Date]
+  test=perStation[[find2]][perStation[[find]], roll='nearest']
+  test$Date=as.Date(test$Date)
+  test$dateMatch=as.Date(test$dateMatch)
+  
+  test=as.data.frame(test)
+
+  test=test[,c(1:38, 47)]
+  perStation[[find]]=test
+  
+  setDT(perStation[[find2]])
+  setDT(perStation[[find]])
+  
+  setkey(perStation[[find]], Date)[, dateMatch:=Date]
+  test=perStation[[find]][perStation[[find2]], roll='nearest']
+  test$Date=as.Date(test$Date)
+  
+  test=as.data.frame(test)
+  
+  test=test[,c(1:38, 47)]
+  perStation[[find2]]=test
+  print(i)
 }
+
+for(i in wholeSeries){
+  print(ncol(perStation[[i]]))
+}
+
+wholeSeries
+ncol(perStation[[3]]) ## successfully added 2 to every station of interest (match date, and chl value)
