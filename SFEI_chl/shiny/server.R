@@ -18,7 +18,7 @@ allData=read.csv("~/Desktop/sfei/allData.csv")
 volFlow=read.csv("~/Desktop/sfei/VolFingerPrintsMaster.csv")
 # Define server logic required to generate and plot data
 
-makeCompChart=function(data,stationID,month=T){
+makeCompChart=function(data,stationID,month=T,labels=c("AG","East","Jones","MTZ","SAC","SJR")){
   toPlot=as.data.frame(data)
   
   if(month){
@@ -31,7 +31,7 @@ makeCompChart=function(data,stationID,month=T){
   toPlot2<-melt(toPlot,id.vars="row")
   
   ggplot(toPlot2,aes(x=variable,y=value,fill=as.factor(row)))+geom_bar(stat="identity")+
-    scale_fill_discrete("Volumetric Fingerprint",labels=c("AG","East","Jones","MTZ","SAC","SJR"))+
+    scale_fill_discrete("Volumetric Fingerprint",labels=labels)+
     xlab("")+ylab("% contribution")+
     ggtitle(paste("Average Composition of",stationID,sep=" "))
   
@@ -1320,7 +1320,31 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     if(stat %in% c("D6","D7","D8","D10","D4","D12","D22","D26","D28A",
                    "MD10","P8")){
      
-      if(stat=="D10"){
+      
+      if(stat=="D28A"){
+        
+        aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$year), 
+                            FUN=mean, na.rm=TRUE)
+        gY<-makeCompChart(t(aggdata[,-1]),stat,F,c("AG","East","Jones","SAC","SJR"))
+        
+        aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$month), 
+                            FUN=mean, na.rm=TRUE)
+        gM<-makeCompChart(t(aggdata[,-1]),stat,T,c("AG","East","Jones","SAC","SJR"))
+        
+        grid.arrange(gY,gM)
+      }else if(stat=="MD10"){
+        
+        aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$year), 
+                            FUN=mean, na.rm=TRUE)
+        gY<-makeCompChart(t(aggdata[,-1]),stat,F,c("AG","East","MTZ","SAC","SJR"))
+        
+        aggdata <-aggregate(volFlow[,grepl(stat,names(volFlow))], by=list(volFlow$month), 
+                            FUN=mean, na.rm=TRUE)
+        gM<-makeCompChart(t(aggdata[,-1]),stat,T,c("AG","East","MTZ","SAC","SJR"))
+        
+        grid.arrange(gY,gM)
+        
+      }else if(stat=="D10"){
         aggdata <-aggregate(volFlow[,grepl(paste(stat,"\\.",sep=""),names(volFlow))], by=list(volFlow$year), 
                             FUN=mean, na.rm=TRUE)
         gY<-makeCompChart(t(aggdata[,-1]),stat,F)

@@ -137,3 +137,11 @@ plot(allData$Longitude,allData$Latitude,type="n")
 text(allData$Longitude,allData$Latitude, allData$Station)
 
       
+##
+aggdata <-aggregate(volFlow[,c(74:79)], by=list(volFlow$month), 
+                    FUN=mean, na.rm=TRUE)
+
+aggdata <-aggregate(volFlow[,c(62:67)], by=list(volFlow$month), 
+                    FUN=mean, na.rm=TRUE)
+
+toPlot=t(aggdata[,-1])
