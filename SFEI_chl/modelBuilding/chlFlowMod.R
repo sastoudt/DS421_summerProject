@@ -575,3 +575,27 @@ gam.check(gamP)
 perStationFlowMod[[40]]=gamP
 
 save(perStationFlowMod,file="perStationFlowMod.Rda")
+
+rmse<-c()
+for(i in wholeSeries){
+  toUse=na.omit(perStationAdd[[i]][,c("doy","date_dec","chl","i.chl")])
+  predV=predict(perStationFlowMod[[i]],toUse)
+  resid=(toUse$chl-predV)^2
+  rmse=c(rmse,sqrt(sum(resid,na.rm=T)/length(resid)))
+  print(i)
+}
+rmse
+
+names(perStation)[wholeSeries]
+
+cbind(testMerge5$rmseInt,rmse)
+## worse for every station except C10
+
+plot(perStationAdd[[11]]$date_dec,perStationAdd[[11]]$chl)
+toUse=na.omit(perStationAdd[[11]][,c("doy","date_dec","chl","i.chl")])
+predV=predict(perStationFlowMod[[11]],toUse)
+lines(toUse$date_dec, predV,col="red",lwd=2)
+lines(toUse$date_dec,toUse$i.chl,col="forestgreen",lwd=2)
+
+plot(toUse$chl,toUse$i.chl)
+cor(toUse$chl,toUse$i.chl)
