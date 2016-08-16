@@ -60,6 +60,35 @@ names(data2)[1]="Date"
 
 write.csv(data2,"flowData.csv",row.names=F)
 setwd("~/Desktop/sfei")
+flowData<-read.csv("flowData.csv",stringsAsFactors=F)
+## merge total flow to everything, by closest date
+require(data.table)
+for(i in wholeSeries){
+ 
+ testMerge=merge(perStationAdd[[i]],flowData,by.x="Date",by.y="Date",all.x=T)
+ 
+ setDT(perStationAdd[[i]])
+ setDT(flowData)
+ 
+ flowData$Date=as.Date(flowData$Date)
+ perStationAdd[[i]]$Date=as.Date(perStationAdd[[i]]$Date)
+ 
+ setkey(perStationAdd[[i]], Date)[, dateMatch:=Date]
+ test=perStationAdd[[i]][flowData, roll='nearest']
+ test$Date=as.Date(test$Date)
+ test$dateMatch=as.Date(test$dateMatch)
+ 
+ test=as.data.frame(test)
+ 
+ perStationAdd[[i]]=test
+ print(i)
+}
+save(perStationAdd,file="perStationAdd.Rda")
+## then merge more strategically by station based on maximum avg contribution from volumetric data
+
+
+plot(density(as.numeric(data2$TOT)))
+
 require(tidyr)
 require(dplyr)
 flow_dat <- read.csv('flowData.csv',stringsAsFactors=F) %>% 
@@ -70,7 +99,7 @@ flow_dat <- read.csv('flowData.csv',stringsAsFactors=F) %>%
   ) %>% 
   gather('var', 'val', -DATE) %>% 
   mutate(
-    val = val * 0.028316847,
+    val = val * 0.028316847, #converted to m3/s
     var = tolower(var)
   ) %>% 
   rename(Date = DATE)
