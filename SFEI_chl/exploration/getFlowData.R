@@ -1,3 +1,5 @@
+## http://www.water.ca.gov/dayflow/
+
 require(lubridate)
 for(i in c(1997:2015)){
   data=read.csv(paste("http://www.water.ca.gov/dayflow/docs/dayflowCalculations",i,".csv",sep=""),row.names=NULL,stringsAsFactors=F)
