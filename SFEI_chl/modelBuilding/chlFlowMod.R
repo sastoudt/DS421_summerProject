@@ -599,3 +599,18 @@ lines(toUse$date_dec,toUse$i.chl,col="forestgreen",lwd=2)
 
 plot(toUse$chl,toUse$i.chl)
 cor(toUse$chl,toUse$i.chl)
+## It seems weird that this doesn't help. 
+
+table(toUse$chl>toUse$i.chl)
+#FALSE  TRUE 
+#185   271 
+
+hist(toUse$chl-toUse$i.chl)
+## maybe just want the "flow" to be a linear predictor?
+
+data=perStationAdd[[11]]
+
+gamP<-gam(chl~i.chl+ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=118),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+sqrt(sum(gamP$residuals^2)/length(gamP$residuals)) ## worse than as a smooth
