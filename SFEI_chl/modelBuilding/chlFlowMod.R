@@ -614,3 +614,23 @@ gamP<-gam(chl~i.chl+ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=118),data=data,fa
 gam.check(gamP)
 
 sqrt(sum(gamP$residuals^2)/length(gamP$residuals)) ## worse than as a smooth
+
+###
+gamP<-gam(chl~i.chl+ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(log(i.chl),bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-bam(chl~i.chl+ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=80)+ti(log(i.chl),bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP)
+
+gamP<-bam(chl~i.chl+ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=100)+ti(log(i.chl),bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP)
+
+gamP<-bam(chl~i.chl+ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=120)+ti(log(i.chl),bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) ## can't go beyond 120
+
+sqrt(sum(gamP$residuals^2)/length(gamP$residuals)) ## better than before but not as good as interaction
+
+names(testMerge5)
+testMerge5$rmsePars[5]
+testMerge5$rmseFull[5]
+testMerge5$rmse2[5]
