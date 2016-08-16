@@ -89,27 +89,36 @@ save(perStationAdd,file="perStationAdd.Rda")
 
 plot(density(as.numeric(data2$TOT)))
 
-require(tidyr)
-require(dplyr)
-flow_dat <- read.csv('flowData.csv',stringsAsFactors=F) %>% 
-  select(DATE, SAC, YOLO, CSMR, MOKE, MISC, SJR, EAST, TOT, XGEO, WEST, PREC, SJR) %>% 
-  mutate(
-    DATE = as.character(DATE), 
-    DATE = as.Date(DATE, format = '%d-%b-%y')
-  ) %>% 
-  gather('var', 'val', -DATE) %>% 
-  mutate(
-    val = val * 0.028316847, #converted to m3/s
-    var = tolower(var)
-  ) %>% 
-  rename(Date = DATE)
+## SAC =  RIO + YOLO
+## D10, D12, D22, D26, D28A, D4, D8
+## SJR = WEST 
+## P8, MD10A
 
-# pull out input stations from Novick et al, combine based on fig 2
-flow_dat <- filter(flow_dat, var %in% c('sjr', 'sac', 'yolo', 'csmr', 'moke', 'misc')) %>% 
-  spread(var, val) %>% 
-  mutate(
-    east = csmr + moke + misc,
-    sac = sac
-  ) %>% 
-  select(Date, sac, east, sjr) %>% 
-  gather('station', 'q', sac:sjr)
+## Skip D6, D7 for now. What is a reasonable equivalent of MTZ?
+
+
+
+# require(tidyr)
+# require(dplyr)
+# flow_dat <- read.csv('flowData.csv',stringsAsFactors=F) %>% 
+#   select(DATE, SAC, YOLO, CSMR, MOKE, MISC, SJR, EAST, TOT, XGEO, WEST, PREC, SJR) %>% 
+#   mutate(
+#     DATE = as.character(DATE), 
+#     DATE = as.Date(DATE, format = '%d-%b-%y')
+#   ) %>% 
+#   gather('var', 'val', -DATE) %>% 
+#   mutate(
+#     val = val * 0.028316847, #converted to m3/s
+#     var = tolower(var)
+#   ) %>% 
+#   rename(Date = DATE)
+# 
+# # pull out input stations from Novick et al, combine based on fig 2
+# flow_dat <- filter(flow_dat, var %in% c('sjr', 'sac', 'yolo', 'csmr', 'moke', 'misc')) %>% 
+#   spread(var, val) %>% 
+#   mutate(
+#     east = csmr + moke + misc,
+#     sac = sac
+#   ) %>% 
+#   select(Date, sac, east, sjr) %>% 
+#   gather('station', 'q', sac:sjr)
