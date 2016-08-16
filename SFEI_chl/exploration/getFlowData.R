@@ -1,21 +1,37 @@
+require(lubridate)
+for(i in c(1997:2015)){
+  data=read.csv(paste("http://www.water.ca.gov/dayflow/docs/dayflowCalculations",i,".csv",sep=""),row.names=NULL,stringsAsFactors=F)
+  print(head(data$Mo))
+} ## different date formats across different files, joy
+
+
 
 library(data.table)
 data=c()
 for(i in c(1997:2013,2015)){
-  data=rbind(data,read.csv(paste("http://www.water.ca.gov/dayflow/docs/dayflowCalculations",i,".csv",sep=""),row.names=NULL))
-print(i)
+  dataH=read.csv(paste("http://www.water.ca.gov/dayflow/docs/dayflowCalculations",i,".csv",sep=""),row.names=NULL,stringsAsFactors=F)
+ind=which(dataH[,1]=="monthly totals")
+dataH=dataH[1:(ind-1),]
+dataH$Mo=dmy(dataH$Mo)
+data=rbind(data,dataH)
+  print(ind)
   }
 
-
-myfile=read.csv("http://www.water.ca.gov/dayflow/docs/dayflowCalculations2014.csv",row.names=NULL)
+myfile=read.csv("http://www.water.ca.gov/dayflow/docs/dayflowCalculations2014.csv",row.names=NULL,stringsAsFactors=F)
 myfile$row.names=rep(NA,nrow(myfile))
+which(myfile[,1]=="monthly totals")
+
 myfile=myfile[,c(ncol(myfile),1:(ncol(myfile)-1))]
-data=rbind(data,myfile)
+myfile$Mo=as.Date(myfile$Date,"%d-%h-%y")
+data=rbind(data,myfile[1:(ind-1),])
+
+#apply(data,2,class)
 
 setwd("~/Desktop/sfei")
 
-seventies<-read.csv("wy1970-1983.csv")
-eighties<-read.csv("wy1984-1996.csv")
+seventies<-read.csv("wy1970-1983.csv",stringsAsFactors=F)
+
+eighties<-read.csv("wy1984-1996.csv",stringsAsFactors=F)
 
 ncol(seventies)
 ncol(eighties)
@@ -27,25 +43,26 @@ eighties$extra=rep(NA,nrow(eighties))
 names(seventies)=names(data)
 names(eighties)=names(data)
 
-data=rbind(data,seventies,eighties)
+seventies$Mo=as.Date(seventies$Date,"%d-%h-%y")
+eighties$Mo=as.Date(eighties$Date,"%d-%h-%y")
 
-data=data[,-c(1,ncol(data))]
-names(data)
-data=data[,-c(1,3)]
-names(data)
+data2=rbind(data,seventies,eighties)
+row.names(data2)=NULL
 
-class(data$Mo)
-data$Mo=as.character(data$Mo)
-require(lubridate)
-data$Mo=dmy(data$Mo)
+data2=data2[,-c(1,ncol(data2))]
+names(data2)
+data2=data2[,-c(1,3)]
+names(data2)
 
-mydat <- read.csv(textConnection(myfile), header=T)
+which(is.na(data2$Mo)) ## woo
+
+names(data2)[1]="Date"
+
+write.csv(data2,"flowData.csv",row.names=F)
 setwd("~/Desktop/sfei")
-flow_dat=read.csv("wy1970-1983.csv")
-
 require(tidyr)
 require(dplyr)
-flow_dat <- read.csv('wy1970-1983.csv',stringsAsFactors=F) %>% 
+flow_dat <- read.csv('flowData.csv',stringsAsFactors=F) %>% 
   select(DATE, SAC, YOLO, CSMR, MOKE, MISC, SJR, EAST, TOT, XGEO, WEST, PREC, SJR) %>% 
   mutate(
     DATE = as.character(DATE), 
