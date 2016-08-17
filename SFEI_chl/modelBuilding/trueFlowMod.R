@@ -1232,6 +1232,7 @@ setwd("~/Desktop/sfei")
 load("perStationFlowTOT.Rda")
 load("perStationFlowSpecific.Rda")
 load("perStationAdd.Rda")
+
 rmseFlow<-c()
 for(i in wholeSeries){
   perStationAdd[[i]]$TOT= 0.028316847*perStationAdd[[i]]$TOT
@@ -1239,7 +1240,18 @@ for(i in wholeSeries){
   rmseFlow<-c(rmseFlow,sqrt(sum(predVal^2)/length(predVal)))
   print(i)
 }
-rmseFlow ## 
+rmseFlow ##
+
+
+for(i in wholeSeries){
+  perStationAdd[[i]]$TOT= 0.028316847*perStationAdd[[i]]$TOT
+  predVal=predict(perStationFlowTOT[[i]],perStationAdd[[i]])
+  perStationAdd[[i]]$TOT=perStationAdd[[i]]$TOT/0.028316847 ## get back to normal
+  perStationAdd[[i]]$flowPred=predVal
+  print(i)
+}
+
+save(perStationAdd,file="perStationAdd.Rda")
 
 rmseFlowSpecific<-c()
 for(i in wholeSeries){
@@ -1297,3 +1309,6 @@ which(testMerge5$rmseInt<rmseFlow) ## 10/15
 which(testMerge5$rmseInt<rmseFlowSpecific) ## 6/15
 
 testMerge5$Station[-which(testMerge5$rmseInt<rmseFlow)]
+
+cbind(rmse,rmseFlow)
+which(rmse<rmseFlow)

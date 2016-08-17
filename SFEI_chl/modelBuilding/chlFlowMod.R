@@ -575,7 +575,8 @@ gam.check(gamP)
 perStationFlowMod[[40]]=gamP
 
 save(perStationFlowMod,file="perStationFlowMod.Rda")
-
+setwd("~/Desktop/sfei")
+load(file="perStationFlowMod.Rda")
 rmse<-c()
 for(i in wholeSeries){
   toUse=na.omit(perStationAdd[[i]][,c("doy","date_dec","chl","i.chl")])
@@ -585,6 +586,17 @@ for(i in wholeSeries){
   print(i)
 }
 rmse
+
+
+for(i in wholeSeries){
+ toUse=na.omit(perStationAdd[[i]][,c("doy","date_dec","chl","i.chl")])
+  predV=predict(perStationFlowMod[[i]],toUse)
+  perStationAdd[[i]]$chlPred[as.numeric(row.names(toUse))]=predV
+  print(i)
+}
+
+save(perStationAdd,"perStationAdd.Rda")
+
 
 names(perStation)[wholeSeries]
 
