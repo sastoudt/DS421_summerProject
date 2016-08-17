@@ -1227,3 +1227,73 @@ perStationFlowSpecific[[40]]=gamP
 
 save(perStationFlowSpecific,file="perStationFlowSpecific.Rda")
 save(perStationFlowTOT,file="perStationFlowTOT.Rda")
+
+setwd("~/Desktop/sfei")
+load("perStationFlowTOT.Rda")
+load("perStationFlowSpecific.Rda")
+load("perStationAdd.Rda")
+rmseFlow<-c()
+for(i in wholeSeries){
+  perStationAdd[[i]]$TOT= 0.028316847*perStationAdd[[i]]$TOT
+  predVal=predict(perStationFlowTOT[[i]],perStationAdd[[i]])
+  rmseFlow<-c(rmseFlow,sqrt(sum(predVal^2)/length(predVal)))
+  print(i)
+}
+rmseFlow ## 
+
+rmseFlowSpecific<-c()
+for(i in wholeSeries){
+  perStationAdd[[i]]$EAST= 0.028316847*perStationAdd[[i]]$EAST
+  perStationAdd[[i]]$SAC2=(perStationAdd[[i]]$RIO+perStationAdd[[i]]$YOLO)*0.028316847
+  if(!is.null(perStationFlowSpecific[[i]])){
+  predVal=predict(perStationFlowSpecific[[i]],perStationAdd[[i]])
+  rmseFlowSpecific<-c(rmseFlowSpecific,sqrt(sum(predVal^2)/length(predVal)))
+  }else{
+    rmseFlowSpecific<-c(rmseFlowSpecific,NA)
+  }
+  print(i)
+}
+
+rmseFlowSpecific
+
+cbind(rmseFlow,rmseFlowSpecific)
+## when rmse is bad for flow, often better for rmseFlowSpecific
+## when rmse is decent for flow, rmseFlowSpecific worse
+
+cbind(names(perStation)[wholeSeries],rmseFlow,rmseFlowSpecific)
+## D7, D22, D28A, D26, P8 pretty large for flow
+
+names(testMerge5)
+View(cbind(testMerge5,rmseFlow,rmseFlowSpecific))
+
+test=cbind(testMerge5,rmseFlow,rmseFlowSpecific)
+
+
+
+g1<-ggplot(test,aes(x = Longitude, y = Latitude,colour=rmseInt,cex=2))+geom_point()+
+  ggtitle("Interaction RMSE by Station")+scale_size(guide=F)
+
+g2<-ggplot(test,aes(x = Longitude, y = Latitude,colour=rmseFlow,cex=2))+geom_point()+
+  ggtitle("Flow RMSE by Station")+scale_size(guide=F)
+
+g3<-ggplot(test,aes(x = Longitude, y = Latitude,colour=rmseFlowSpecific,cex=2))+geom_point()+
+  ggtitle("Flow Specific RMSE by Station")+scale_size(guide=F)
+
+g4<-ggplot(test,aes(x = Longitude, y = Latitude,colour=rmsePars,cex=2))+geom_point()+
+  ggtitle("Parsimonious Model RMSE Intercepts by Station")+scale_size(guide=F)
+
+grid.arrange(g1,g2,g3,g4)
+
+## can be better at places, but other covariates are better
+## let's see graphically what is going on
+
+which(testMerge5$rmseInt<testMerge5$rmsePars)
+
+length(which(testMerge5$rmseFull<testMerge5$rmsePars))
+nrow(testMerge5)
+## 12/15
+
+which(testMerge5$rmseInt<rmseFlow) ## 10/15
+which(testMerge5$rmseInt<rmseFlowSpecific) ## 6/15
+
+testMerge5$Station[-which(testMerge5$rmseInt<rmseFlow)]
