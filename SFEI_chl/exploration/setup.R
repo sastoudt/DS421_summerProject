@@ -73,6 +73,7 @@ perStation<- vector(mode = "list", length = length(unique(sfei$Station)))
 
 for(i in 1:length(unique(sfei$Station))){
   perStation[[i]]=subset(sfei,Station==stations[i])
+  perStation[[i]]$Date=as.Date(perStation[[i]]$Date)
 }
 names(perStation)=stations
 
