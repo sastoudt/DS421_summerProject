@@ -80,3 +80,11 @@ names(perStation)=stations
 write.csv(sfei,"sfeiPlusDates.csv",row.names=F)
 save(perStation,file="perStation.Rda")
 
+
+load("perStationAdd.Rda")
+
+for(i in wholeSeries){
+  perStationAdd[[i]]=perStationAdd[[i]][,c(1:39,65)]
+}
+
+View(perStationAdd[[1]])
