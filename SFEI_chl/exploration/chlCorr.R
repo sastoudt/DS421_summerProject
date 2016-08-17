@@ -208,35 +208,74 @@ library(data.table)
 perStationAdd2=perStationAdd
 perStationAdd<- vector(mode = "list", length = length(perStation))
 
+## This is the step that messes up everything
+
+## perStation1 chl is perStationAdd2 chl
+## instead want perStationAdd2 i.chl to be perStation 1 chl
 
 for(i in 1:nrow(keepTrack)){
+
   find=grep(paste("^",keepTrack[i,1],"$",sep=""),names(perStation))
   find2=grep(paste("^",keepTrack[i,2],"$",sep=""),names(perStation))
   
-  setDT(perStation[[find]])
-  setDT(perStation[[find2]])
+  perStation[[find]]$Date=as.Date(perStation[[find]]$Date)
+  perStation[[find2]]$Date=as.Date(perStation[[find2]]$Date)
   
-  setkey(perStation[[find2]], Date)[, dateMatch:=Date]
-  test=perStation[[find2]][perStation[[find]], roll='nearest']
-  test$Date=as.Date(test$Date)
-  test$dateMatch=as.Date(test$dateMatch)
+  temp <- outer(perStation[[find]]$Date, perStation[[find2]]$Date,  "-")
   
-  test=as.data.frame(test)
+  # remove where date1 are after date2
+  #temp[temp < 0] <- NA
+  
+  # find index of minimum
+  ind <- apply(temp, 1, function(i) which.min(abs(i)))
+  
+  # output
+  test <- cbind(perStation[[find]],  perStation[[find2]][ind,])
+  
+  
+  
+  # setDT(perStation[[find]])
+  # setDT(perStation[[find2]])
+  # 
+  # setkey(perStation[[find]], Date)[, dateMatch:=Date]
+  # test=perStation[[find]][perStation[[find2]], roll='nearest']
+  # test$Date=as.Date(test$Date)
+  # test$dateMatch=as.Date(test$dateMatch)
+  
+  # setkey(perStation[[find2]], Date)[, dateMatch:=Date]
+  # test=perStation[[find2]][perStation[[find]], roll='nearest']
+  # test$Date=as.Date(test$Date)
+  # test$dateMatch=as.Date(test$dateMatch)
+  # 
+  # test=as.data.frame(test)
 
-  test=test[,c(1:38,which(names(test)=="i.chl"))]
+  test=test[,c(1:38,which(names(test)=="chl")[2])]
   perStationAdd[[find]]=test
+  #perStationAdd[[find2]]=test
   
-  setDT(perStation[[find2]])
-  setDT(perStation[[find]])
+  # setDT(perStation[[find2]])
+  # setDT(perStation[[find]])
+  # 
+  # setkey(perStation[[find]], Date)[, dateMatch:=Date]
+  # test=perStation[[find]][perStation[[find2]], roll='nearest']
+  # test$Date=as.Date(test$Date)
+  # 
+  # test=as.data.frame(test)
   
-  setkey(perStation[[find]], Date)[, dateMatch:=Date]
-  test=perStation[[find]][perStation[[find2]], roll='nearest']
-  test$Date=as.Date(test$Date)
+  temp <- outer(perStation[[find2]]$Date, perStation[[find]]$Date,  "-")
   
-  test=as.data.frame(test)
+  # remove where date1 are after date2
+  #temp[temp < 0] <- NA
   
-  test=test[,c(1:38, 47)]
-  perStationAdd[[find2]]=test
+  # find index of minimum
+  ind <- apply(temp, 1, function(i) which.min(abs(i)))
+  
+  # output
+  test <- cbind(perStation[[find2]],  perStation[[find]][ind,])
+  
+  test=test[,c(1:38, which(names(test)=="chl")[2])]
+  perStationAdd[[find2]]=test ##this puts chl from 2 into 1
+  #perStationAdd[[find]]
   print(i)
 }
 save(perStationAdd,file="perStationAdd.Rda")

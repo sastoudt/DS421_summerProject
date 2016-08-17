@@ -1,4 +1,5 @@
 ## http://www.water.ca.gov/dayflow/
+wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
 
 require(lubridate)
 for(i in c(1997:2015)){
@@ -67,8 +68,8 @@ flowData<-read.csv("flowData.csv",stringsAsFactors=F)
 
 
 load("perStationAdd.Rda")
-
-
+load("perStation.Rda")
+perStationAdd=perStation
 for(i in wholeSeries){
  
  testMerge=merge(perStationAdd[[i]],flowData,by.x="Date",by.y="Date",all.x=T)
