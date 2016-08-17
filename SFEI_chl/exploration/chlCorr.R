@@ -213,6 +213,24 @@ perStationAdd<- vector(mode = "list", length = length(perStation))
 ## perStation1 chl is perStationAdd2 chl
 ## instead want perStationAdd2 i.chl to be perStation 1 chl
 
+## Not symmetrical, need to rewrite
+keepTrack=rbind(cbind("C3","C10"),
+cbind("C10","C3"),
+cbind("D10","D4"),
+cbind("D4","D10"),
+cbind("D12","D19"),
+cbind('D22',"D19"),
+cbind("D26","D28A"),
+cbind("D19","D28A"),
+cbind("D28A","D19"),
+cbind("D41","D6"),
+cbind("D6","D4"),
+cbind("D7","D8"),
+cbind("D8","D7"),
+cbind("MD10","P8"),
+cbind("P8","MD10"))
+
+
 for(i in 1:nrow(keepTrack)){
 
   find=grep(paste("^",keepTrack[i,1],"$",sep=""),names(perStation))
@@ -261,21 +279,21 @@ for(i in 1:nrow(keepTrack)){
   # test$Date=as.Date(test$Date)
   # 
   # test=as.data.frame(test)
-  
-  temp <- outer(perStation[[find2]]$Date, perStation[[find]]$Date,  "-")
-  
-  # remove where date1 are after date2
-  #temp[temp < 0] <- NA
-  
-  # find index of minimum
-  ind <- apply(temp, 1, function(i) which.min(abs(i)))
-  
-  # output
-  test <- cbind(perStation[[find2]],  perStation[[find]][ind,])
-  
-  test=test[,c(1:38, which(names(test)=="chl")[2])]
-  perStationAdd[[find2]]=test ##this puts chl from 2 into 1
-  #perStationAdd[[find]]
+  # 
+  # temp <- outer(perStation[[find2]]$Date, perStation[[find]]$Date,  "-")
+  # 
+  # # remove where date1 are after date2
+  # #temp[temp < 0] <- NA
+  # 
+  # # find index of minimum
+  # ind <- apply(temp, 1, function(i) which.min(abs(i)))
+  # 
+  # # output
+  # test <- cbind(perStation[[find2]],  perStation[[find]][ind,])
+  # 
+  # test=test[,c(1:38, which(names(test)=="chl")[2])]
+  # perStationAdd[[find2]]=test ##this puts chl from 2 into 1
+  # #perStationAdd[[find]]
   print(i)
 }
 save(perStationAdd,file="perStationAdd.Rda")
