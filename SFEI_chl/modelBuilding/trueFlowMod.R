@@ -960,7 +960,7 @@ for(i in wholeSeries){
   rmseFlow<-c(rmseFlow,sqrt(sum(predVal^2)/length(predVal)))
   print(i)
 }
-rmseFlow ##
+rmseFlow ## fairly decent
 
 
 for(i in wholeSeries){
@@ -993,7 +993,7 @@ cbind(rmseFlow,rmseFlowSpecific)
 ## when rmse is decent for flow, rmseFlowSpecific worse
 
 cbind(names(perStation)[wholeSeries],rmseFlow,rmseFlowSpecific)
-## D7, D22, D28A, D26, P8 pretty large for flow
+## D12, D22, D26, D8 (in the middle ish)
 
 names(testMerge5)
 View(cbind(testMerge5,rmseFlow,rmseFlowSpecific))
@@ -1025,10 +1025,12 @@ length(which(testMerge5$rmseFull<testMerge5$rmsePars))
 nrow(testMerge5)
 ## 12/15
 
-which(testMerge5$rmseInt<rmseFlow) ## 10/15
-which(testMerge5$rmseInt<rmseFlowSpecific) ## 6/15
+which(testMerge5$rmseInt<rmseFlow) ## 6/15
+which(testMerge5$rmseInt<rmseFlowSpecific) ## 4/15
 
 testMerge5$Station[-which(testMerge5$rmseInt<rmseFlow)]
 
-cbind(rmse,rmseFlow)
-which(rmse<rmseFlow)
+View(cbind(testMerge5$Station,rmse,rmseFlow,testMerge5$rmseInt,testMerge5$rmsePars,testMerge5$rmseFull))
+which(rmse<rmseFlow) #4/15
+testMerge5$Station[which(rmse<rmseFlow)]
+

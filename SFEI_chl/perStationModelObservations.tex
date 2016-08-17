@@ -650,7 +650,12 @@ D26 to D28A
 1991-2006
 
 \begin{itemize}
-\item AG: Delta agricultural returns\item EAST: Cosumnes + Mokelumne Rivers\item JONES: Jones Tract pump off \textcolor{red}{where is this?}\item MTZ: Carquinez Strait at Martinez\item SAC: Sacramento River inflow (includes Yolo Bypass flows)\item SJR: San Joaquin River inflow
+\item AG: Delta agricultural returns
+\item EAST: Cosumnes + Mokelumne Rivers
+\item JONES: Jones Tract pump off \textcolor{red}{where is this?}
+\item MTZ: Carquinez Strait at Martinez
+\item SAC: Sacramento River inflow (includes Yolo Bypass flows)
+\item SJR: San Joaquin River inflow
 \end{itemize}
 
 \begin{itemize}
@@ -695,6 +700,22 @@ D26 to D28A
 \item P8 across a year: mostly SJR, peak in East in the summer months
 \end{itemize}
 
+\section{Flow Models}
+
+\begin{enumerate}
+\item Use chl from the station with the highest correlation as a predictor variable.
+\item Use total flow through the area as a predictor. Also try a more specific flow based on the maximum component from volumetric flow analysis.
+\end{enumerate}
+
+\begin{itemize}
+\item Overall, flow models do better than chl models (4/15 stations had lower RMSE for the chl models). 
+\item D12, D22, D26, D8 have really high RMSEs for the flow model (all pretty central)
+\item For the good stations, the RMSEs for the flow models are on par with the Interaction/Parsimonious Model/Full Model RMSEs. 6/15 stations have lower RMSE for the interaction model than for the flow model.
+
+\end{itemize}
+\subsection{Chl Models}
+
+\subsection{Water Flow Models}
 
 \end{document}
 
