@@ -65,7 +65,8 @@ setwd("~/Desktop/sfei")
 flowData<-read.csv("flowData.csv",stringsAsFactors=F)
 ## merge total flow to everything, by closest date
 
-perStationAdd=perStation
+
+load("perStationAdd.Rda")
 
 
 for(i in wholeSeries){

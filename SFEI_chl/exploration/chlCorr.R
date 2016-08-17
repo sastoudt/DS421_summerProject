@@ -205,7 +205,7 @@ library(data.table)
 ## Not same dates
 ## use this cool trick to find nearest date
 ## http://stackoverflow.com/questions/28072542/merge-nearest-date-and-related-variables-from-a-another-dataframe-by-group
-
+perStationAdd2=perStationAdd
 perStationAdd<- vector(mode = "list", length = length(perStation))
 
 
