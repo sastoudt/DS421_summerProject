@@ -64,25 +64,28 @@ write.csv(data2,"flowData.csv",row.names=F)
 setwd("~/Desktop/sfei")
 flowData<-read.csv("flowData.csv",stringsAsFactors=F)
 ## merge total flow to everything, by closest date
-require(data.table)
+
+perStationAdd=perStation
+
+
 for(i in wholeSeries){
  
  testMerge=merge(perStationAdd[[i]],flowData,by.x="Date",by.y="Date",all.x=T)
  
- setDT(perStationAdd[[i]])
- setDT(flowData)
- 
- flowData$Date=as.Date(flowData$Date)
- perStationAdd[[i]]$Date=as.Date(perStationAdd[[i]]$Date)
- 
- setkey(perStationAdd[[i]], Date)[, dateMatch:=Date]
- test=perStationAdd[[i]][flowData, roll='nearest']
- test$Date=as.Date(test$Date)
- test$dateMatch=as.Date(test$dateMatch)
- 
- test=as.data.frame(test)
- 
- perStationAdd[[i]]=test
+ # setDT(perStationAdd[[i]])
+ # setDT(flowData)
+ # 
+ # flowData$Date=as.Date(flowData$Date)
+ # perStationAdd2[[i]]$Date=as.Date(perStationAdd2[[i]]$Date)
+ # 
+ # setkey(perStationAdd[[i]], Date)[, dateMatch:=Date]
+ # test=perStationAdd[[i]][flowData, roll='nearest']
+ # test$Date=as.Date(test$Date)
+ # test$dateMatch=as.Date(test$dateMatch)
+ # 
+ # test=as.data.frame(test)
+ # 
+ perStationAdd[[i]]=testMerge
  print(i)
 }
 save(perStationAdd,file="perStationAdd.Rda")
