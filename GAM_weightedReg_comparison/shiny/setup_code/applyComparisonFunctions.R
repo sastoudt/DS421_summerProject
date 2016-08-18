@@ -48,7 +48,7 @@ setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/compareModels")
 #for(i in c(1:9,19:27))
 for(i in 1:27)
   print(xtable(rmseDevPerStation[[i]],caption=toUse[i]),float=T,type="latex",floating.environment="table",table.placement="H",file="likeTable2.tex",append=T)
-
+## conclusions the same after bug fix
 
 
 avgPCPerStation=mapply(getFlowNormalizedSummary,dataNiceNoLag,1:length(dataNiceNoLag),SIMPLIFY=F)

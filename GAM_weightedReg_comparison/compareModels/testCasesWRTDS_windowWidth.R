@@ -380,8 +380,11 @@ getSummaryRMSE_adapt2<-function(data,model){
   #             flow1=rmseF1,flow2=rmseF2,flow3=rmseF3,flow4=rmseF4))
 }
 
-getSummaryRMSE_adapt2(dataNiceNoLag[[16]],1)
+df=getSummaryRMSE_adapt2(dataNiceNoLag[[16]],1)
 ## gam, gam big, wrtds, small window, big window, bigger window
+
+apply(df,1,which.min) ## gam big
+apply(df[,3:6],1,which.min) ## small window
 
 df1=getSummaryRMSE_adapt2(dataNiceNoLag[[17]],1)
 
@@ -413,5 +416,5 @@ apply(df5,1,which.min)
 apply(df5[,3:6],1,which.min) ## mostly 2 (small window)
 
 
-## gam big is always better
+## gam big is always better (conclusion the same after bug fix)
 
