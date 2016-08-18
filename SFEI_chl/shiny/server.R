@@ -57,6 +57,18 @@ shinyServer(function(input, output) {
     
   })
   
+  datA <- reactive({
+    
+    stat <- input$stat
+    
+    
+    out<-perStationAdd[[which(names(perStation)==stat)]]
+    
+    
+    return(out)
+    
+  })
+  
   # for initial date range
   output$daterng <- renderUI({
     
@@ -1415,5 +1427,43 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
     
     
   }, height = 800, width = 800)
+  
+  
+  output$nestedPlotChl <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data<- datA()
+    
+  
+    
+    
+    mod<-perStationFlowMod[[index]]
+    toUse=na.omit(data[,c("doy","date_dec","Date","chl","chl.1")])
+    byTerm=predict(mod,toUse,type="terms")
+    toName=c("doy","date_dec","chl","date","intercept")
+    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    names(nestPred)=toName
+    terms<-c("ti(doy)","ti(date_dec)","ti(chl)","intercept")
+    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+      geom_line(data=nestPred,aes(x=date,y = chl, color = 'ti(chl)'), lwd=1)+
+      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+      scale_colour_manual(name = '',
+                          labels =c('red'=terms[1],"dodgerblue"=terms[2],
+                                    "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
+                                                                                       "dodgerblue","forestgreen","purple")
+      ) +
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Chl Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    
+    
+  }, height = 250, width = 1200)
   
 })
