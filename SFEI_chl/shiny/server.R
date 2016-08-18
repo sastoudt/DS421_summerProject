@@ -14,6 +14,8 @@ load(file="~/Desktop/sfei/mod2Spatial.RData")
 load(file="~/Desktop/sfei/mod3Spatial.RData")
 load(file="~/Desktop/sfei/mod4Spatial.RData")
 load(file="~/Desktop/sfei/perStationAdd.Rda")
+load(file="~/Desktop/sfei/perStationFlowMod.Rda")
+load(file="~/Desktop/sfei/perStationFlowTOT.Rda")
 full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 allData=read.csv("~/Desktop/sfei/allData.csv")
 volFlow=read.csv("~/Desktop/sfei/VolFingerPrintsMaster.csv")
@@ -1461,6 +1463,41 @@ plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longit
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
       ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Chl Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+    
+    
+  }, height = 250, width = 1200)
+  
+  output$nestedPlotFlow <- renderPlot({
+    
+    # inputs
+    
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data<- datA()
+    data$TOT=0.028316847*data$TOT
+    mod<-perStationFlowTOT[[index]]
+    toUse=na.omit(data[,c("doy","date_dec","Date","TOT")])
+    byTerm=predict(mod,toUse,type="terms")
+    toName=c("doy","date_dec","tot","date","intercept")
+   
+    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    names(nestPred)=toName
+    terms<-c("ti(doy)","ti(date_dec)","ti(tot)","intercept")
+    ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
+      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
+      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+      geom_line(data=nestPred,aes(x=date,y = tot, color = 'ti(tot)'), lwd=1)+
+      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+      scale_colour_manual(name = '',
+                          labels =c('red'=terms[1],"dodgerblue"=terms[2],
+                                    "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
+                                                                                       "dodgerblue","forestgreen","purple")
+      ) +
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Total Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
