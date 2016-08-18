@@ -1,13 +1,14 @@
-getSummaryRMSE(perStationPredVal[[1]],"predPars")
+setwd("~/Desktop/sfei")
+load("perStationPredVal.Rda")
 
 getSummaryRMSE<-function(data,namePred){
   
   trueVal=data$chl 
- 
+  
   predVal=data[,namePred]
   
   rmse=sqrt(sum((trueVal-predVal)^2,na.rm=T)/sum(!is.na((trueVal-predVal)^2)))
-
+  
   data$month=as.numeric(strftime(data$Date, '%m'))
   data$year=as.numeric(strftime(data$Date, '%Y'))
   
@@ -33,11 +34,11 @@ getSummaryRMSE<-function(data,namePred){
   annual5I=which(data$year<2010 & data$year>=2003)
   annual5P=predVal[annual5I]
   
-
+  
   annual6=subset(data,year>=2010) ## has 2 fewer years
   annual6I=which( data$year>=2010)
   annual6P=predVal[annual6I]
-
+  
   
   rmseA1=sqrt(sum((annual1$chl-annual1P)^2,na.rm=T)/sum(!is.na((annual1$chl-annual1P)^2)))
   rmseA2=sqrt(sum((annual2$chl-annual2P)^2,na.rm=T)/sum(!is.na((annual2$chl-annual2P)^2)))
@@ -45,7 +46,7 @@ getSummaryRMSE<-function(data,namePred){
   rmseA4=sqrt(sum((annual4$chl-annual4P)^2,na.rm=T)/sum(!is.na((annual4$chl-annual4P)^2)))
   rmseA5=sqrt(sum((annual5$chl-annual5P)^2,na.rm=T)/sum(!is.na((annual5$chl-annual5P)^2)))
   rmseA6=sqrt(sum((annual6$chl-annual6P)^2,na.rm=T)/sum(!is.na((annual6$chl-annual6P)^2)))
-
+  
   seasonal1=subset(data,month %in% c(1:3))
   seasonal1I=which(data$month %in% c(1:3))
   seasonal1P=predVal[seasonal1I]
@@ -57,11 +58,11 @@ getSummaryRMSE<-function(data,namePred){
   seasonal3=subset(data,month %in% c(7:9))
   seasonal3I=which(data$month %in% c(7:9))
   seasonal3P=predVal[seasonal3I]
- 
+  
   seasonal4=subset(data,month %in% c(10:12))
   seasonal4I=which(data$month %in% c(10:12))
   seasonal4P=predVal[seasonal4I]
-
+  
   
   rmseS1=sqrt(sum((seasonal1$chl-seasonal1P)^2,na.rm=T)/sum(!is.na((seasonal1$chl-seasonal1P)^2)))
   rmseS2=sqrt(sum((seasonal2$chl-seasonal2P)^2,na.rm=T)/sum(!is.na((seasonal2$chl-seasonal2P)^2)))
@@ -77,3 +78,21 @@ getSummaryRMSE<-function(data,namePred){
   #             seasonal1=rmseS1, seasonal2=rmseS2, seasonal3=rmseS3, seasonal4=rmseS4,
   #             flow1=rmseF1,flow2=rmseF2,flow3=rmseF3,flow4=rmseF4))
 }
+
+
+
+models=c("predPars","predFull","predInt","predSpat1","predSpat2","predSpat3","predSpat4",
+         "predSpat3Pheo","predSpat3Tn","chlPred","flowPred")
+setwd("~/Desktop/DS421_summerProject/SFEI_chl/compareModels")
+require(xtable)
+
+for( i in models){
+  
+  RMSE=lapply(perStationPredVal[wholeSeries],getSummaryRMSE,i)
+  RMSE=as.data.frame(do.call(cbind,RMSE))
+  
+  names(RMSE)=names(perStation)[wholeSeries]
+  print(xtable(RMSE,caption=i),float=T,type="latex",floating.environment="table",table.placement="H",file="compareRMSEbreakdown.tex",append=T)
+  print(i)
+}
+
