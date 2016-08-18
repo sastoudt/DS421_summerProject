@@ -83,3 +83,83 @@ for(i in wholeSeries){
   
 }
 
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-perStationIntMod[[i]]
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)))
+  fullPred=predict(mod,toUse,type="response")
+  
+  perStationPredVal[[i]]$predInt[toPut]=fullPred
+  print(i)
+  
+}
+
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-mod1
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date","Station")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)| 
+                                     is.na(data$Station)))
+  fullPred=predict(mod,toUse,type="response")
+  
+  perStationPredVal[[i]]$predSpat1[toPut]=fullPred
+  print(i)
+  
+  
+}
+
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-mod2
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date","Station")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)| 
+                                     is.na(data$Station)))
+  fullPred=predict(mod,toUse,type="response")
+  
+  perStationPredVal[[i]]$predSpat2[toPut]=fullPred
+  print(i)
+  
+  
+}
+
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-mod3
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date","Station")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)| 
+                                     is.na(data$Station)))
+  fullPred=predict(mod,toUse,type="response")
+  
+  perStationPredVal[[i]]$predSpat3[toPut]=fullPred
+  print(i)
+  
+  
+}
+
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-mod4
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date","Station")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)| 
+                                     is.na(data$Station)))
+  fullPred=predict(mod,toUse,type="response")
+  
+  perStationPredVal[[i]]$predSpat4[toPut]=fullPred
+  print(i)
+  
+  
+}
+
+
+
