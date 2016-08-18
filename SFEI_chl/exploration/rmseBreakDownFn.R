@@ -96,6 +96,12 @@ for( i in models){
   print(i)
 }
 
+i=11
+RMSE=lapply(perStationPredVal[wholeSeries],getSummaryRMSE,models[i])
+RMSE=as.data.frame(do.call(cbind,RMSE))
+
+table(row.names(RMSE)[unlist(apply(RMSE,2,which.min))])
+
 ## ok this is gross but I'm just going to switch the order of the parameters so that I can do 
 ## what I want to do
 
