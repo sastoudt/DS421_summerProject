@@ -1264,11 +1264,10 @@ rmseFlowSpecific
 #[9]   1.600664         NA         NA         NA   3.783009  14.894915   1.917451
 
 cbind(rmseFlow,rmseFlowSpecific)
-## when rmse is bad for flow, often better for rmseFlowSpecific
-## when rmse is decent for flow, rmseFlowSpecific worse
+
 
 cbind(names(perStation)[wholeSeries],rmseFlow,rmseFlowSpecific)
-## D12, D22, D26, D8 (in the middle ish)
+## D19 really bad
 
 names(testMerge5)
 View(cbind(testMerge5,rmseFlow,rmseFlowSpecific))
@@ -1300,12 +1299,13 @@ length(which(testMerge5$rmseFull<testMerge5$rmsePars))
 nrow(testMerge5)
 ## 12/15
 
-which(testMerge5$rmseInt<rmseFlow) ## 6/15
-which(testMerge5$rmseInt<rmseFlowSpecific) ## 4/15
+which(testMerge5$rmseInt<rmseFlow) ## 7/15
+which(testMerge5$rmseInt<rmseFlowSpecific) ## 6/15
 
 testMerge5$Station[-which(testMerge5$rmseInt<rmseFlow)]
 
 View(cbind(testMerge5$Station,rmse,rmseFlow,testMerge5$rmseInt,testMerge5$rmsePars,testMerge5$rmseFull))
-which(rmse<rmseFlow) #4/15
+which(rmse<rmseFlow) #5/15
 testMerge5$Station[which(rmse<rmseFlow)]
 
+which(rmseFlow<rmseFlowSpecific)
