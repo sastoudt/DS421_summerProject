@@ -1237,7 +1237,7 @@ rmseFlow ## fairly decent
 
 for(i in wholeSeries){
   perStationAdd[[i]]$TOT= 0.028316847*perStationAdd[[i]]$TOT
-  predVal=predict(perStationFlowTOT[[i]],perStationAdd[[i]])
+  predVal=predict(perStationFlowTOT[[i]],perStationAdd[[i]],type="response")
   perStationAdd[[i]]$TOT=perStationAdd[[i]]$TOT/0.028316847 ## get back to normal
   perStationAdd[[i]]$flowPred=predVal
   print(i)

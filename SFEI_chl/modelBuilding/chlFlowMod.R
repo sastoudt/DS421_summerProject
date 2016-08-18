@@ -651,8 +651,9 @@ rmse
 
 for(i in wholeSeries){
  toUse=na.omit(perStationAdd[[i]][,c("doy","date_dec","chl","chl.1")])
-  predV=predict(perStationFlowMod[[i]],toUse)
-  perStationAdd[[i]]$chlPred[as.numeric(row.names(toUse))]=predV
+  predV=predict(perStationFlowMod[[i]],toUse,type="response")
+  toFill=setdiff(1:nrow(perStationAdd[[i]]),which(is.na(perStationAdd[[i]]$doy) | is.na(perStationAdd[[i]]$date_dec) |is.na(perStationAdd[[i]]$chl) |is.na(perStationAdd[[i]]$chl.1)))
+  perStationAdd[[i]]$chlPred[toFill]=predV
   print(i)
 }
 
