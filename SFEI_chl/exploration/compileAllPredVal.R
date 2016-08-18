@@ -161,5 +161,44 @@ for(i in wholeSeries){
   
 }
 
+names(perStationPredVal[[1]]) ## already has chlPred and flowPred
 
 
+load("spatialMod3Tn.RData")
+load("spatialMod3Pheo.RData")
+
+
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-spatialMod3Pheo
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date","Station","pheo")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)| 
+                        is.na(data$pheo)|             is.na(data$Station)))
+  fullPred=predict(mod,toUse,type="response")
+  
+  perStationPredVal[[i]]$predSpat3Pheo[toPut]=fullPred
+  print(i)
+  
+  
+}
+
+for(i in wholeSeries){
+  
+  data<-perStationAdd[[i]]
+  mod<-spatialMod3Tn
+  
+  toUse=na.omit(data[,c("doy","date_dec","Date","Station","tn")])
+  toPut=setdiff(1:nrow(data),which(is.na(data$doy) | is.na(data$date_dec)| is.na(data$Date)| 
+                                     is.na(data$tn)|             is.na(data$Station)))
+  fullPred=as.vector(predict(mod,toUse,type="response"))
+  
+  perStationPredVal[[i]]$predSpat3Tn=rep(NA,nrow(data)) ## being weird without this
+  perStationPredVal[[i]]$predSpat3Tn[toPut]=fullPred 
+  print(i)
+  
+  
+}
+
+save(perStationPredVal,file="perStationPredVal.Rda")

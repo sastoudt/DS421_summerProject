@@ -32,6 +32,9 @@ gam.check(gamP)
 system.time(gamP<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=10)+ti(date_dec,bs="tp",by=as.factor(Station),k=10)+ti(pheo,bs="tp",k=10),data=allData,family=gaussian(link="log"),control=ctrl))
 gam.check(gamP)  ## Just under a minute
 
+spatialMod3Pheo=gamP
+save(spatialMod3Pheo,file="spatialMod3Pheo.RData")
+
 ## pheo helps make this look pretty decent without getting too big
 
 ## pheo by station
@@ -42,6 +45,9 @@ gam.check(gamP2)  ## stopped after 5 minutes
 ## try tn
 system.time(gamP3<-bam(chl~as.factor(Station)+ti(doy,bs="cc",by=as.factor(Station),k=10)+ti(date_dec,bs="tp",by=as.factor(Station),k=10)+ti(tn,bs="tp",k=10),data=allData,family=gaussian(link="log"),control=ctrl))
 gam.check(gamP3) ## under 2 minutes
+
+spatialMod3Tn=gamP3
+save(spatialMod3Tn,file="spatialMod3Tn.RData")
 
 ##
 require(dplyr)
