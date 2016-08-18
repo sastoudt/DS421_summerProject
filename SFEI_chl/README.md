@@ -95,11 +95,16 @@ To Do
 - volumetric data
 - think about correlation network and optimization of lags of other stations per station
 
+Some notes so far:
+1. Add total flow data from http://www.water.ca.gov/dayflow/, need to think more about a structure rather than merely a covariate
+2. Visualize volumetric data over months and years, use to pick a more specific flow for #1 (doesn't really help)
+3. Added chl from most correlated station, best lag is zero lag for all.
+
 ## Week 4 Goals
 
 - write up
 - prepare presentation materials
-
+- combine best pieces of all of the models tried so far?
 
 ## Throughout
 
