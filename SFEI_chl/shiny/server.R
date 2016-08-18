@@ -13,6 +13,7 @@ load(file="~/Desktop/sfei/mod1Spatial.RData")
 load(file="~/Desktop/sfei/mod2Spatial.RData")
 load(file="~/Desktop/sfei/mod3Spatial.RData")
 load(file="~/Desktop/sfei/mod4Spatial.RData")
+load(file="~/Desktop/sfei/perStationAdd.Rda")
 full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 allData=read.csv("~/Desktop/sfei/allData.csv")
 volFlow=read.csv("~/Desktop/sfei/VolFingerPrintsMaster.csv")
@@ -335,6 +336,48 @@ shinyServer(function(input, output) {
       geom_line(data=data,aes_string(x="Date",y = names(data)[index], color = shQuote("red")),lwd=1)+
       
       ggtitle(paste(input$spatMod, "Fitted Values Model",sep=" "))+
+      theme(legend.position='none')+
+      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
+    
+    
+  }, height = 250, width = 1200)
+  
+  output$fittedChl<- renderPlot({
+    
+    # inputs
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+  data=perStationAdd[[index]]
+  
+    ggplot(data,aes(x = Date, y = chl))+geom_point()+
+      #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
+      geom_line(data=data,aes(x=Date,y = chlPred, color = "red"),lwd=1)+
+      
+      ggtitle("Chl from Other Station Fitted Values Model")+
+      theme(legend.position='none')+
+      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
+    
+    
+  }, height = 250, width = 1200)
+  
+  output$fittedFlow<- renderPlot({
+    
+    # inputs
+    dt_rng <- input$dt_rng
+    stat <- input$stat
+    index=which(names(perStation)==stat)
+    
+    # data
+    data=perStationAdd[[index]]
+    
+    ggplot(data,aes(x = Date, y = chl))+geom_point()+
+      #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
+      geom_line(data=data,aes(x=Date,y = flowPred, color = "red"),lwd=1)+
+      
+      ggtitle("Flow Fitted Values Model")+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     

@@ -178,6 +178,8 @@ shinyUI(fluidPage(
     plotOutput("fittedFull", height = "100%"),
     plotOutput("fittedInt",height="100%"),
     plotOutput("fittedSpat",height="100%"),
+    plotOutput("fittedChl",height="100%"),
+    plotOutput("fittedFlow",height="100%"),
     plotOutput("nestedPlotPars", height = "100%"),
     plotOutput("nestedPlotFull",height="100%"),
     plotOutput("nestedPlotInt",height="100%"),
