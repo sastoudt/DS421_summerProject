@@ -160,6 +160,16 @@ shinyUI(fluidPage(
     #        
     # ),
     
+    column(2,
+           selectInput(inputId="model",label="Select a model to look at RMSE breakdown.",
+                       choices=c("predPars","predFull","predInt","predSpat1","predSpat2",
+                                 "predSpat3","predSpat4","predSpat3Pheo","predSpat3Tn",
+                                 "chlPred","flowPred"),selected="predPars")
+           ),
+    column(2,
+           checkboxInput("outlier", "Remove C10 as Outlier", FALSE)
+           ),
+    
     
     width = 12
     
@@ -193,6 +203,8 @@ shinyUI(fluidPage(
     plotOutput("nestedPlotFullJust2",height="100%"),
     plotOutput("nestedPlotIntJust2",height="100%"),
     plotOutput("flowInput",height="100%"),
+    plotOutput("rmseSpatPlotS",height="100%"),
+    plotOutput("rmseSpatPlotA",height="100%"),
     width = 9
     
   )
