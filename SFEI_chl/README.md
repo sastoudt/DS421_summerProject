@@ -102,8 +102,10 @@ Some notes so far:
 
 ## Week 4 Goals
 
-- write up
-- prepare presentation materials
+- write up overall results
+- host slimmed down Shiny app
+- one page report describing what I did, what I learned, how I see the project contributing to your longer term career development
+- prepare presentation materials (3 minute lightning talk)
 - combine best pieces of all of the models tried so far?
 
 ## Throughout
