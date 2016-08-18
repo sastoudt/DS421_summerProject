@@ -9,8 +9,8 @@ getSummaryRMSE<-function(data,model){
   predValGAM=data$gamPred
   predValWRTDS=data$wrtdsPred
   
-  rmseGAM=sqrt(sum((trueVal-predValGAM)^2))
-  rmseWRTDS=sqrt(sum((trueVal-predValWRTDS)^2,na.rm=T))
+  rmseGAM=sqrt(sum((trueVal-predValGAM)^2)/sum(!is.na((trueVal-predValGAM)^2)))
+  rmseWRTDS=sqrt(sum((trueVal-predValWRTDS)^2,na.rm=T)/sum(!is.na((trueVal-predValWRTDS)^2)))
   
   data$month=as.numeric(strftime(data$date, '%m'))
   data$year=as.numeric(strftime(data$date, '%Y'))
@@ -45,17 +45,17 @@ getSummaryRMSE<-function(data,model){
   annual5PW=predValWRTDS[annual5I]
   
   
-  rmseA1G=sqrt(sum((annual1$res-annual1PG)^2))
-  rmseA2G=sqrt(sum((annual2$res-annual2PG)^2))
-  rmseA3G=sqrt(sum((annual3$res-annual3PG)^2))
-  rmseA4G=sqrt(sum((annual4$res-annual4PG)^2))
-  rmseA5G=sqrt(sum((annual5$res-annual5PG)^2))
+  rmseA1G=sqrt(sum((annual1$res-annual1PG)^2)/sum(!is.na((annual1$res-annual1PG)^2)))
+  rmseA2G=sqrt(sum((annual2$res-annual2PG)^2)/sum(!is.na((annual2$res-annual2PG)^2)))
+  rmseA3G=sqrt(sum((annual3$res-annual3PG)^2)/sum(!is.na((annual3$res-annual3PG)^2)))
+  rmseA4G=sqrt(sum((annual4$res-annual4PG)^2)/sum(!is.na((annual4$res-annual4PG)^2)))
+  rmseA5G=sqrt(sum((annual5$res-annual5PG)^2)/sum(!is.na((annual5$res-annual5PG)^2)))
   
-  rmseA1W=sqrt(sum((annual1$res-annual1PW)^2,na.rm=T))
-  rmseA2W=sqrt(sum((annual2$res-annual2PW)^2,na.rm=T))
-  rmseA3W=sqrt(sum((annual3$res-annual3PW)^2,na.rm=T))
-  rmseA4W=sqrt(sum((annual4$res-annual4PW)^2,na.rm=T))
-  rmseA5W=sqrt(sum((annual5$res-annual5PW)^2,na.rm=T))
+  rmseA1W=sqrt(sum((annual1$res-annual1PW)^2,na.rm=T)/sum(!is.na((annual1$res-annual1PW)^2)))
+  rmseA2W=sqrt(sum((annual2$res-annual2PW)^2,na.rm=T)/sum(!is.na((annual2$res-annual2PW)^2)))
+  rmseA3W=sqrt(sum((annual3$res-annual3PW)^2,na.rm=T)/sum(!is.na((annual3$res-annual3PW)^2)))
+  rmseA4W=sqrt(sum((annual4$res-annual4PW)^2,na.rm=T)/sum(!is.na((annual4$res-annual4PW)^2)))
+  rmseA5W=sqrt(sum((annual5$res-annual5PW)^2,na.rm=T)/sum(!is.na((annual5$res-annual5PW)^2)))
   
   seasonal1=subset(data,month %in% c(1:3))
   seasonal1I=which(data$month %in% c(1:3))
@@ -80,15 +80,15 @@ getSummaryRMSE<-function(data,model){
   seasonal4PG=predValGAM[seasonal4I]
   seasonal4PW=predValWRTDS[seasonal4I]
   
-  rmseS1G=sqrt(sum((seasonal1$res-seasonal1PG)^2))
-  rmseS2G=sqrt(sum((seasonal2$res-seasonal2PG)^2))
-  rmseS3G=sqrt(sum((seasonal3$res-seasonal3PG)^2))
-  rmseS4G=sqrt(sum((seasonal4$res-seasonal4PG)^2))
+  rmseS1G=sqrt(sum((seasonal1$res-seasonal1PG)^2)/sum(!is.na((seasonal1$res-seasonal1PG)^2)))
+  rmseS2G=sqrt(sum((seasonal2$res-seasonal2PG)^2)/sum(!is.na((seasonal2$res-seasonal2PG)^2)))
+  rmseS3G=sqrt(sum((seasonal3$res-seasonal3PG)^2)/sum(!is.na((seasonal3$res-seasonal3PG)^2)))
+  rmseS4G=sqrt(sum((seasonal4$res-seasonal4PG)^2)/sum(!is.na((seasonal4$res-seasonal4PG)^2)))
   
-  rmseS1W=sqrt(sum((seasonal1$res-seasonal1PW)^2,na.rm=T))
-  rmseS2W=sqrt(sum((seasonal2$res-seasonal2PW)^2,na.rm=T))
-  rmseS3W=sqrt(sum((seasonal3$res-seasonal3PW)^2,na.rm=T))
-  rmseS4W=sqrt(sum((seasonal4$res-seasonal4PW)^2,na.rm=T))
+  rmseS1W=sqrt(sum((seasonal1$res-seasonal1PW)^2,na.rm=T)/sum(!is.na((seasonal1$res-seasonal1PW)^2)))
+  rmseS2W=sqrt(sum((seasonal2$res-seasonal2PW)^2,na.rm=T)/sum(!is.na((seasonal2$res-seasonal2PW)^2)))
+  rmseS3W=sqrt(sum((seasonal3$res-seasonal3PW)^2,na.rm=T)/sum(!is.na((seasonal3$res-seasonal3PW)^2)))
+  rmseS4W=sqrt(sum((seasonal4$res-seasonal4PW)^2,na.rm=T)/sum(!is.na((seasonal4$res-seasonal4PW)^2)))
   
   flow1=subset(data,flo<quantile(data$flo,.25))
   flow1I=which(data$flo<quantile(data$flo,0.25))
@@ -110,15 +110,15 @@ getSummaryRMSE<-function(data,model){
   flow4PG=predValGAM[flow4I]
   flow4PW=predValWRTDS[flow4I]
   
-  rmseF1G=sqrt(sum((flow1$res-flow1PG)^2))
-  rmseF2G=sqrt(sum((flow2$res-flow2PG)^2))
-  rmseF3G=sqrt(sum((flow3$res-flow3PG)^2))
-  rmseF4G=sqrt(sum((flow4$res-flow4PG)^2))
+  rmseF1G=sqrt(sum((flow1$res-flow1PG)^2)/sum(!is.na((flow1$res-flow1PG)^2)))
+  rmseF2G=sqrt(sum((flow2$res-flow2PG)^2)/sum(!is.na((flow2$res-flow2PG)^2)))
+  rmseF3G=sqrt(sum((flow3$res-flow3PG)^2)/sum(!is.na((flow3$res-flow3PG)^2)))
+  rmseF4G=sqrt(sum((flow4$res-flow4PG)^2)/sum(!is.na((flow4$res-flow4PG)^2)))
   
-  rmseF1W=sqrt(sum((flow1$res-flow1PW)^2,na.rm=T))
-  rmseF2W=sqrt(sum((flow2$res-flow2PW)^2,na.rm=T))
-  rmseF3W=sqrt(sum((flow3$res-flow3PW)^2,na.rm=T))
-  rmseF4W=sqrt(sum((flow4$res-flow4PW)^2,na.rm=T))
+  rmseF1W=sqrt(sum((flow1$res-flow1PW)^2,na.rm=T)/sum(!is.na((flow1$res-flow1PW)^2)))
+  rmseF2W=sqrt(sum((flow2$res-flow2PW)^2,na.rm=T)/sum(!is.na((flow2$res-flow2PW)^2)))
+  rmseF3W=sqrt(sum((flow3$res-flow3PW)^2,na.rm=T)/sum(!is.na((flow3$res-flow3PW)^2)))
+  rmseF4W=sqrt(sum((flow4$res-flow4PW)^2,na.rm=T)/sum(!is.na((flow4$res-flow4PW)^2)))
   
   rmseG=rbind(rmseGAM,rmseA1G,rmseA2G,rmseA3G,rmseA4G,rmseA5G,rmseS1G,rmseS2G,rmseS3G,rmseS4G,
              rmseF1G,rmseF2G,rmseF3G,rmseF4G)
