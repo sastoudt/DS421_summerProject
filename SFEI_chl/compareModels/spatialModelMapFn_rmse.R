@@ -1,6 +1,9 @@
 setwd("~/Desktop/sfei")
-
+models=c("predPars","predFull","predInt","predSpat1","predSpat2","predSpat3","predSpat4",
+         "predSpat3Pheo","predSpat3Tn","chlPred","flowPred")
 allData<-read.csv("allData.csv",stringsAsFactors=F)
+load("perStationPredVal.Rda")
+wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
 
 forMap=allData[,c("Longitude","Latitude","Station")]
 forMap=unique(forMap)
@@ -112,11 +115,12 @@ if(length(breakdownPieces)==4){
   g3<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[3],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[2]))+scale_size(guide=F)
   
-  g4<-ggplot(testMerge,aes(x = "Longitude", y = "Latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
+  g4<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[4]))+scale_size(guide=F)
   
   grid.arrange(g1,g2,g3,g4)
 }else{
+
   g1<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[1],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[1]))+scale_size(guide=F)
   
@@ -126,17 +130,59 @@ if(length(breakdownPieces)==4){
   g3<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[3],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[3]))+scale_size(guide=F)
   
-  g4<-ggplot(testMerge,aes(x = "Longitude", y = "Latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
+  g4<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[4]))+scale_size(guide=F)
   
   g5<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[5],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[5]))+scale_size(guide=F)
   
-  g6<-ggplot(testMerge,aes(x = "Longitude", y = "Latitude",colour=breakdownPieces[6],cex=2))+geom_point()+
+  g6<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[6],cex=2))+geom_point()+
     ggtitle(paste(modName,breakdownPieces[6]))+scale_size(guide=F)
   
   grid.arrange(g1,g2,g3,g4,g5,g6)
 }
 }
+setwd("~/Desktop/DS421_summerProject/SFEI_chl/figures/rmseSpatialFigs")
+## annual
+for(i in 1:length(models)){
+  RMSE=lapply(perStationPredVal[wholeSeries],getSummaryRMSE,models[i])
+  RMSE=as.data.frame(do.call(cbind,RMSE))
+  
+  test=as.data.frame(t(RMSE))
+  pdf(paste(models[i],"_annual.pdf",sep=""),height=10, width=8)
+  spatialPlotRMSE_pieces(test,names(test)[2:7],models[i])
+  dev.off()
+}
+## annual without C10
+for(i in 1:length(models)){
+  RMSE=lapply(perStationPredVal[wholeSeries],getSummaryRMSE,models[i])
+  RMSE=as.data.frame(do.call(cbind,RMSE))
+  
+  test=as.data.frame(t(RMSE))
+  pdf(paste(models[i],"_annual_without_C10.pdf",sep=""),height=10, width=8)
+  spatialPlotRMSE_pieces(test,names(test)[2:7],models[i],T)
+  dev.off()
+  
+}
+## seasonal
+for(i in 1:length(models)){
+  RMSE=lapply(perStationPredVal[wholeSeries],getSummaryRMSE,models[i])
+  RMSE=as.data.frame(do.call(cbind,RMSE))
+  
+  test=as.data.frame(t(RMSE))
+  pdf(paste(models[i],"_seasonal.pdf",sep=""),height=10, width=8)
+  spatialPlotRMSE_pieces(test,names(test)[8:11],models[i])
+  dev.off()
+  
+}
+## seasonal without C10
+for(i in 1:length(models)){
+  RMSE=lapply(perStationPredVal[wholeSeries],getSummaryRMSE,models[i])
+  RMSE=as.data.frame(do.call(cbind,RMSE))
+  
+  test=as.data.frame(t(RMSE))
+  pdf(paste(models[i],"_seasonal_without_C10.pdf",sep=""),height=10, width=8)
+  spatialPlotRMSE_pieces(test,names(test)[8:11],models[i],T)
+  dev.off()
+}
 
-spatialPlotRMSE_pieces(test,names(test)[2:7],models[i])
