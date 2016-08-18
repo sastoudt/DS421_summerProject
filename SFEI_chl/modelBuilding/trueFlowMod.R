@@ -12,19 +12,26 @@ data=perStationAdd[[1]]
 data$TOT= 0.028316847*data$TOT
 #converted to m3/s
 
-gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(TOT,bs="tp"),data=data,family=gaussian(link="log"))
+
+gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
-gamP<-gam(chl~ti(doy,bs="cc")+ti(date_dec,bs="tp")+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gamP<-bam(chl~ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP)
 
-gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gamP<-bam(chl~ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP) ## warning
 
-gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gamP<-bam(chl~ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) ## warning
+
+gamP<-bam(chl~ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",k=70)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) ## warning
+
+gamP<-bam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP)
 
-gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gamP<-bam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=65)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP)
 
 perStationFlowTOT[[1]]=gamP
@@ -51,6 +58,9 @@ gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=30)+ti(TOT,bs="tp",k=15
 gam.check(gamP)
 
 gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
 
@@ -85,12 +95,15 @@ gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=30
 gam.check(gamP) ## warning
 
 gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=28),data=data,family=gaussian(link="log"))
-gam.check(gamP)
+gam.check(gamP) ## stopped
 
 gamP<-bam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=28),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP)
 
 gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=28),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) ## warning
+
+gamP<-bam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=28),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP)
 
 perStationFlowTOT[[5]]=gamP
@@ -196,6 +209,36 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=17)+ti(TOT,bs="tp",k=8),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=17)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=70)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
 perStationFlowTOT[[7]]=gamP
 names(perStation)[7]
 
@@ -239,6 +282,27 @@ gam.check(gamP) ## worse
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=15)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## go with this
 
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=15)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=20)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=40)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(SAC2,bs="tp",k=25),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=70)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=90)+ti(date_dec,bs="tp",k=90)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
 perStationFlowSpecific[[7]]=gamP
 ####
 
@@ -256,25 +320,39 @@ gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=30)+ti(TOT,bs="tp",k=10
 gam.check(gamP)  ## warning
 
 gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP)
-
-gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## warning
 
-gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
-gam.check(gamP) ## warning
- 
-gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP)
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=10)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
 
-gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=25)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP) ## warning
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
 
-gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=22)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gamP<-gam(chl~ti(doy,bs="cc",k=10)+ti(date_dec,bs="tp",k=15)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=15)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=30)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP)  ## warning
 
-gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP)
+gamP<-gam(chl~ti(doy,bs="cc",k=20)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=25)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=15)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## stuck with this
+ 
+
 
 
 perStationFlowTOT[[11]]=gamP
@@ -329,6 +407,42 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=15)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP)  ## stuck here
 
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=30)+ti(TOT,bs="tp",k=30),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=30)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=140)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=150)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=95)+ti(date_dec,bs="tp",k=140)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
 perStationFlowTOT[[13]]=gamP
 names(perStation)[13]
 
@@ -365,6 +479,27 @@ gam.check(gamP) ## warning
 
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=20)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## go with this
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=25)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=25)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=40)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=40)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=80)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=100)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
  
 perStationFlowSpecific[[13]]=gamP
 
@@ -397,6 +532,30 @@ gam.check(gamP) ## warning
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=30)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP) 
 
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=30)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=90)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=90)+ti(date_dec,bs="tp",k=55)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=90)+ti(date_dec,bs="tp",k=55)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=90)+ti(date_dec,bs="tp",k=55)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)  ## stuck here
+
 perStationFlowTOT[[15]]=gamP
 names(perStation)[15]
 
@@ -419,11 +578,9 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=40)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## warning
 
-gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=35)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP)
+gamP<-gam(chl~ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",k=30)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## stuck here
 
-gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=35)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP)
 
 perStationFlowSpecific[[15]]=gamP
 
@@ -461,6 +618,27 @@ gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=12)+ti(TOT,bs="tp",k=12
 gam.check(gamP)
 
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=12)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=15)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=20)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=12),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
 perStationFlowTOT[[16]]=gamP
@@ -515,6 +693,32 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=18)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## have to go with this, not good though
 
+gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=20)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=40)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=60)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=80)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=100)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=120)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=110)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=110)+ti(SAC2,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=110)+ti(SAC2,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## stuck here
 
 perStationFlowSpecific[[16]]=gamP
 
@@ -545,6 +749,18 @@ gamP<-bam(chl~ti(doy,bs="cc",k=40)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=20
 gam.check(gamP) 
 
 gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) 
+
+gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=25),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP)  ## warning
+
+gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) 
+
+gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
+gam.check(gamP) 
+
+gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP) 
 
 perStationFlowTOT[[17]]=gamP
@@ -647,20 +863,22 @@ gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=25
 gam.check(gamP) 
 
 gamP<-bam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=40)+ti(TOT,bs="tp",k=30),data=data,family=gaussian(link="log"),control=ctrl)
-gam.check(gamP) 
-
-gamP<-bam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=30),data=data,family=gaussian(link="log"),control=ctrl)
-gam.check(gamP) 
-
-gamP<-bam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=40),data=data,family=gaussian(link="log"),control=ctrl)
 gam.check(gamP)  ## warning
 
-gamP<-bam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=35),data=data,family=gaussian(link="log"),control=ctrl)
-gam.check(gamP)  ## warning
-
-gamP<-bam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=30),data=data,family=gaussian(link="log"),control=ctrl)
+gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=50)+ti(TOT,bs="tp",k=25),data=data,family=gaussian(link="log"))
 gam.check(gamP) 
- 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=60)+ti(TOT,bs="tp",k=25),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=25),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=25),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=25),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
 
 perStationFlowTOT[[21]]=gamP
 names(perStation)[21]
@@ -710,6 +928,12 @@ gam.check(gamP) ## warning
 
 gamP<-gam(chl~ti(doy,bs="cc",k=85)+ti(date_dec,bs="tp",k=75)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=85)+ti(date_dec,bs="tp",k=75)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=85)+ti(date_dec,bs="tp",k=90)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP)
 
 perStationFlowTOT[[22]]=gamP
 names(perStation)[22]
@@ -761,6 +985,12 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=90)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## go with this
 
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=110)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=90)+ti(TOT,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## stuck here
+
 perStationFlowTOT[[23]]=gamP
 names(perStation)[23]
 
@@ -804,6 +1034,11 @@ gam.check(gamP)  ## warning
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
 gam.check(gamP)  ## go with this
 
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=60)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=80)+ti(SAC2,bs="tp",k=20),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
 
 perStationFlowSpecific[[23]]=gamP
 
@@ -836,6 +1071,15 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=80)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
+gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
 perStationFlowTOT[[29]]=gamP
 names(perStation)[29]
 
@@ -864,6 +1108,21 @@ gam.check(gamP) ## warning
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=80)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=100)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=90)+ti(date_dec,bs="tp",k=100)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=100)+ti(date_dec,bs="tp",k=120)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=100)+ti(date_dec,bs="tp",k=140)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=100)+ti(date_dec,bs="tp",k=120)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## go with this
+
 perStationFlowSpecific[[29]]=gamP
 ####
 data=perStationAdd[[40]]
@@ -891,18 +1150,17 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
-gamP<-gam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gamP<-gam(chl~ti(doy,bs="cc",k=50)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) ## warning
+
+gamP<-gam(chl~ti(doy,bs="cc",k=70)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP)
 
-gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=150)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
-gam.check(gamP) ## warning
+gamP<-gam(chl~ti(doy,bs="cc",k=100)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
 
-gamP<-bam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"),control=ctrl)
-gam.check(gamP) ## warning
-
-gamP<-bam(chl~ti(doy,bs="cc",k=60)+ti(date_dec,bs="tp",k=120)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"), control=ctrl)
-gam.check(gamP) ## go with this
-
+gamP<-gam(chl~ti(doy,bs="cc",k=120)+ti(date_dec,bs="tp",k=100)+ti(TOT,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
 
 perStationFlowTOT[[40]]=gamP
 names(perStation)[40]
@@ -943,6 +1201,18 @@ gam.check(gamP)
 gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=75)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
 gam.check(gamP) ## stuck here
 
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=75)+ti(EAST,bs="tp",k=15),data=data,family=gaussian(link="log"))
+gam.check(gamP) 
+
+gamP<-gam(chl~ti(doy,bs="cc",k=80)+ti(date_dec,bs="tp",k=90)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=100)+ti(date_dec,bs="tp",k=100)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
+gamP<-gam(chl~ti(doy,bs="cc",k=110)+ti(date_dec,bs="tp",k=100)+ti(EAST,bs="tp",k=10),data=data,family=gaussian(link="log"))
+gam.check(gamP)
+
 perStationFlowSpecific[[40]]=gamP
 
 save(perStationFlowSpecific,file="perStationFlowSpecific.Rda")
@@ -962,6 +1232,8 @@ for(i in wholeSeries){
 }
 rmseFlow ## fairly decent
 
+## [1]   2.838674   0.952655   1.612711   1.615428 690.946301   3.298630  19.751330  12.701654
+#[9]   1.538721   1.163252  13.038407   4.653620  19.123854   4.075712   1.860528
 
 for(i in wholeSeries){
   perStationAdd[[i]]$TOT= 0.028316847*perStationAdd[[i]]$TOT
@@ -987,6 +1259,9 @@ for(i in wholeSeries){
 }
 
 rmseFlowSpecific
+
+#[1]         NA         NA  27.833327   3.373440         NA   1.457301 114.038307  56.297109
+#[9]   1.600664         NA         NA         NA   3.783009  14.894915   1.917451
 
 cbind(rmseFlow,rmseFlowSpecific)
 ## when rmse is bad for flow, often better for rmseFlowSpecific

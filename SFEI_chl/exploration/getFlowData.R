@@ -73,6 +73,17 @@ perStationAdd=perStation
 for(i in wholeSeries){
  
  testMerge=merge(perStationAdd[[i]],flowData,by.x="Date",by.y="Date",all.x=T)
+ flowData$Date=as.Date(flowData$Date)
+ temp <- outer(perStationAdd[[i]]$Date, flowData$Date,  "-")
+ 
+ # remove where date1 are after date2
+ #temp[temp < 0] <- NA
+ 
+ # find index of minimum
+ ind <- apply(temp, 1, function(i) which.min(abs(i)))
+ 
+ # output
+ test <- cbind(perStationAdd[[i]],  flowData[ind,])
  
  # setDT(perStationAdd[[i]])
  # setDT(flowData)
@@ -87,7 +98,8 @@ for(i in wholeSeries){
  # 
  # test=as.data.frame(test)
  # 
- perStationAdd[[i]]=testMerge
+ perStationAdd[[i]]=test
+ #perStationAdd[[i]]=testMerge
  print(i)
 }
 save(perStationAdd,file="perStationAdd.Rda")
