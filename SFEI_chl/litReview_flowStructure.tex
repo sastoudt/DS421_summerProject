@@ -18,6 +18,8 @@
 
 \section{A mixed-model moving-average approach to geostatistical modelingin stream networks, Peterson, Ver Hoeff, Ecology 2010}
 
+(more of an overview piece)
+
 Problems with Euclidean Distance:  does not represent 
 \begin{itemize}
 \item spatial configuration
@@ -77,6 +79,64 @@ In practice
 \item possible to produce covariance matrices for Poisson or binomial variables
 \end{itemize}
 
-\subsection{}
+\subsection{Geostatistical modelling on stream networks: developingvalid covariance matrices based on hydrologic distanceand stream flow, Peterson, Theobald, Ver Hoef, Freshwater Biology 2007}
+
+(more of a detailed paper)
+
+buzz words
+\begin{itemize}
+\item hierarchy theory (http://www.botany.wisc.edu/allenlab/AllenLab/Hierarchy.html)
+\item the need to recognize multi-scale processes
+\end{itemize}
+
+Distance measures
+\begin{itemize}
+\item symmetric distance: allows movement between sites in all directions (Euclidean)
+\item symmetric hydrologic distance: shortest distance along stream network without restricting to flow
+\item asymmetric hydrologic distance: requires water flow from one location to another for two sites to be connected (upstream or downstream, not both)
+\end{itemize}
+
+Geostatistical modelling in stream networks
+\begin{itemize}
+\item nugget: represents variation between sites as their separation distance approaches zero, experimental error, or indicate that substantial variation occurs at a scale finer than the sampling scale
+\item sill: autocovariance asymptote, represents variance found among uncorrelated data
+\item range: how fast the autocovariance decays with distance
+\item covariance matrix must by symmetric, positive-definite, and ll diagonal elemnts must be non-negative
+\item exponential model is valid when making predictions at unobserved locations using covariance matrices based on symmetric hydrologic distance
+\item pure asymmetric distance measures (unweighted) do not produce symmetric covariance matrices
+\end{itemize}
+
+Autocovariance models using hydrologic distances
+\begin{itemize}
+\item large class of autocovariance functions can be developed by creating random variables as the integration of a moving average function over a white noise random process
+\item $Z(s) \int_{-\infty}^\infty g(x-s|\theta)W(x)dx$
+\item $C(h|\theta)=  \int_{-\infty}^\infty (g(x|\theta))^2dx+\theta_0$ (if h=0) $\int_{-\infty}^\infty g(x|\theta)g(x-h|\theta)dx$ (if h>0)
+\item $\theta_0$ is nugget, $h$ is the separation distance
+\item distance upstream: distance upstream of any segment from the stream outlet
+\end{itemize}
+
+Notation
+\begin{itemize}
+\item $x_i$: distance upstream on the $i$th stream segment
+\item $l_i$: most downstream location on the $i$th stream segment
+\item $u_i$: most upstream location on the $i$th stream segment
+\item $l_i=u_j$ when the $i$th segment is directly upstream from the $j$th segment
+\item $U_{x_i}$: index set of stream segments upstream of $x_i$ excluding $i$
+\item $B_{x_i, s_j}$: index set of segments between downstream location $x_i$ and upstream location $s_j$ excluding the downstream segment but including the upstream segment
+\item $B_{x_i,[j]}$: index set between a downstream location and an upstream segment $j$
+\item $\omgega_k$: segment weight equal to the proportion that a stream segment contributes to the segment directly downstream
+\item $Z(s_i)=\int_{s_i}^{u_i}g(x_i-s_i|\theta)W(x_i)dx_i + \sum_{j \in U_{s_i}} \left( \prod_{k \in B_{s_i,[j]}}\sqrt{\omega_k}\right) \int_{l_j}^{u_j} g(x_j-s_i|\theta)W(x_j)dx_j$
+\item in words: moving average from point of interest to upstream of moving average function over the white noise process plus sum of [(product of weights from those in-between location of interest and an upstream segment)*  (lower to upper of stream segment j moving average over random process)] for all segments upstream of location of interest
+\item $C(s_i,s_j|\theta) = 0$ (if locations are not flow connected) $= C_1(0)_\theta_0$ (if location 1=location 2) $= \prod_{k \in B_{s_i,s_j} \sqrt{\omega_k}C_1(|s_i-s_j|)}$ (otherwise)
+\item C_1(h)= \int_{-\infty}^\infty g(x|\theta) g(x-h|\theta)dx$
+\item exponential, linear with sill, spherical, or Mariah autocovariance functions can be fit to the empirical covariances once the asymmetric hydrologic distance data have been weighted appropriately
+\item can plug covariance matrix generated from this autocovariance function into kriging
+\end{itemize}
+
+In practice
+\begin{itemize}
+\item need to calculate symmetric and asymmetric hydrologic distance measures using ARCGIS
+\item for spatial weights: need to calculate discharge volume or use watershed area as a surrogate
+\end{itemize}
 
 \end{document}
