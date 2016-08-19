@@ -137,6 +137,14 @@ In practice
 \begin{itemize}
 \item need to calculate symmetric and asymmetric hydrologic distance measures using ARCGIS
 \item for spatial weights: need to calculate discharge volume or use watershed area as a surrogate
+\item V: uses the hydrologic distance between each pair of locations $h$, $C_1(h|\theta)= \theta_0+\theta_1$ (if h=0), $\theta_1 \rho(h/\theta_2)$ (if h>0)
+\item then elementwise product $V$ with a symmetric spatial weights matrix W+W'
+\end{itemize}
+
+Future directions
+\begin{itemize}
+\item create other relevant distance measures that incorporate physical characteristics such as flow velocity, stream gradient, or physical structures that better reflect the "energy" an organism expends to move from one location to another
+\item network connectivity could also include chemical, physical, and biological barriers
 \end{itemize}
 
 \end{document}
