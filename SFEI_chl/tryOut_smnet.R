@@ -137,53 +137,49 @@ adjacency=get_adjacency(example_network@path,1)
 make_weights(adjacency[[1]])
 class(adjacency)
 
-adjacency <- get_adjacency(
-  paste(tempdir(), "/example_network", sep = ""),
-  net = 1
-)
 
 display(adjacency[[1]])
 class(adjacency[[1]])
-example_network<- createSSN(
-  n = 50,
-  obsDesign = binomialDesign(200),
-  predDesign = binomialDesign(50),
-  importToR = TRUE,
-  path = paste(tempdir(),"/example_network",sep = ""),
-  treeFunction = iterativeTreeLayout
-)
-
-observed_data <- getSSNdata.frame(example_network, "Obs")
-prediction_data <- getSSNdata.frame(example_network, "preds")
-## associate continuous covariates with the observation locations
-# data generated from a normal distribution
-obs <- rnorm(200)
-observed_data[,"X"] <- obs
-observed_data[,"X2"] <- obs^2
-## associate continuous covariates with the prediction locations
-# data generated from a normal distribution
-pred <- rnorm(50)
-prediction_data[,"X"] <- pred
-prediction_data[,"X2"] <- pred^2
-createDistMat(example_network, "preds", o.write=TRUE, amongpred = TRUE)
-sims <- SimulateOnSSN(
-  ssn.object = example_network,
-  ObsSimDF = observed_data,
-  PredSimDF = prediction_data,
-  PredID = "preds",
-  formula = ~ 1 + X,
-  coefficients = c(1, 10),
-  CorModels = c("Exponential.tailup"),
-  use.nugget = TRUE,
-  CorParms = c(10, 5, 0.1),
-  addfunccol = "addfunccol")$ssn.object
-## extract the observed and predicted data frames, now with simulated values
-sim1DFpred <- getSSNdata.frame(sims, "preds")
-sim1preds <- sim1DFpred[,"Sim_Values"]
-sim1DFpred[,"Sim_Values"] <- NA
-sims <- putSSNdata.frame(sim1DFpred, sims, "preds")
-
-show_weights(sims, adjacency)
+# example_network<- createSSN(
+#   n = 50,
+#   obsDesign = binomialDesign(200),
+#   predDesign = binomialDesign(50),
+#   importToR = TRUE,
+#   path = paste(tempdir(),"/example_network",sep = ""),
+#   treeFunction = iterativeTreeLayout
+# )
+# 
+# observed_data <- getSSNdata.frame(example_network, "Obs")
+# prediction_data <- getSSNdata.frame(example_network, "preds")
+# ## associate continuous covariates with the observation locations
+# # data generated from a normal distribution
+# obs <- rnorm(200)
+# observed_data[,"X"] <- obs
+# observed_data[,"X2"] <- obs^2
+# ## associate continuous covariates with the prediction locations
+# # data generated from a normal distribution
+# pred <- rnorm(50)
+# prediction_data[,"X"] <- pred
+# prediction_data[,"X2"] <- pred^2
+# createDistMat(example_network, "preds", o.write=TRUE, amongpred = TRUE)
+# sims <- SimulateOnSSN(
+#   ssn.object = example_network,
+#   ObsSimDF = observed_data,
+#   PredSimDF = prediction_data,
+#   PredID = "preds",
+#   formula = ~ 1 + X,
+#   coefficients = c(1, 10),
+#   CorModels = c("Exponential.tailup"),
+#   use.nugget = TRUE,
+#   CorParms = c(10, 5, 0.1),
+#   addfunccol = "addfunccol")$ssn.object
+# ## extract the observed and predicted data frames, now with simulated values
+# sim1DFpred <- getSSNdata.frame(sims, "preds")
+# sim1preds <- sim1DFpred[,"Sim_Values"]
+# sim1DFpred[,"Sim_Values"] <- NA
+# sims <- putSSNdata.frame(sim1DFpred, sims, "preds")
+# 
+# show_weights(sims, adjacency)
 
 unifWeights=make_weights(adjacency[[1]])
 unifWeights
@@ -211,3 +207,171 @@ D2           <- t(D2)%*%D2
 require(Matrix)
 
 View(as.data.frame(as.matrix(D2)))
+
+
+##
+adjacency_to_shreve <- function(adjacency){
+  trips        <- triplet(adjacency$adjacency)$indices
+  shreve.order <- inverse.order <- vector("numeric", length = nrow(adjacency$adjacency))
+  #   INVERSE ORDER PROVIDES THE NUMBER OF STREAM SEGMENTS
+  #   EACH SEGMENTS LIES UPSTREAM FROM THE SOURCE
+  # the root node is the segment that has no downstream neighbours, ie. the outlet
+  root.node    <- which(rowSums(adjacency$adjacency) == 0)
+  if(length(root.node) > 1){
+    bid_roots <- nchar(adjacency$rid_bid[root.node, 2])
+    root.node <- root.node[which(bid_roots == max(bid_roots))]
+  }
+  # inverse.order is a vector that accumulates from root.node upstream
+  # each element indicates the 'height' in the network of each segment
+  inverse.order[root.node] <- 1 
+  # every element of inverse.order should be non-zero.  
+  # A zero might indicate a lake or something disconnected from the network
+  # to get the inverse.order, siply count the number of characters in the binaryID vector
+  inverse.order <- nchar(adjacency$rid_bid[, 2])
+  for(i in 1:nrow(trips)) inverse.order[trips[i,1]] <- inverse.order[trips[i,2]] + 1
+  # sources is a vector indicating the segments that have no upstream neighbours, ie the sources of the stream
+  sources <- which(colSums(adjacency$adjacency) == 0)
+  # shreve.order assigns a weight of 1 to these source segments
+  shreve.order[sources] <- 1
+  # remaining gives the network 'heights' of the non-source segments that remain
+  # in reverse order, since shreve.order will accumlate from the highest to the lowest in the network
+  remaining <- rev(sort(unique(inverse.order[-sources])))
+  # we now ignore the sources and simply populate the remaining shreve.orders
+  inverse.order[sources] <- NA
+  # need the row locations of 1's in adjacency
+  # since spam uses column compression, must transpose to extract these efficiently
+  tadjacency <- t(adjacency$adjacency)
+  # populate elements of shreve.order in reverse order of network 'height' (larger number means 'higher')
+  for(i in 1:length(remaining)){
+    # identify all those segments with network height == remaining[i]
+    next.down <- which(inverse.order == remaining[i])
+    # cycle through each of next.down in turn and add up their upstream weights
+    # this makes sense because every segment with the same network height has weight indep. of the others
+    for(j in 1:length(next.down)){
+      shreve.order[next.down[j]] <- sum(shreve.order[tadjacency[next.down[j],]@colindices])
+    }
+  }
+  # finally print the shreve.order
+  shreve.order
+}
+
+weight       <- adjacency_to_shreve(adjacency = adjacency)
+
+
+check_weight <- function(adj, wgt, silent = F){
+  wgt <- try(as.numeric(as.matrix(wgt)))
+  if(class(wgt) == "numeric" & (!anyNA(wgt))){
+    # pull out the bid from the adjacency object
+    bid  <- adj$rid_bid[,2]
+    nbid <- nchar(bid) 
+    min_weight <- min(wgt)
+    # the idea here is that for a network weight, the sum of the weights at the i^th 
+    # level of the network heirarchy should equal the number of segments in the i-1^th level
+    # of the network, minus the number of 'source' segments (dead_ends) that occur at i-1^th level
+    # for an additive weight, the idea is similar, the sum of the weights a the i^th level
+    # equal the sum of the weights at the i-1^th level, minus the number of dead_ends at i-1
+    # since all dead_ends will have order 1 (under Shreve - if the lowest order is different, I'll need to fix this)
+    dis_additive     <- 0
+    dis_network      <- 0
+    for(i in 2:max(nbid)){
+      which_lower     <- which(nbid == i-1)
+      which_upper     <- which(nbid == i)
+      n_lower         <- length(which_lower)
+      sum_up_weight   <- sum(wgt[which_upper])
+      sum_dn_weight   <- sum(wgt[which_lower])
+      dead_ends       <- sum(colSums(adj$adjacency)[which_lower] == 0)
+      dis_network     <- dis_network + (n_lower - sum_up_weight - dead_ends)^2
+      dis_additive    <- dis_additive + (sum_dn_weight - sum_up_weight - dead_ends*min_weight)^2
+    }
+    if(round(dis_additive, 6) == 0){
+      weight.type <- "additive"
+      if(!silent) cat("Provided weight passes additivity check... \n")
+    } else if(round(dis_network, 6)  == 0){
+      weight.type <- "network"
+      if(!silent) cat("Provided weight passes network check... \n")
+    } else {weight.type <- "unrecognised"}
+  } else {
+    weight.type <- "unrecognised"
+  }
+  weight.type
+}
+
+weight.type  <- check_weight(adjacency, weight)
+
+get_shreve_weights<-function(adjacency, shreve.order){
+  # convert shreve to weights
+  n.segments<-nrow(adjacency)
+  shreve.weights<-vector("numeric", length = nrow(adjacency))
+  ij<-triplet(adjacency)$indices
+  
+  for(j in 1:n.segments){
+    ij.ind<-which(ij[,2] == j)
+    shreve.down<-shreve.order[j]
+    if(length(ij.ind)>0){
+      for(i in 1:length(ij.ind)){
+        shreve.up<-shreve.order[ij[ij.ind[i],1]]
+        shreve.weights[ij[ij.ind[i]]]<-shreve.up/shreve.down
+      }
+    }
+  }
+  shreve.weights[which(shreve.weights == 0)]<-1# this shouldn't happen and so there is an error....
+  shreve.weights
+}
+
+weight       <- get_shreve_weights(adjacency = adjacency$adjacency, shreve.order = as.matrix(weight))  
+
+weight
+
+spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
+  adj.spam <- make_spam(adjacency)
+  pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
+  ij.nzero.adj <- triplet(adj.spam)$indices
+  in.pseudo    <- ij.nzero.adj[,2] %in% pseudo.inds
+  ij.confl     <- ij.nzero.adj[!in.pseudo,]
+  n.nzero      <- nrow(ij.confl)
+  p.row.ind    <- rep(1:n.nzero, each = 2)
+  p.col.ind    <- c(t(ij.confl))
+  p.val        <- wgts[rep(ij.confl[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+  D2           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+  D2           <- t(D2)%*%D2 
+  
+  if(!is.null(pseudo.inds)){
+    ij.pseudo    <- ij.nzero.adj[in.pseudo,]
+    n.nzero      <- nrow(ij.pseudo)
+    if(is.null(n.nzero)) n.nzero <- 1
+    p.row.ind    <- rep(1:n.nzero, each = 2)
+    p.col.ind    <- c(t(ij.pseudo))
+    if(is.matrix(ij.pseudo)){
+      p.val        <- wgts[rep(ij.pseudo[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+    }
+    if(is.vector(ij.pseudo)){
+      p.val        <- wgts[rep(ij.pseudo[1], each = 2)]*rep(c(-1, 1), n.nzero)
+    }
+    D1           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+    D1            <- t(D1)%*%D1
+  }  
+  return((lambda)*(D2 + D1))  
+}
+
+
+spatial_penalty(adjacency[[1]],weight,0.5,50) ## what is D1?
+
+observed_data <- getSSNdata.frame(example_network, "Obs")
+names(observed_data)
+
+## locID=pid: point identifier
+## rid: reach identifief of segment point is on
+## upDist: distance from stream outlet (most downstream point) to the uppermost location on the line segment
+## ratio: proportional distance along the edge to the site location
+## shreve
+## addfunccol (additive weight)
+## NEAR_X, NEAR_Y: spatial coordinates
+
+## all in all, I think I can make smnet function work if I can produce data in correct format
+## make my own adjacency matrix and go with shreve weights for now
+## can eventually add in at least relative flow
+
+## Two go into a confluence x: a/x, b/x
+## Two come out of an influence y: a/y, b/y
+## some can have weights 1
+## need to check this logic
