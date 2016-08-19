@@ -208,7 +208,7 @@ require(Matrix)
 
 View(as.data.frame(as.matrix(D2)))
 
-
+View(as.data.frame(as.matrix(adjacency[[1]])))
 ##
 adjacency_to_shreve <- function(adjacency){
   trips        <- triplet(adjacency$adjacency)$indices
