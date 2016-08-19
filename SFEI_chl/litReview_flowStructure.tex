@@ -2,6 +2,7 @@
 \documentclass[12pt]{amsart}
 \usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
 \geometry{a4paper} % or letter or a5paper or ... etc
+\usepackage{color}
 % \geometry{landscape} % rotated page geometry
 
 % See the ``Article customise'' template for come common customisations
@@ -25,7 +26,7 @@ Problems with Euclidean Distance:  does not represent
 \item spatial configuration
 \item longitudinal connectivity: "refers to the pathway along the entire length of a stream. A gradient of physical, chemical, and biological processes occur from source to mouth."
 \item discharge
-\ite flow direction
+\item flow direction
 \item common autocovariance functions are not generally valid when Euclidean distance is replaced with a hydrologic distance measure
 \item generally valid autocovariance function must be guaranteed to produce a covariance matrix that is symmetric and positive definite with all nonnegative diagonal elements regardless of the configuration of your data
 \end{itemize}
@@ -124,11 +125,11 @@ Notation
 \item $U_{x_i}$: index set of stream segments upstream of $x_i$ excluding $i$
 \item $B_{x_i, s_j}$: index set of segments between downstream location $x_i$ and upstream location $s_j$ excluding the downstream segment but including the upstream segment
 \item $B_{x_i,[j]}$: index set between a downstream location and an upstream segment $j$
-\item $\omgega_k$: segment weight equal to the proportion that a stream segment contributes to the segment directly downstream
+\item $\omega_k$: segment weight equal to the proportion that a stream segment contributes to the segment directly downstream
 \item $Z(s_i)=\int_{s_i}^{u_i}g(x_i-s_i|\theta)W(x_i)dx_i + \sum_{j \in U_{s_i}} \left( \prod_{k \in B_{s_i,[j]}}\sqrt{\omega_k}\right) \int_{l_j}^{u_j} g(x_j-s_i|\theta)W(x_j)dx_j$
 \item in words: moving average from point of interest to upstream of moving average function over the white noise process plus sum of [(product of weights from those in-between location of interest and an upstream segment)*  (lower to upper of stream segment j moving average over random process)] for all segments upstream of location of interest
 \item $C(s_i,s_j|\theta) = 0$ (if locations are not flow connected) $= C_1(0)_\theta_0$ (if location 1=location 2) $= \prod_{k \in B_{s_i,s_j} \sqrt{\omega_k}C_1(|s_i-s_j|)}$ (otherwise)
-\item C_1(h)= \int_{-\infty}^\infty g(x|\theta) g(x-h|\theta)dx$
+\item $C_1(h)= \int_{-\infty}^\infty g(x|\theta) g(x-h|\theta)dx$
 \item exponential, linear with sill, spherical, or Mariah autocovariance functions can be fit to the empirical covariances once the asymmetric hydrologic distance data have been weighted appropriately
 \item can plug covariance matrix generated from this autocovariance function into kriging
 \end{itemize}
@@ -182,7 +183,7 @@ Penalized Splines
 \item $\omega_a\beta_a+\omega_b\beta_b=\beta_c$, so we need \omega_a(\beta_a-\beta_c)+\omega_b(\beta_b-\beta_c)=0$
 \item use this difference penalty: $\lambda\{\omega_a^2(\beta_a-\beta_c)^2+\omega_b^2(\beta_b-\beta_c)^2 \}$
 \item outputs conditioned on their immediate upstream neighbors are independent of all further upstream neighbors
-\item P-spline model: $y=B\beta+\epsilon$, $B$ is an $n \times p$ indicator matrix whose $i$th row has the value 1 in the column corresponding to the stream unit of y_i and 0s elsewhere
+\item P-spline model: $y=B\beta+\epsilon$, $B$ is an $n \times p$ indicator matrix whose $i$th row has the value 1 in the column corresponding to the stream unit of $y_i$ and 0s elsewhere
 \item minimize the penalized sum of squares: $(y-B\beta)^T(y-B\beta)+\lambda\beta^TD^TD\beta$ with respect to $\beta$
 \item $D$: generates the differences between $\beta$s from adjacent stream units, weighted by flow when there is an intervening confluence point, $D$ is $p\times p$, $p$ is number of stream pieces
 \item $\hat{\beta}=(B^TB+\lambda D^TD)^{-1}B^Ty$
@@ -202,7 +203,54 @@ Computational Comparisons
 
 Spatiotemporal
 \begin{itemize}
-\item 
+\item spatial, temporal, and seasonal trends: $y_i=\mu+m_s(s_i)+m_t(t_i)+m_z(z_i)+\epsilon_i$
+\item can use cubic B-splines for the temporal and seasonal effects, defined over more standard sample spaces, can combine all of the design matrices for each piece into one
+\item smoothness penalty: $\beta^TP\beta$ where $P$ has block diagonal form that combines the individual penalties $(0, \lambda_sD_s^TD_s, \lambda_tD_t^TD_t, \lambda_zD_z^TD_z)$
+\item $D_t$ often a second order differencing, $D_z$ needs a cyclic structure so that the first $r$ basis functions are identical with the last $r$: $\sum_{k=1}^r (\beta_{z,k}-\beta_{z,p+1-k})^2$
+\item for identifiability, need a ridge penalty: $\beta^TQ\beta$ where $Q$ is a diagonal matrix constructed from $(0, \nu_s 1_s, \nu_t1_t, \nu_z1_z)$ where the $\nu$ parameters are the ridge  parameters, $1_s$ a vector of 1s whose length is determined by the basis functions in the $s$ term
+\item $\hat{\beta} =(B^TB+P+Q)^{-1}B^Ty$
+\item can get standard errors for $\hat{\beta}$ from the diagonal elements of $HH^T$ $(H=(B^TB+P+Q)^{-1}B^T) $ multiplied by an estimate of the error variance: $$\hat{\sigma}^2$=RSS/(n-dof) [residual sum of squares and approximate degrees of freedom for the model (trace of hat matrix)]
 \end{itemize}
+
+Allow for interaction terms
+\begin{itemize}
+\item let the spatial pattern evolve over time
+\item $y_i=\mu+m_s(s_i)+m_t(t_i)+m_z(z_i)+m_{s,t}(s_i,t_i)+m_{s,z}(s_i,z_i)+m_{t,z}(t_i,z_i)+\epsilon_i$
+\item basis formed by all possible products of the spline basis functions on each separate variable
+\item $m_{s,t}=\sum_{j,k} \beta_{jk}\phi_{s,j}\phi_{t,k}$
+\item $B=(1 B_s B_t B_z B_x \square B_t B_s\square B_z B_t \square B_z)$
+\item $\square$ is the row-wise tensor product: $A\squareY=(A\otimes 1') \odot (1' \otimes Y) $ where $\odot$ is elementwise prod \textcolor{red}{look into dimensions of this}
+\item penalties for the interaction terms can be constructed by considering the coefficients $\beta_{jk}$ in matrix form and applying smoothness penalties to both the rows and columns: (ex.) space-time smoothness, apply first-order network penalty to the columns and a second-order difference penalty over the rows
+\end{itemize}
+
+Computational details
+\begin{itemize}
+\item tensor product spline smooths have many basis parameters to fit
+\item $V$ denotes the $n \times q$ matrix evaluating the bases for the other terms in the model, then $B_s \square V$ is at least $100(1-1/p_s)\%$ sparse and much more so if $V$ is sparse
+\item define all of the model components in a compressed format, spam or Matrix packages)
+\item Cholesky factor $L$ of $B^TB+P+Q$ to obtain the quadratic form of interest where $B^TB+P+Q=LL^T$
+\item standard errors of the fitted values are the diagonal elements of $B^TL^{-1T}L^{-1}BB^TL^{-T}L^{-1}B$ and can be calculated efficiently by solving first $AL=B$ then $CL^T=A$ and then summing the elementwise product of $CB^T$ with itself
+\end{itemize}
+
+Residual correlation
+\begin{itemize}
+\item residual temporal correlation at short time lags is to be expected, the model accounts for trends over longer time periods
+\item standard error estimates are likely to be underestimated when the underlying error process is correlated
+\item conservative approach: fit a separable spatiotemporal model to the errors so that $\hat{\Sigma){ij}=cov(\epsilon_i,\epsilon_j)=\omega_{ij}\sigma^2 \exp{-d_{ij}/\rho-|t_i-t_j|/\psi}}$
+\item $\omega_{ij}=\prod_{k\in N} \omega_k$, k indexes teh set of stream units that lie between $i$ and $j$ and on the same flow path as both
+\item time lag: t_i-t_j, d_{ij}: network separation measured in numbers of stream units
+\item fit by weighted least squares
+\item adjustment: $se(\hat{y})=\sqrt{var(\hat{H}y}=\sqrt{diag(\hat{H}\hat{\Sigma}\hat{H}^T}$, \hat{H}=B(B^TB+P+Q)^{-1}B^T
+\item could incorporate the correlation structure into the fitting process but would increase the complexity of the computations because sparsity would be compomised
+\end{itemize}
+
+Future work
+\begin{itemize}
+
+\item smoothing parameters representing variance components which can be estimated by restricted maximum likelihood
+\item Bayesian hierarchical model interpretation: $\beta_i$ are treated as random effects with a Gaussian Markov random-field prior and a fixed variance, uncertainty associated with smoothing parameters is integrated out (right now a grid search)
+\item need average flow values for each stream unit in the network partition, flow ratios are the crucial quantities
+\end{itemize}
+
 
 \end{document}
