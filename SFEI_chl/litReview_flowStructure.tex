@@ -1,0 +1,82 @@
+
+\documentclass[12pt]{amsart}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\geometry{a4paper} % or letter or a5paper or ... etc
+% \geometry{landscape} % rotated page geometry
+
+% See the ``Article customise'' template for come common customisations
+
+\title{Informal Lit Review for Flow Structure}
+\author{Sara Stoudt}
+%\date{} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+\section{A mixed-model moving-average approach to geostatistical modelingin stream networks, Peterson, Ver Hoeff, Ecology 2010}
+
+Problems with Euclidean Distance:  does not represent 
+\begin{itemize}
+\item spatial configuration
+\item longitudinal connectivity: "refers to the pathway along the entire length of a stream. A gradient of physical, chemical, and biological processes occur from source to mouth."
+\item discharge
+\ite flow direction
+\item common autocovariance functions are not generally valid when Euclidean distance is replaced with a hydrologic distance measure
+\item generally valid autocovariance function must be guaranteed to produce a covariance matrix that is symmetric and positive definite with all nonnegative diagonal elements regardless of the configuration of your data
+\end{itemize}
+
+Hydrologic distance
+\begin{itemize}
+\item distance along the flow network
+\item ``flow-connected" relationship requires water flow from one location to another for two sites to be correlated
+\item ``flow-unconnected": sites are spatially independent if no flow between the two
+\end{itemize}
+
+Tail-up models
+\begin{itemize}
+\item use hydrologic distance, only allow autocorrelation for flow-connected relationships
+\item autocorrelation occurs when moving average functions overlap among sites, with greater autocorrelation resulting from greater overlap
+\item when the moving average (MA) function reaches a confluence (split) in the network, segment weights are used to proportionally allocate or split the function between upstream segments (often use discharge or watershed area to represent relative influence in a stream network)
+\item segment weights can also be based on measures that represent the sum of the upstream measures (segment does not contriubte anything to itself) such as Shreve's stream order [basically how many stream segments feed into that one]
+\item segment weights that sum to one ensure constant variance
+\item good for modeling organisms or materials that move passively downstream
+
+\end{itemize}
+
+Tail-down models
+\begin{itemize}
+\item allow autocrrelation between both flow-connected and flow-unconnected pairs of sites
+\item MA function is only non-zero downstream of a location
+\item total hydrologic distance is used for flow-connected pairs, but the hydrologic distances from each site to a common confluence are used for flow-unconnected pairs
+\item no need for segment weights since MA function points downstream
+\item restriction for relative strength of spatial autocorrelation for each type [flow connected and unconnected]
+\begin{itemize}
+\item one pair is flow-connected, one pair is not, total distance for flow connected = sum of distances of non-flow connected points to a shared confluence, the strength of the spatial autocorrelation is generally equal or greater for the flow-unconnected pairs
+\item none of the current models are able to generate a tail-down (or up) model with significantly stronger spatial autocorrelation between flow-connected pairs than flow-unconnected pairs for an equal hydrologic distance
+\item restrictions might make sense for fish populations that have the tendency to invade upstream reaches
+\end{itemize}
+\end{itemize}
+
+Mixed models
+\begin{itemize}
+\item variance component approach
+\item Covariance mixture = $\sigma^2_{Euc}cor(z_{Euc})+\sigma^2_{TD}cor(z_{TD})+\sigma^2_{TU}cor(z_{TU})+\sigma^2_{nug}I$
+\item $cor(z_{TU})= C_{TU} \odot W_{TU}$ elementwise multiplication of flow-connected autocorrelations and the spatial weights matrix 
+\item allows for the possibility of more autocorrelation among flow-connected pairs of sites with somewhat less autocorrelation among flow-unconnected pairs of sites
+\item multiple range parameters can capture patterns at multiple scales
+\end{itemize}
+
+In practice
+\begin{itemize}
+\item recommend fitting a full covariance matrix, allows the data to determine which variance components have the strongest influence
+\item TU model allows discontinuities in predictions at confluences
+\item effect of spatial weights on prediction uncertainty is apparent if upstream segments have not been sampled (various combinations can contribute to the downstream observed)
+\item possible to produce covariance matrices for Poisson or binomial variables
+\end{itemize}
+
+\subsection{}
+
+\end{document}
