@@ -79,7 +79,7 @@ In practice
 \item possible to produce covariance matrices for Poisson or binomial variables
 \end{itemize}
 
-\subsection{Geostatistical modelling on stream networks: developingvalid covariance matrices based on hydrologic distanceand stream flow, Peterson, Theobald, Ver Hoef, Freshwater Biology 2007}
+\section{Geostatistical modelling on stream networks: developingvalid covariance matrices based on hydrologic distanceand stream flow, Peterson, Theobald, Ver Hoef, Freshwater Biology 2007}
 
 (more of a detailed paper)
 
@@ -145,6 +145,64 @@ Future directions
 \begin{itemize}
 \item create other relevant distance measures that incorporate physical characteristics such as flow velocity, stream gradient, or physical structures that better reflect the "energy" an organism expends to move from one location to another
 \item network connectivity could also include chemical, physical, and biological barriers
+\end{itemize}
+
+\section{Flexible regression models over river networks, O' Donnel, Rushworth, Bowman, and Scott, Applied Statistics 2014}
+
+Overview of what the goal is
+\begin{itemize}
+\item underlying trends that are more flexible than linear trends
+\item smoothing techniques not seen often in a network setting
+\item borrow strength locally while respecting the specific topology of a network and the additional complications of directionality and size of flow
+\item how to deal with confluence points where different branches of the network combine
+\item want to be allowed to predict sharp changes which are often expected at confluence points
+\item extend to spatial, temporal, covariate effects, spatio-temporal
+\end{itemize}
+
+Kernel Functions
+\begin{itemize}
+\item local average $\hat{m}(x)=\frac{\sum_i w(x_i-x; h) y_i}{\sum_i w(x_i-x;h)}$
+where the weight function $w$ decreases with distance from zero at a rate determined by $h$ ($w$ could be normal density and $h$ could be the standard deviation)
+\item can use river distance and make weights non-zero only where there is a flow path between two points, additional weights can reflect the volume of water flowing in different sections of the river
+\item can fit Ver Hoef approach into this framework
+\end{itemize}
+
+Penalized Splines
+\begin{itemize}
+\item $\hat{m}(x)=\sum_j \beta_j \phi_j(x)$ where the $\phi$s are basis functions
+\item dimensionality can be kept low, independent of the size of the data
+\item B splines, or penalized B splines for computational expediency
+\item construct a basis set over a network, need to combine them suitably at the confluence points
+\begin{itemize}
+\item smooth overlapping functions
+\item divide network into a large number of small pieces within which the function $m$ is likely to change very little, piecewise constant (B splines of order 0)
+\end{itemize}
+\item need to penalize because more stream units than observed values, smoothness of $\beta$ values corresponding to adjacent stream units $j$ and $k$ with no intervening confluence can be measured by $(\beta_j-\beta_k)^2$
+\item if there is a confluence point (a and b feed into c) then $f_c=f_a+f_b$, relative flows $\omega_a=f_a/f_c$ and $\omega_b=f_b\f_c$
+\item $\omega_a\beta_a+\omega_b\beta_b=\beta_c$, so we need \omega_a(\beta_a-\beta_c)+\omega_b(\beta_b-\beta_c)=0$
+\item use this difference penalty: $\lambda\{\omega_a^2(\beta_a-\beta_c)^2+\omega_b^2(\beta_b-\beta_c)^2 \}$
+\item outputs conditioned on their immediate upstream neighbors are independent of all further upstream neighbors
+\item P-spline model: $y=B\beta+\epsilon$, $B$ is an $n \times p$ indicator matrix whose $i$th row has the value 1 in the column corresponding to the stream unit of y_i and 0s elsewhere
+\item minimize the penalized sum of squares: $(y-B\beta)^T(y-B\beta)+\lambda\beta^TD^TD\beta$ with respect to $\beta$
+\item $D$: generates the differences between $\beta$s from adjacent stream units, weighted by flow when there is an intervening confluence point, $D$ is $p\times p$, $p$ is number of stream pieces
+\item $\hat{\beta}=(B^TB+\lambda D^TD)^{-1}B^Ty$
+\end{itemize}
+
+Computational Comparisons
+\begin{itemize}
+\item easy to identify estimated values at any location of interest by identifying the stream unit in which it lies
+\item local mean estimation requires a new calculation for each new estimation point
+\item the penalty can bridge the gap between data points if there are sparse regions
+\item local mean estimation can run into difficulties with very small weights
+\item P-spline construction only deals with relationship between values and flows in neighboring stream units, so you don't need to define connectedness across the whole network simultaneously or to consider the cumulative effect of flow across distances which span several confluences
+\item can lose some information because the lengths of the stream units are not used, small if stream units are defined as homogeneous stretches of water
+\item P splines will scale up better
+\item have to choose $\lambda$ for P splines
+\end{itemize}
+
+Spatiotemporal
+\begin{itemize}
+\item 
 \end{itemize}
 
 \end{document}
