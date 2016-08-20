@@ -110,10 +110,15 @@ adjacency = sfeiAdjMatrix_sp
   shreve.order
 ## this can't be right
 ## https://en.wikipedia.org/wiki/Strahler_number
+  
+  ## http://pro.arcgis.com/en/pro-app/tool-reference/spatial-analyst/how-stream-order-works.htm
+  ## was doing strahler not shreve
+  ## still doesn't help the fact that nbin is off
 
   ### do by hand
   
-  shreve.order<-c(1,2,2,2,1,2,1,1,1,1,1,2,1)
+  strahler.order<-c(1,2,2,2,1,2,1,1,1,1,1,2,1)
+  shreve.order<-c(1,4,3,3,1,2,1,1,4,4,4,1,1)
 
 #weight       <- adjacency_to_shreve(adjacency = sfeiAdjMatrix_sp)
 
@@ -130,6 +135,7 @@ adjacency = sfeiAdjMatrix_sp
       inverse.order<-c(5,2,3,4,4,5,5,3,1,1,2,6,6)
       nbid=7-inverse.order
       ## this makes the most sense and gets closest to zero but still doesn't match
+      nbid[c(1,2,5,7,8)]=nbid[c(1,2,5,7,8)]-1
       
       nbid=c(0,3,3,2,1,1,0,2,5,5,4,0,0)
       nbid=nbid+1
@@ -181,5 +187,17 @@ adjacency = sfeiAdjMatrix_sp
     weight.type
   
     ## unrecognized
-  
+  ## can't go forward with smnet call without figuring this out :(
   weight.type  <- check_weight(adjacency, shreve.order)
+  
+  ## found where the issue is
+  ## need to eliminate MD & P level to fix, see if this works
+  
+  sfeiAdjMatrix=sfeiAdjMatrix[-c(12,13),]
+sfeiAdjMatrix=sfeiAdjMatrix[,-c(12,13)]
+
+sfeiAdjMatrix
+sfeiAdjMatrix_sp <- Matrix(sfeiAdjMatrix, sparse = TRUE) 
+shreve.order=c(1,3,2,2,1,1,1,1,3,3,3)
+
+nbid=c()
