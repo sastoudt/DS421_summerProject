@@ -117,3 +117,69 @@ adjacency = sfeiAdjMatrix_sp
 
 #weight       <- adjacency_to_shreve(adjacency = sfeiAdjMatrix_sp)
 
+  
+  wgt=shreve.order
+  wgt
+  adj=adjacency
+    wgt <- try(as.numeric(as.matrix(wgt)))
+    if(class(wgt) == "numeric" & (!anyNA(wgt))){
+      # pull out the bid from the adjacency object
+      #bid  <- adj$rid_bid[,2]
+      #nbid <- nchar(bid) 
+      
+      inverse.order<-c(5,2,3,4,4,5,5,3,1,1,2,6,6)
+      nbid=7-inverse.order
+      ## this makes the most sense and gets closest to zero but still doesn't match
+      
+      nbid=c(0,3,3,2,1,1,0,2,5,5,4,0,0)
+      nbid=nbid+1
+      min_weight <- min(wgt)
+      # the idea here is that for a network weight, the sum of the weights at the i^th 
+      # level of the network heirarchy should equal the number of segments in the i-1^th level
+      # of the network, minus the number of 'source' segments (dead_ends) that occur at i-1^th level
+      # for an additive weight, the idea is similar, the sum of the weights a the i^th level
+      # equal the sum of the weights at the i-1^th level, minus the number of dead_ends at i-1
+      # since all dead_ends will have order 1 (under Shreve - if the lowest order is different, I'll need to fix this)
+      dis_additive     <- 0
+      dis_network      <- 0
+      nl=c()
+      suw=c()
+      de=c()
+      sdw=c()
+      for(i in 2:max(nbid)){
+        which_lower     <- which(nbid == i-1)
+        which_upper     <- which(nbid == i)
+        n_lower         <- length(which_lower)
+        sum_up_weight   <- sum(wgt[which_upper])
+        sum_dn_weight   <- sum(wgt[which_lower])
+        dead_ends       <- sum(colSums(adj)[which_lower] == 0)
+        dis_network     <- dis_network + (n_lower - sum_up_weight - dead_ends)^2
+        dis_additive    <- dis_additive + (sum_dn_weight - sum_up_weight - dead_ends*min_weight)^2
+      nl=c(nl,n_lower)
+      suw=c(suw,sum_up_weight)
+      de=c(de,dead_ends)
+      sdw=c(sdw,sum_dn_weight)
+        }
+      nl
+      suw
+      de
+      sdw
+      
+      (nl-suw-de)^2
+      (sdw-suw-de*min_weight)^2
+      
+      if(round(dis_additive, 6) == 0){
+        weight.type <- "additive"
+        if(!silent) cat("Provided weight passes additivity check... \n")
+      } else if(round(dis_network, 6)  == 0){
+        weight.type <- "network"
+        if(!silent) cat("Provided weight passes network check... \n")
+      } else {weight.type <- "unrecognised"}
+    } else {
+      weight.type <- "unrecognised"
+    }
+    weight.type
+  
+    ## unrecognized
+  
+  weight.type  <- check_weight(adjacency, shreve.order)
