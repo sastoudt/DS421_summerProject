@@ -840,3 +840,81 @@ plot(modelsNoLag_Nested[[9]]$residuals,modelsNoLag_Nested[[9]]$fitted.values)
 ## narrower band of residuals, but outlier residuals have high leverage on the symmetry
 ## of resid v. fitted. values
 
+
+### now need to do same thing for no flow models
+plot(modelsNoLag_NoFlow_Nested[[7]]$residuals) 
+plot(modelsNoLag_NoFlow_Nested[[7]]$residuals,modelsNoLag_NoFlow_Nested[[7]]$fitted.values) ## less asymmetry
+
+summary(modelsNoLag_NoFlow_Nested[[7]]$residuals)
+which(modelsNoLag_NoFlow_Nested[[7]]$residuals < -0.9556) 
+
+plot(modelsNoLag_NoFlow_Nested[[8]]$residuals)  ## still pretty asymmetrical
+plot(modelsNoLag_NoFlow_Nested[[8]]$residuals,modelsNoLag_NoFlow_Nested[[8]]$fitted.values)
+summary(modelsNoLag_NoFlow_Nested[[8]]$residuals)
+which(modelsNoLag_NoFlow_Nested[[8]]$residuals < -2.017) ## less than the max on the right hand side
+
+plot(modelsNoLag_NoFlow_Nested[[9]]$residuals) ## expected is much more than true, for a decent range of fitted values
+plot(modelsNoLag_NoFlow_Nested[[9]]$residuals,modelsNoLag_NoFlow_Nested[[9]]$fitted.values) ## only a few leverage points
+summary(modelsNoLag_NoFlow_Nested[[9]]$residuals)
+which(modelsNoLag_NoFlow_Nested[[8]]$residuals < -0.9683) 
+
+fitted.val7=predict(modelsNoLag_NoFlow_Nested[[7]],tmp7)
+fitted.val8=predict(modelsNoLag_NoFlow_Nested[[8]],tmp8)
+fitted.val9=predict(modelsNoLag_NoFlow_Nested[[9]],tmp9)
+
+resid7=tmp7$res-fitted.val7
+resid8=tmp8$res-fitted.val8
+resid9=tmp9$res-fitted.val9
+
+which(resid7 < -0.9556) ##123 210 291 298 424 
+which(resid8 < -2.017) ##123 254 320 328 354 361 
+which(resid9 < -0.9683) ##  123 210 291 298 424 
+
+tmp7_problem=tmp7[c(123, 210, 291, 298, 424 ),]
+tmp8_problem=tmp8[c(123, 254, 320, 328, 354, 361 ),]
+tmp9_problem=tmp9[c( 123, 210, 291, 298, 424 ),]
+
+## different responses, but same time period causing the issue?
+testMerge=merge(tmp7_problem,tmp8_problem,by.x=c("date"),by.y=c("date"),all.x=T,all.y=T)
+testMerge2=merge(testMerge,tmp9_problem,by.x=c("date"),by.y=c("date"),all.x=T,all.y=T)
+View(testMerge2)
+
+## find where response for res.x, res both not na
+
+which(!is.na(testMerge2$res.x) & !is.na(testMerge2$res))
+nrow(testMerge2) ## 5/10
+
+testMerge2$date[ c(1 , 2 , 4,  5, 10)]
+#"1986-03-01" "1993-06-01" "2000-03-01" "2000-10-01" "2011-04-01"
+
+tmp7_problem$date
+## "1986-03-01" "1993-06-01" "2000-03-01" "2000-10-01" "2011-04-01"
+
+tmp8_problem$date
+## "1986-03-01" "1997-02-01" "2002-08-01" "2003-04-01" "2005-06-01" "2006-01-01"
+
+tmp9_problem$date
+## "1986-03-01" "1993-06-01" "2000-03-01" "2000-10-01" "2011-04-01"
+
+month(tmp7_problem$date) ## 3  6  3 10  4
+month(tmp8_problem$date) ## 3 2 8 4 6 1
+month(tmp9_problem$date) ##3  6  3 10  4
+
+## more agreement here
+
+## check from before
+tmp7_problem$date ## din
+#"1979-12-01" "1993-06-01" "2000-03-01" "2000-10-01"
+tmp8_problem$date ## nh
+#"1990-03-01" "1997-02-01" "2002-08-01" "2003-04-01" "2005-06-01"
+tmp9_problem$date ## no23
+#[1] "1978-08-01" "1979-11-01" "1979-12-01" "1982-12-01" "1984-08-01" "1989-08-01" "1989-09-01"
+#[8] "1993-06-01" "2000-03-01" "2000-10-01" "2009-08-01" "2013-11-01"
+
+## a few of the same culprits, but not inclusive
+
+## need to check where in the distribution of flow, the bad residuals fall
+## maybe a weird flow is causing the issue
+
+
+
