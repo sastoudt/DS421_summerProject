@@ -568,3 +568,141 @@ names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$r
 print(i)
 
 ####
+
+i=9
+tmp <- mods_nolag$data[[i]] %>% 
+  mutate(
+    dec_time = dec_time(Date)[['dec_time']],
+    doy = yday(Date)
+  ) %>% 
+  rename(
+    res = resval, 
+    flo = flolag,
+    date = Date
+  )
+tmp=tmp[!is.na(tmp$res),]
+tmp=tmp[!is.na(tmp$flo),]
+tmp=tmp[order(tmp$date),]
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                    ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                        bs=c("cc","tp","tp"),k=c(4,4,4)), data = tmp)
+gam.check(gamDEFAULT) ## I think it is the lack of symmetry in the resids vs. linear pred around y=0
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                    ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
+                                                        bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT) 
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                        bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT) 
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                    ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=60)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=60)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=50)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=60)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT) ## warning
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=40)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=60)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                  bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT) ## warning
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=35)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=60)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(6,6,6)), data = tmp)
+gam.check(gamDEFAULT)  ## warning
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=60)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(7,7,7)), data = tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=80)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(7,7,7)), data = tmp)
+gam.check(gamDEFAULT)
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=80)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(8,8,8)), data = tmp)
+gam.check(gamDEFAULT) ## warning
+
+gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=100)+
+                    ti(flo,doy,bs=c("tp","cc"),k=c(7,7))+ti(flo,dec_time,bs=c("tp","tp"),k=c(7,7))+
+                    ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7))+ti(doy,dec_time,flo,
+                                                                 bs=c("cc","tp","tp"),k=c(7,7,7)), data = tmp)
+gam.check(gamDEFAULT) ## go with this
+
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=45)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(7,7)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=45)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=60)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=60)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=80)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=100)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(8,8)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=100)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(9,9)), data = tmp)
+gam.check(gamDEFAULTnoflow)
+
+gamDEFAULTnoflow <- gam(res ~ ti(doy,bs="cc",k=20)+ti(dec_time,bs="tp",k=100)+
+                          ti(doy,dec_time,bs=c("cc","tp"),k=c(10,10)), data = tmp)
+gam.check(gamDEFAULTnoflow) ## go with this
+
+modelsNoLag_Nested[[i]]=gamDEFAULT
+modelsNoLag_NoFlow_Nested[[i]]=gamDEFAULTnoflow
+names(modelsNoLag_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
+names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
+print(i)
