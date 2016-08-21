@@ -916,5 +916,21 @@ tmp9_problem$date ## no23
 ## need to check where in the distribution of flow, the bad residuals fall
 ## maybe a weird flow is causing the issue
 
+Fn <- ecdf(tmp7$flo)
+Fn(tmp7_problem$flo) ## 0.9845815 0.6233480 0.9317181 0.4823789 0.9823789
+
+Fn <- ecdf(tmp8$flo)
+Fn(tmp8_problem$flo) ## 0.9845815 0.9933921 0.1321586 0.4713656 0.8898678 0.9052863
+
+Fn <- ecdf(tmp9$flo)
+Fn(tmp9_problem$flo) ##  0.9845815 0.6233480 0.9317181 0.4823789 0.9823789
+
+## so at least many of these are extreme values of flow
+## so this makes a little bit of sense why flow models are doing worse
+
+## but on annual scale, I'm still a bit puzzled why these few points are making such a drastic
+## difference, especially after fixed that trimming bug
+
+
 
 
