@@ -182,6 +182,8 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F)
     names(forAgg3)=names(forAgg4)=c("date","res","fit")
     data1=annual_agg(forAgg3,min_mo=11)
     data2=annual_agg(forAgg4,min_mo=11)
+    #data1=annual_agg(forAgg3) ## doesn't help
+    #data2=annual_agg(forAgg4) ## doesn't help
     data1=data1[order(data1$date),]
     data2=data2[order(data2$date),]
 
