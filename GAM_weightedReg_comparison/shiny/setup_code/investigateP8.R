@@ -956,5 +956,126 @@ Fn(tmp9_problem$flo) ##  0.9845815 0.6233480 0.9317181 0.4823789 0.9823789
 ## take out these points, refit big model and see what happens
 
 
+length(modelsNoLag_NoFlow_Nested[[7]]$fitted.values)
+length(modelsNoLag_Nested[[7]]$fitted.values)
+
+plot(modelsNoLag_NoFlow_Nested[[7]]$fitted.values,modelsNoLag_Nested[[7]]$fitted.values)
+abline(0,1,col="red")
+table(modelsNoLag_NoFlow_Nested[[7]]$fitted.values>modelsNoLag_Nested[[7]]$fitted.values)
+# FALSE  TRUE 
+# 227   223 
+## pretty balanced
+
+plot(modelsNoLag_NoFlow_Nested[[8]]$fitted.values,modelsNoLag_Nested[[8]]$fitted.values)
+abline(0,1,col="red")
+table(modelsNoLag_NoFlow_Nested[[8]]$fitted.values>modelsNoLag_Nested[[8]]$fitted.values)
+##FALSE  TRUE 
+##244   206 
+## a little less balanced, can see in plot
+## makes sense, can see in annual plot for nh
+
+plot(density(dataNiceNoLag[[8]]$flo,na.rm=T))
+plot(density(dataNiceNoLag[[7]]$flo,na.rm=T),col="red")
+plot(density(dataNiceNoLag[[9]]$flo,na.rm=T)) ## all the same, I guess this is obvious
+
+plot(density(dataNiceNoLag[[8]]$res,na.rm=T))
+lines(density(dataNiceNoLag[[7]]$res,na.rm=T),col="red")
+lines(density(dataNiceNoLag[[9]]$res,na.rm=T),col="forestgreen")
+lines(density(dataNiceNoLag[[11]]$res,na.rm=T),col="dodgerblue")
+lines(density(dataNiceNoLag[[10]]$res,na.rm=T),col="purple")
+lines(density(dataNiceNoLag[[2]]$res,na.rm=T),col="goldenrod")
+## no obvious visual difference when comparing to other distributions, let's just look at the
+## same response variable
+
+## mod 3 is 2 to be like 8
+
+plot(density(dataNiceNoLag[[8]]$res,na.rm=T))
+lines(density(dataNiceNoLag[[2]]$res,na.rm=T),col="red")
+lines(density(dataNiceNoLag[[5]]$res,na.rm=T),col="forestgreen")
+lines(density(dataNiceNoLag[[11]]$res,na.rm=T),col="goldenrod")
+lines(density(dataNiceNoLag[[14]]$res,na.rm=T),col="dodgerblue")
+lines(density(dataNiceNoLag[[17]]$res,na.rm=T),col="purple")
+lines(density(dataNiceNoLag[[20]]$res,na.rm=T),col="brown")
+lines(density(dataNiceNoLag[[23]]$res,na.rm=T),col="indianred")
+lines(density(dataNiceNoLag[[26]]$res,na.rm=T),col="pink")
+
+plot(density(dataNiceNoLag[[8]]$res,na.rm=T))
+abline(v=mean(dataNiceNoLag[[8]]$res,na.rm=T))
+abline(v=mean(dataNiceNoLag[[2]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[5]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[11]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[14]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[17]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[20]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[23]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[26]]$res,na.rm=T),col="red")
+
+plot(density(dataNiceNoLag[[8]]$res,na.rm=T))
+abline(v=median(dataNiceNoLag[[8]]$res,na.rm=T))
+abline(v=median(dataNiceNoLag[[2]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[5]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[11]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[14]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[17]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[20]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[23]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[26]]$res,na.rm=T),col="red")
+
+## doesn't seem obviously different
+
+for(i in c(8,2,5,11,14,17,20,23,26)){
+  print(sd(dataNiceNoLag[[i]]$res,na.rm=T))
+} ## has one of the bigger spreads
+
+names(dataNiceNoLag)[2] ## C10nh, on shiny doesn't look as extreme as P8
+
+plot(density(dataNiceNoLag[[8]]$flo,na.rm=T))
+abline(v=mean(dataNiceNoLag[[8]]$flo,na.rm=T))
+abline(v=mean(dataNiceNoLag[[2]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[5]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[11]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[14]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[17]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[20]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[23]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[26]]$flo,na.rm=T),col="red")
+
+plot(density(dataNiceNoLag[[8]]$flo,na.rm=T))
+abline(v=median(dataNiceNoLag[[8]]$flo,na.rm=T))
+abline(v=median(dataNiceNoLag[[2]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[5]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[11]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[14]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[17]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[20]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[23]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[26]]$flo,na.rm=T),col="red")
+
+## doesn't seem obviously different
+
+for(i in c(8,2,5,11,14,17,20,23,26)){
+  print(sd(dataNiceNoLag[[i]]$flo,na.rm=T))
+} ## has one of the bigger spreads but still not a huge difference
 
 
+for(i in 1:length(dataNiceNoLag)){
+  print(dataNiceNoLag[[i]]$resdup[1])
+}
+## din 1, 4, etc
+## nh 2, 5, etc
+## no23 3,6,etc
+
+plot(modelsNoLag_NoFlow_Nested[[9]]$fitted.values,modelsNoLag_Nested[[9]]$fitted.values)
+abline(0,1,col="red")
+table(modelsNoLag_NoFlow_Nested[[9]]$fitted.values>modelsNoLag_Nested[[9]]$fitted.values)
+##FALSE  TRUE 
+##236   215 
+## still pretty balanced
+
+
+
+length(modelsNoLag_NoFlow_Nested[[8]]$fitted.values)
+length(modelsNoLag_Nested[[8]]$fitted.values)
+
+length(modelsNoLag_NoFlow_Nested[[9]]$fitted.values)
+length(modelsNoLag_Nested[[9]]$fitted.values)
