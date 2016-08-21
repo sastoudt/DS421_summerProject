@@ -6,6 +6,22 @@ grep("P8",names(dataNiceNoLag)) ## 7, 8, 9
 load("modelsNoLag_NoFlow_Nested.RData") ##modelsNoLag_NoFlow_Nested
 load("modelsNoLag_Nested.RData") ##modelsNoLag_Nested
 
+lablk <- list(
+  shrt = c('din', 'nh', 'no23'),
+  lngs = c(
+    expression(paste('ln-dissolved inorganic nitrogen (mg ', L^-1, ')')),
+    expression(paste('ln-ammonium (mg ', L^-1, ')')),
+    expression(paste('ln-nitrite/nitrate (mg ', L^-1, ')'))
+  )
+)
+
+stalk <- list(
+  shrt = c('sjr', 'sac', 'sal'),
+  lngs = c('San Joaquin', 'Sacramento', 'Salinity')
+)
+
+source("/Users/Sara/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/getFlowNormalized.R")
+
 data=dataNiceNoLag[[7]]
 mod=modelsNoLag_Nested[[7]]
 modNoFlow=modelsNoLag_NoFlow_Nested[[7]]
@@ -76,6 +92,8 @@ modNoFlow=modelsNoLag_NoFlow_Nested[[7]]
   #   #print(i)
   
   # }
+  annual=T
+  scale=T
   titleLab=ifelse(scale,data$resdup[1],paste("ln(",data$resdup[1],")",sep=""))
   
   if(annual){
@@ -102,7 +120,7 @@ modNoFlow=modelsNoLag_NoFlow_Nested[[7]]
     ggplot(data1, aes(x = date, y = res))+geom_point()+
       geom_line(aes(y = norm, color = 'With Flow'),lwd=1)+
       geom_line(data=data2,aes(y = norm, color = 'No Flow'),lwd=1)+
-      xlim(xlim)+
+      #xlim(xlim)+
       xlab("")+
       ylab(ylabel)+
       scale_colour_manual(name = '',
@@ -149,6 +167,9 @@ modNoFlow=modelsNoLag_NoFlow_Nested[[7]]
   
 }
 
-
+## ok, getFlowNormalized matches
+## https://raw.githubusercontent.com/fawda123/sf_trends/master/R/funcs.R
+## dynagam
+## maybe model is not fitted appropriately?
 dat=dataNiceNoLag[[7]]
 flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_Nested[[7]],modelsNoLag_Nested[[7]],annual=T)
