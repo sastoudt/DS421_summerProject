@@ -1,6 +1,6 @@
 ## flow normalized
 
-getFlowNormalized <- function(mod_in, dat_in, flow,  allflo = T){
+getFlowNormalized <- function(mod_in, dat_in, flow,  allflo = F){
   
   # add year, month columns to dat_in
   dat_in <- mutate(dat_in, 
