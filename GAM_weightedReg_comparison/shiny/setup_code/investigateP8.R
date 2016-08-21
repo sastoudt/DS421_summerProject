@@ -1,4 +1,9 @@
 ### investigate P8 annual flow-normalized
+require(tidyr)
+require(dplyr)
+require(lubridate)
+require(WRTDStidal)
+require(mgcv)
 setwd("~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data")
 load("dataNice_nolag.RData")
 grep("P8",names(dataNiceNoLag)) ## 7, 8, 9
@@ -228,6 +233,10 @@ tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
 tmp=tmp[order(tmp$date),]
 
+tmp=tmp[-c(48, 210, 278, 291, 298),] ## for flow
+tmp=tmp[-c(123, 210, 291, 298, 424 ),] ## for no flow
+ 
+
 gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=60)+
                     ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                     ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
@@ -419,6 +428,12 @@ tmp <- mods_nolag$data[[i]] %>%
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
 tmp=tmp[order(tmp$date),]
+
+tmp=tmp[-c(171, 254, 320, 328, 354 ),] ## for flow
+tmp=tmp[-c(123, 254, 320, 328, 354, 361 ),] ## for no flow
+
+
+
 gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
                     ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                     ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
@@ -583,6 +598,11 @@ tmp <- mods_nolag$data[[i]] %>%
 tmp=tmp[!is.na(tmp$res),]
 tmp=tmp[!is.na(tmp$flo),]
 tmp=tmp[order(tmp$date),]
+ 
+tmp=tmp[-c(32 , 47,  48,  84, 104, 164, 165, 210, 291, 298, 404, 455),] ## for flow
+tmp=tmp[-c( 123, 210, 291, 298, 424 ),] ## for no flow
+
+
 gamDEFAULT <- gam(res ~ ti(flo,bs="tp",k=30)+ti(doy,bs="cc",k=15)+ti(dec_time,bs="tp",k=40)+
                     ti(flo,doy,bs=c("tp","cc"))+ti(flo,dec_time,bs=c("tp","tp"))+
                     ti(doy,dec_time,bs=c("cc","tp"))+ti(doy,dec_time,flo,
@@ -707,8 +727,8 @@ names(modelsNoLag_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[
 names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
 print(i)
 
-save(modelsNoLag_Nested,file="data/modelsNoLag_Nested.RData")
-save(modelsNoLag_NoFlow_Nested,file="data/modelsNoLag_NoFlow_Nested.RData")
+save(modelsNoLag_Nested,file="modelsNoLag_Nested.RData")
+save(modelsNoLag_NoFlow_Nested,file="modelsNoLag_NoFlow_Nested.RData")
 ## in shiny, these new models don't really make a difference
 ## still need to dig in and see what is going on here and see if it is connected to the context
 ## of this station
@@ -930,6 +950,10 @@ Fn(tmp9_problem$flo) ##  0.9845815 0.6233480 0.9317181 0.4823789 0.9823789
 
 ## but on annual scale, I'm still a bit puzzled why these few points are making such a drastic
 ## difference, especially after fixed that trimming bug
+
+## ok, just take all of these points out, refit and see what happens
+## checked with server, and it will just pull fitted values from model, so go back up
+## take out these points, refit big model and see what happens
 
 
 
