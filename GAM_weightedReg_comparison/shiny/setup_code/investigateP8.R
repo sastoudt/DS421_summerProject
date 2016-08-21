@@ -727,8 +727,8 @@ names(modelsNoLag_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[
 names(modelsNoLag_NoFlow_Nested)[i]=paste(mods_nolag$Site_Code[[i]],mods_nolag$resvar[[i]],sep="_")
 print(i)
 
-save(modelsNoLag_Nested,file="modelsNoLag_Nested.RData")
-save(modelsNoLag_NoFlow_Nested,file="modelsNoLag_NoFlow_Nested.RData")
+save(modelsNoLag_Nested,file="data/modelsNoLag_Nested.RData")
+save(modelsNoLag_NoFlow_Nested,file="data/modelsNoLag_NoFlow_Nested.RData")
 ## in shiny, these new models don't really make a difference
 ## still need to dig in and see what is going on here and see if it is connected to the context
 ## of this station
