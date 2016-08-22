@@ -120,10 +120,22 @@ I started with the default parameters for the predictor variables day of year, d
 
 From checking the diagnostics of these, I got a sense for how much the maximum basis dimensions needed to be expanded. I picked reasonably large basis dimensions per parameter and then fit a consistent model to each station/response variable pair. A few of the models yielded warnings, and then I adjusted the basis dimensions a bit to get the warnings to go away, but keeping the adjustments as consistent with one another as possible. I also fit the models in a nested way so that we could isolate the impact of each interaction above and beyond the individual components. 
 
+\subsection{Annual Aggregation}
 
+\subsection{Metrics of Comparison}
 
-
+\subsection{Response-Flow relationships by Month Over Different Years}
 
 \subsection{In Progress}
+
+I am currently investigating what is going on at station P8. In context, P8 is downstream of a wastewater treatment plant. Changes happened in the mid-2000s to reduce ammonium outputs from the treatment plant. Water quality changes in ammonium and to a lesser extent dissolved inorganic nitrogen have been shown in other work.
+
+The biggest differences seen in the metrics of comparison between GAMs and WRTDS happens for P8, so I am looking into where the methods differ, and if these differences correspond to the times where we know something new is happening. Some of the differences in the metrics are huge, so first I want to make sure this isn't a missingness issue. 
+
+There is also a major discrepancy in the annual aggregated GAM with flow v. GAM without flow. The without flow model does much better, which is not consistent with the rest of the results. I refit the models to give higher maximum basis dimensions in case the model fit was off. This didn't help. It looks like there is some asymmetry around $y=0$ in the residuals v. predicted values plot, but there are so few points where this is true, and on the annual aggregation level, this shouldn't be a big issue. I took those points out and refit the model, but this still didn't help. For dissolved inorganic nitrogen and nitrate, this station has an increased mean, median, and spread than all of the other stations for that response, but C10 is also up there and seems to be fine on the Shiny app. Ammonium is still a mystery; the flow model consistently predicts larger values than the no flow predictions, but both the distributions of flow and the response is consistent with those of other stations.
+
+The annual, flow-normalized predictions for GAMs at P8 look weird compared to the WRTDS version, so I need to make sure the flow-normalization is not off or see why the model is behaving so poorly.
+
+
 
 \end{document}
