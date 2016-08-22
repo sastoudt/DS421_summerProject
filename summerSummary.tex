@@ -1,0 +1,43 @@
+
+\documentclass[12pt]{amsart}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\geometry{a4paper} % or letter or a5paper or ... etc
+% \geometry{landscape} % rotated page geometry
+
+% See the ``Article customise'' template for come common customisations
+
+\title{DS421 Summer 2016 Project Summary}
+\author{Sara Stoudt}
+%\date{} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+\section{Investigation of Chlorophyll}
+
+\subsection{Goals and Approaches}
+The overarching goal of this portion of the project is to understand what variables help explain the variation of chlorophyll over time and at each station. We want to understand if these relationships differ over time and/or over space. My approach was to first see which other variables that we have information on at the same times and places as chlorophyll are correlated with chlorophyll. I included these variables in what I refer to as the ``parsimonious" model. I then added to a "full" model additional variables that were identified by David as variables whose relationships with chlorophyll, in context, would be interesting to understand. I build models including these variables separately for each station. Then I experimented with truly spatial models by using the station ID as a factor in a model, so I could fit one model and be able to predict chlorophyll for each station at once. After this I went back to make more ``bare bones" models per station that only incorporate the date (to incorporate trends over time) and the day of year (to incorporate seasonal trends) as well as the interaction between the two, allowing these trends to change depending on the value of the other one in order to have more fair comparisons between the various models. I then moved towards models that incorporate a sense of ``flow" using chlorophyll values from neighboring stations and measures of true flow throughout the area. Throughout all of these models, I fitted the models in a nested way so that we could see how much each variable contributed to the overall fitted value. I created a Shiny application (a web application written in R) to be able to compare and contrast the fitted values from each model, the contributions of each variable to the fitted values in each model, the overall RMSE per station of each model plotted on a map, and the contribution of volumetric flow averaged yearly and averaged monthly for each station.
+
+\subsection{Details About the Setup}
+I chose to use a log link function in each Generalized Additive Model since the distribution of chlorophyll is highly skewed right. I was deciding between log transforming the response and fitting a linear model ($log(y)=X\beta)+\epsilon$) versus using a Generalized Linear Model using a log link function ($log(y+\epsilon)= X\beta$) The residuals versus fitted values plots all look reasonable for constant variance under the GAM approach, so it did not seem necessary to use the log transform which would affect the variance as well as the linearity. We also don't have to deal with the back-transform bias where the back transform of the mean of the response on a log scale is not equivalent to the mean of the response on the raw scale.
+
+I also had to choose which stations to focus on. 
+
+
+\subsection{Parsimonious Model}
+
+\subsection{Full Model}
+
+\subsection{Spatial Models}
+
+
+
+
+
+
+\section{Generalized Additive Model (GAM) and Weighted Regression on Time, Discharge, and Season (WRTDS) Comparison}
+
+\end{document}
