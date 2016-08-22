@@ -124,6 +124,28 @@ From checking the diagnostics of these, I got a sense for how much the maximum b
 
 \subsection{Metrics of Comparison}
 
+The metrics of comparison are taken from Beck and Murphy's manuscript. They all are calculated on the log scale.  All of the metrics of comparison are calculated overall, in annual blocks, seasonal blocks, and flow levels. 
+
+\begin{itemize}
+\item annual: [1976, 1983), [1983, 1990), [1990, 1997), [1997, 2004), [2004, 2015] \{has 2 extra years\}
+\item seasonal: (Jan, Feb, Mar), (Apr, May, Jun), (Jul, Aug, Sept), (Oct, Nov, Dev)
+\item flow: quartiles of the flow for that station
+\end{itemize}
+
+\begin{itemize}
+\item: root-mean-squared-error (RMSE): $\sqrt{\frac{\sum_{i}=1^n (\hat{y}-y)^2}{n}}$
+\item deviance: sum of squared residuals
+\item average difference: \left(\frac{\sum_{i=1}^n \hat{y}_{WRTDS,i}-\sum_{i=1}^n \hat{y}_{GAM,i}}{\sum_{i=1}^n \hat{y}_{GAM,i}}\right)*100
+\item percent change: annual mean estimates for the first and last three years of flow-normalized estimates, excluding the annual aggregations that had limited annual mean data (i.e., seven years per period) \textcolor{red}{double check, still might have done this wrong}
+\item RMSE between: $\sqrt{\frac{\sum_{i}=1^n (\hat{y}_{WRTDS,i}-\hat{y}_{GAM,i})^2}{n}}$
+\item regression of wrtdsPred ~ gamPred: is intercept significant? ( $>0$ WRTDS estimates were on average larger than GAMs) is slope significant? ( $<1$ GAMs fit a wider range of values compared to WRTDS)
+\item: visually compare fitted values on Shiny app
+\end{itemize}
+
+
+\textcolor{red}{come back and put results/observations}
+
+
 \subsection{Response-Flow relationships by Month Over Different Years}
 
 \subsection{In Progress}
