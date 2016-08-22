@@ -1079,3 +1079,162 @@ length(modelsNoLag_Nested[[8]]$fitted.values)
 
 length(modelsNoLag_NoFlow_Nested[[9]]$fitted.values)
 length(modelsNoLag_Nested[[9]]$fitted.values)
+
+
+### check i=7, 9
+
+plot(density(dataNiceNoLag[[7]]$res,na.rm=T))
+lines(density(dataNiceNoLag[[1]]$res,na.rm=T),col="red")
+lines(density(dataNiceNoLag[[4]]$res,na.rm=T),col="forestgreen")
+lines(density(dataNiceNoLag[[10]]$res,na.rm=T),col="goldenrod")
+lines(density(dataNiceNoLag[[13]]$res,na.rm=T),col="dodgerblue")
+lines(density(dataNiceNoLag[[16]]$res,na.rm=T),col="purple")
+lines(density(dataNiceNoLag[[19]]$res,na.rm=T),col="brown")
+lines(density(dataNiceNoLag[[22]]$res,na.rm=T),col="indianred")
+lines(density(dataNiceNoLag[[25]]$res,na.rm=T),col="pink")
+
+
+plot(density(dataNiceNoLag[[7]]$res,na.rm=T))
+abline(v=mean(dataNiceNoLag[[7]]$res,na.rm=T))
+abline(v=mean(dataNiceNoLag[[1]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[4]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[10]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[13]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[16]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[19]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[22]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[25]]$res,na.rm=T),col="red") ## ok here we can see a difference
+## so a shift upward of response than the other stations for this response
+
+plot(density(dataNiceNoLag[[7]]$res,na.rm=T))
+abline(v=median(dataNiceNoLag[[7]]$res,na.rm=T))
+abline(v=median(dataNiceNoLag[[1]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[4]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[10]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[13]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[16]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[19]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[22]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[25]]$res,na.rm=T),col="red") ## yup still true for median
+
+## one pretty close, C10
+
+for(i in c(7,1,4,10,13,16,19,22,25)){
+  print(sd(dataNiceNoLag[[i]]$res,na.rm=T))
+} ## has one of the bigger spreads, but not crazy amount
+
+
+
+names(dataNiceNoLag)[2] ## C10nh, on shiny doesn't look as extreme as P8
+
+plot(density(dataNiceNoLag[[7]]$flo,na.rm=T))
+abline(v=mean(dataNiceNoLag[[7]]$flo,na.rm=T))
+abline(v=mean(dataNiceNoLag[[1]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[4]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[10]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[13]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[16]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[19]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[22]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[25]]$flo,na.rm=T),col="red") ## Nothing crazy going on here
+
+plot(density(dataNiceNoLag[[7]]$flo,na.rm=T))
+abline(v=median(dataNiceNoLag[[7]]$flo,na.rm=T))
+abline(v=median(dataNiceNoLag[[1]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[4]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[10]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[13]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[16]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[19]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[22]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[25]]$flo,na.rm=T),col="red") ## same
+
+
+for(i in c(7,1,4,10,13,16,19,22,25)){
+  print(sd(dataNiceNoLag[[i]]$flo,na.rm=T))
+} ## biggest variability, followed by C10
+
+
+#### i=9
+plot(density(dataNiceNoLag[[9]]$res,na.rm=T),lwd=2)
+lines(density(dataNiceNoLag[[3]]$res,na.rm=T),col="red")
+lines(density(dataNiceNoLag[[6]]$res,na.rm=T),col="forestgreen")
+lines(density(dataNiceNoLag[[9]]$res,na.rm=T),col="goldenrod")
+lines(density(dataNiceNoLag[[12]]$res,na.rm=T),col="dodgerblue")
+lines(density(dataNiceNoLag[[15]]$res,na.rm=T),col="purple")
+lines(density(dataNiceNoLag[[18]]$res,na.rm=T),col="brown")
+lines(density(dataNiceNoLag[[21]]$res,na.rm=T),col="indianred")
+lines(density(dataNiceNoLag[[24]]$res,na.rm=T),col="pink")
+lines(density(dataNiceNoLag[[27]]$res,na.rm=T),col="green")
+
+
+plot(density(dataNiceNoLag[[9]]$res,na.rm=T))
+abline(v=mean(dataNiceNoLag[[9]]$res,na.rm=T))
+abline(v=mean(dataNiceNoLag[[3]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[6]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[9]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[12]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[15]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[18]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[21]]$res,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[24]]$res,na.rm=T),col="red") 
+abline(v=mean(dataNiceNoLag[[27]]$res,na.rm=T),col="red")## ok here we can see a difference
+## so a shift upward of response than the other stations for this response
+## C10 right up there too though
+
+plot(density(dataNiceNoLag[[9]]$res,na.rm=T))
+abline(v=median(dataNiceNoLag[[9]]$res,na.rm=T))
+abline(v=median(dataNiceNoLag[[3]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[6]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[9]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[12]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[15]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[18]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[21]]$res,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[24]]$res,na.rm=T),col="red") 
+abline(v=median(dataNiceNoLag[[27]]$res,na.rm=T),col="red") ## yup still true for median
+
+## one pretty close, C10
+
+for(i in c(9,3,6,12,15,18,21,24,27)){
+  print(sd(dataNiceNoLag[[i]]$res,na.rm=T))
+} ## has one of the bigger spreads, but not crazy amount
+
+
+plot(density(dataNiceNoLag[[9]]$flo,na.rm=T))
+abline(v=mean(dataNiceNoLag[[9]]$flo,na.rm=T))
+abline(v=mean(dataNiceNoLag[[3]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[6]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[9]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[12]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[15]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[18]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[21]]$flo,na.rm=T),col="red")
+abline(v=mean(dataNiceNoLag[[24]]$flo,na.rm=T),col="red") ## Nothing crazy going on here
+abline(v=mean(dataNiceNoLag[[27]]$flo,na.rm=T),col="red") ## Nothing crazy going on here
+
+
+plot(density(dataNiceNoLag[[9]]$flo,na.rm=T))
+abline(v=median(dataNiceNoLag[[9]]$flo,na.rm=T))
+abline(v=median(dataNiceNoLag[[3]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[6]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[9]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[12]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[15]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[18]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[21]]$flo,na.rm=T),col="red")
+abline(v=median(dataNiceNoLag[[24]]$flo,na.rm=T),col="red") ## same
+abline(v=median(dataNiceNoLag[[27]]$flo,na.rm=T),col="red") ## same
+
+
+for(i in c(9,3,6,9,12,15,18,21,24,27)){
+  print(sd(dataNiceNoLag[[i]]$flo,na.rm=T))
+} ## one of the highest variability
+
+## i=7,9 this station has an increased mean/median/spread than other stations for that response
+## (din and no23)
+## C10 also like this though and seems to be fine on shiny
+
+## nh still a mystery, with flow consistently higher than no flow
+## but flow is normal when compared to other stations 
+## same with response
