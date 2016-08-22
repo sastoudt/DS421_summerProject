@@ -55,6 +55,8 @@ The above models were fit per station which did not allow for a true spatio-temp
 \item Spatial Model 4:  Day of year and date with station as a factor. Date is allowed to differ by station. The interaction between date and day of year is allowed to differ by station. Note that I didn't let day of year to differ by station here to scale back the complexity.
 \end{enumerate}
 
+I went back and did Spatial Model 2 [which turned out to be the highest performing] but adding one covariate (pheophytin a, then total nitrogen separately) to see if we could get a boost from a highly correlated covariate from the parsimonious model that we hadn't allowed in a spatial model yet. 
+
 \textcolor{red}{come back and put results/observations}
 
 Now that we are incorporating more data and having many smooths being able to vary across each of 15 stations we have increasing complexity that carries over into the computational costs of fitting these models. 
@@ -70,6 +72,27 @@ However, in the trial and error phase of choosing basis dimensions, it is still 
 I also recently learned how to switch my linear algebra package in R to be the vecLib version of BLAS which can give up to a linear time improvement. 
 
 Once I learned to take advantage of all of these options, the computational complexity of the spatial model fitting was not a major obstacle to progress.
+
+\subsection{Flow Models}
+
+I started this project with a side motivation of thinking about how to incorporate flow information on data that is set up on a network. The network here is a spatial one, the set-up of the stations as compared to the flow of water in the Bay Delta area.
+
+In the spatial models, the station is just a factor. There is no explicit information about which stations are close to one another. However, just considering the Euclidean distance between two stations may not be the most indicative version of distance if the two stations are not flow connected. If we could somehow incorporate information about the flow network structure into the GAM, we may be able to leverage more spatial information than if we merely used longitude and latitude to determine ``closeness".
+
+I had two approaches for trying to incorporate flow that approach the problem from different angles. Using the chlorophyll series of a neighboring station (correlation-wise) as a covariate, incorporates some information about the network that doesn't explicitly use Euclidean distance between stations. \textcolor{red}{A next step would be to do the same thing only using the station that is nearest in a Euclidean sense to see if there are any major differences.}
+
+I also used flow data from http://www.water.ca.gov/dayflow/ as a covariate. Since I used this in a by station approach, this doesn't actually incorporate information about the spatial network, but it does help us think about flow in general. 
+
+\subsubsection{Neighboring (Correlation-Wise) Station Chlorophyll}
+
+My first approach was to compare the chlorophyll series between each station and see which station's chlorophyll are most correlated. Since not every station was measured on the same days, merging the station series by day to get a true correlation left many missing value pairs between stations. Every station had about 600 measurements, so I decided that any correlation made with less than 100 pairwise comparisons that weren't NA were not to be used because they could be unduly high due to small numbers of comparisons. Then each station's ``best match" was merged on a "closest date" criteria to be a covariate for a by station model. This means that even if the chlorophyll measurements were taken a day apart, they would be merged. This was to help with missingness issue, although I admit that the treatment of missigness in this whole workflow is not necessarily the best way of doing things.
+
+\subsubsection{True Flow}
+
+My second approach was inspired by Marcus Beck's work on adjusting for flow in his Weighted Regression on Time, Discharge, and Season models. 
+\textcolor{To make this more spatial, I should go back and fit a spatial model with flow as a covariate allowing as many of the temporal components to vary by station as possible. Then at least the flows from each station can be leveraged.} A variant on the flow approach that I did try was to look at the volumetric flow data, determine which source made the largest contribution on average to each station, and then using flow data matching the largest contribution source from the water flow data. This was not always possible since for example, there was no obvious matching water flow data for the Carquinez Straight at Martinez even though a few stations had this as their highest volumetric component.
+
+
 
 
 \section{Generalized Additive Model (GAM) and Weighted Regression on Time, Discharge, and Season (WRTDS) Comparison}
