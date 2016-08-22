@@ -2,7 +2,7 @@ source("getFlowNormalized.R")
 source("nestedPlot.R")
 source("spatialResultsPlot.R")
 source("comparePlot.R")
-#load("data/delt_dat.RData")
+load("data/delt_dat.RData")
 #load("data/delt_map.RData")
 
 ## need to change xlabel to something more informative

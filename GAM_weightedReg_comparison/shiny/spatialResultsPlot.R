@@ -120,8 +120,8 @@ preProcessSpatialPlot=function(fn,data,mod,responseVar,locationLookup){
   ofInterestG=ofInterest[,seq(1,ncol(ofInterest),by=2)]
   ofInterestW=ofInterest[,seq(2,ncol(ofInterest),by=2)]
   
-  cutsG=apply(ofInterestG,1,function(x){quantile(x,c(0,0.25,0.5,0.75,1))})
-  cutsW=apply(ofInterestW,1,function(x){quantile(x,c(0,0.25,0.5,0.75,1))})
+  cutsG=apply(ofInterestG,1,function(x){quantile(x,c(0,0.25,0.5,0.75,1),na.rm=T)})
+  cutsW=apply(ofInterestW,1,function(x){quantile(x,c(0,0.25,0.5,0.75,1),na.rm=T)})
   
   #cuts=quantile(ofInterest,c(0,0.25,0.5,0.75,1))
 
