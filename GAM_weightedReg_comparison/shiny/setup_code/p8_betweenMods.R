@@ -90,5 +90,29 @@ dataNiceNoLag[[9]]$diffPred=dataNiceNoLag[[9]]$gamPred-dataNiceNoLag[[9]]$wrtdsP
 
 ## mean of sign(diffPred)
 
-aggdata <-aggregate(dataNiceNoLag[[7]], by=list(year), 
-                    FUN=mean, na.rm=TRUE)
+by_year <- group_by(dataNiceNoLag[[7]], year)
+signDiffPredY7 <- summarise(by_year,count=n(),meanSign = mean(sign(diffPred), na.rm = TRUE)
+                   )
+
+by_month <- group_by(dataNiceNoLag[[7]], month)
+signDiffPredM7 <- summarise(by_month,count=n(),meanSign = mean(sign(diffPred), na.rm = TRUE)
+)
+
+by_year <- group_by(dataNiceNoLag[[8]], year)
+signDiffPredY8 <- summarise(by_year,count=n(),meanSign = mean(sign(diffPred), na.rm = TRUE)
+)
+
+by_month <- group_by(dataNiceNoLag[[8]], month)
+signDiffPredM8 <- summarise(by_month,count=n(),meanSign = mean(sign(diffPred), na.rm = TRUE)
+)
+
+by_year <- group_by(dataNiceNoLag[[9]], year)
+signDiffPredY9 <- summarise(by_year,count=n(),meanSign = mean(sign(diffPred), na.rm = TRUE)
+)
+
+by_month <- group_by(dataNiceNoLag[[9]], month)
+signDiffPredM9 <- summarise(by_month,count=n(),meanSign = mean(sign(diffPred), na.rm = TRUE)
+)
+
+View(signDiffPredY7)
+
