@@ -21,6 +21,9 @@ full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
 allData=read.csv("~/Desktop/sfei/allData.csv")
 volFlow=read.csv("~/Desktop/sfei/VolFingerPrintsMaster.csv")
 # Define server logic required to generate and plot data
+wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+forMap=allData[,c("Longitude","Latitude","Station")]
+forMap=unique(forMap)
 
 getSummaryRMSE<-function(data,namePred){
   
