@@ -4,6 +4,8 @@
 
 ## Sara Stoudt 
 
+Shiny app deployed here: https://sastoudt.shinyapps.io/SF_chl/ 
+
 
 ## Week 1 Goals
 
