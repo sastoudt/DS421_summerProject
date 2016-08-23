@@ -125,6 +125,60 @@ My second approach was inspired by Marcus Beck's work on adjusting for flow in h
 For the flow models, I also built simple day of year, date, and interaction between day of year and date models per station to have a better baseline for comparison.
 The RMSEs for interaction models are smaller than for total flow model for 7/15 stations. The RMSEs for interaction models are smaller than for station specific flow model for 7/15 stations.  The RMSEs for total flow are less than the RMSE for flow specific for 7/15 stations.  However, this could be partially confounded with how much the interaction term helps at each station. \textcolor{red}{I should either add the interaction term to the flow models or take out the interaction term from the baseline models to check this.}
 
+\subsection{Overall Comparisons (RMSE per station/model combinations)}
+
+\textbf{By Station}
+\begin{itemize}
+\item C10: bad in general, need the extra covariates in full model to help
+\item C3: full and parsimonious models are best overall but the interaction and chlorophyll correlation models are on par
+\item D10: interaction and chlorophyll correlation models are best overall
+\item D12: interaction model best overall, on par with parsimonious, full, and chlorophyll correlation models
+\item D19: full model is best overall, on par with parsimonious model; interaction and chlorophyll correlation models are about the same order of magnitude
+\item D22: chlorophyll correlation model does best, on par with interaction and parsimonious models
+\item D26: parsimonious model does best, full model gets bad in certain categories, interaction and chlorophyll correlation models are about the same order of magnitude
+\item D28A: chlorophyll correlation model is best, parsimonious, full, and interaction models are next up and about the same order of magnitude
+\item D4: full model does best, parsimonious and interaction methods on par, chlorophyll correlation model not far behind
+\item D6: full model does best, parsimonious and interaction models on par, chlorophyl correlation model not far behind
+\item D7: full model does best, parsimonious, interaction, and chlorophyll correlation models are next up
+\item D8: full model does best, parsimonious model next interaction and chlorophyll correlation models a little bit behind
+\item MD10: full does best, parsimonious and interaction models next, chlorophyll correlation model decently behind
+\item P8: chlorophyll correlation does best, parsimonious and full models next
+\end{itemize}
+
+Overall it looks like chlorophyll correlation as another predictor variable is valuable. \textcolor{red}{Trying a by station model with an interaction term, chlorophyll from a correlated station, and the effective predictors from the parsimonious model might be the best combination.}
+
+
+\textbf{By Model (numbers out of 15)}
+\begin{itemize}
+\item parsimonious model: annual 4 and 5 most often minimum RMSE (7, 4)
+\item full model: season 4, annual 5 and 6 most often minimum RMSE (4,3,3)
+\item interaction (baseline) model: annual 6, annual 4, 5, seasonal 1 most often minimum RMSE (5, 3,3,3)
+\item spatial model 1: annual 4, annual 5, seasonal 1 most often minimum RMSE (4, 3,3)
+\item spatial model 2: annual 5 and seasonal 4 most often minimum RMSE (6, 3)
+\item spatial model 3: annual 5, annual 4 and 6 most often minimum RMSE (5, 3,3)
+\item spatial model 4: annual 5 most often minimum RMSE (6)
+\item spatial model 3 with pheo: annual 5, 6 most often minimum RMSE (6, 3)
+\item spatial model 3 with total nitrogen: annual 5, 6, 3 most often minimum RMSE (6, 3,3)
+\item chlorophyll correlation: annual 3, 5, 6 most often minimum RMSE (4, 3,3)
+\item total flow : annual 5, 6, 4 most often minimum RMSE (6, 5, 4)
+
+\textbf{Breakdown Key}
+\item annual 1: [1975, 1982)
+\item annual 2: [1982, 1989)
+\item annual 3: [1989, 1996)
+\item annual 4: [1996, 2003)
+\item annual 5: [2003, 2010)
+\item annual 6: [2010, 2015] (fewer years than the others)
+\item seasonal 1: Jan, Feb, Mar
+\item seasonal 2: Apr, May, Jun
+\item seasonal 3: Jul, Aug, Sept
+\item seasonal 4: Oct, Nov, Dec
+\item after mid-90s better RMSE, we see this confirmed in the observations made from the shiny app
+\end{itemize}
+
+
+NOTE: More detailed results per model per station can be found in perStationModelObervations.tex and compareModelPerformanceByStation.tex
+
 
 
 \subsection{Description of Shiny Functionality}
@@ -169,13 +223,15 @@ The RMSEs for interaction models are smaller than for total flow model for 7/15 
 \item commented out (app getting too unwieldly): show plots for all of spatial models at once for easier comparison
 \end{itemize}
 
+
+
+
 \subsection{In Progress}
 
 I am in the process of trying to use the method described in  O' Donnel, Rushworth, Bowman, and Scott's ``Flexible regression models over river networks'' in the Journal of the Royal Statistical Society, Applied Statistics, 2014.
 
 The main idea here is to use penalized B-splines that respect the spatial network of the flow. Because it boils down to a spline approach, I thought it might be a nice comparison. However, the current obstacle is to get the data into the format expected by the smnet package that implements this approach. The data goes through extensive GIS preprocessing before being in the right format. I am trying to circumvent this process, drawing out the network by hand and trying to massage everything into the correct format so that we plug into the heart of main functionality of the smnet package. I am going through the source code, and making some progress, but it is not ready yet.
 
-NOTE: More detailed results per model per station can be found in perStationModelObervations.tex
 
 \section{Generalized Additive Model (GAM) and Weighted Regression on Time, Discharge, and Season (WRTDS) Comparison}
 
