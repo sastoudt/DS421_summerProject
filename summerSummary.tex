@@ -34,14 +34,17 @@ I also had to choose which stations to focus on. I decided to pick stations that
 
 The parsimonious model used temporal components and variables that visually looked correlated with chlorophyll overall. The day of year was included to account for any seasonality and was fit with a cyclic spline so that the ends match up from year to year. The date was included to account for any trends over time. The non-time covariates that looked correlated were pheo (pheophytin a), tn (total nitrogen), and do.per (dissolved oxygen per ?). Note that do.per was more highly correlated than do (dissolved oxygen), but I'm not sure what the ``per" means. If in context, the ``per" variable doesn't make sense, it can be replaced with ordinary dissolved oxygen. All but day of year were fit with thin plate regression splines. These splines have some optimality properties, are low rank (needing to fit many fewer coefficients), and isotropic (rotation of the covariate coordinate system will not change the smoothing). The same model form was fit for each station. The maximum basis dimensions per variable change per station to allow for extra flexibility if need be and are subject to the constraints of the data at each station.  
 
-\textcolor{red}{come back and put results/observations}
+%\textcolor{red}{come back and put results/observations}
 
+Overall, pheophytin a is the non-temporal predictor variable that contributes the most variability in the fitted values of chlorophyl. Dissolved oxygen (per) is more erratic; for some stations it has similar variability in its contribution to the overall fitted value as pheophytin, and for others it matches less well. The day of year and date variables yield different contributions per station which we want to keep in mind when we are fitting full spatial models. For some stations the variability in the contribution of the temporal variables wanes as time goes on, and the matching of the contributions to the true values is better in some time periods than others (better early on). 
 
 \subsection{Full Model}
 
 The full model included everything in the parsimonious model and then added some extra variables that are interesting in context but did not look particularly predictive of chlorophyll in pairwise scatterplots. The additional variables that were added are: sio2 (silicon), tp (total phosphorus), tss (total suspended solids), nh4 (ammonium), sal (salinity). Again, all of these were fit with thin plate regression splines, the same model form was fit for each station, and the maximum basis dimensions per variable change per station.  Salinity, ammonium, and total nitrogen are the variables that have the most missingness and therefore don't occur in every station's model.
 
-\textcolor{red}{come back and put results/observations}
+%\textcolor{red}{come back and put results/observations}
+
+Many of the added variables in the full model have flat contributions (or very small magnitude of variability) to the fitted values including total phosphorus, total suspended solids, ammonium, and salinity. The parsimonious model fitted values often visually match better than those of the full model, especially in magnitude for high peaks. This suggests that adding a bunch of other variables doesn't necessarily give us that much of a practical benefit, even though the RMSEs are often marginally better for the full model merely from having more access to additional information to tune predictions.
 
 
 
@@ -147,6 +150,7 @@ I am in the process of trying to use the method described in  O' Donnel, Rushwor
 
 The main idea here is to use penalized B-splines that respect the spatial network of the flow. Because it boils down to a spline approach, I thought it might be a nice comparison. However, the current obstacle is to get the data into the format expected by the smnet package that implements this approach. The data goes through extensive GIS preprocessing before being in the right format. I am trying to circumvent this process, drawing out the network by hand and trying to massage everything into the correct format so that we plug into the heart of main functionality of the smnet package. I am going through the source code, and making some progress, but it is not ready yet.
 
+NOTE: More detailed results per model per station can be found in perStationModelObervations.tex
 
 \section{Generalized Additive Model (GAM) and Weighted Regression on Time, Discharge, and Season (WRTDS) Comparison}
 
