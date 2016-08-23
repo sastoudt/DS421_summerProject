@@ -99,6 +99,48 @@ My second approach was inspired by Marcus Beck's work on adjusting for flow in h
 
 \textcolor{red}{come back and put results/observations}
 
+\subsection{Description of Shiny Functionality}
+
+\textbf{Choices}
+\begin{itemize}
+\item station: C10, C3, D10, D12, D19, D22, D26, D28A, D4, D41, D6, D7, D8, MD10, and P8
+\item date range (1975-2015)
+\item upper limit for Y on fitted value plots (default calculated from data) [allows you to zoom]
+\item lower limit for Y on nested plots (default calculated from data) [allows you to zoom]
+
+\item upper limit for Y on nested plots (default calculated from data) [allows you to zoom]
+
+\item select up to two variables to display contributions towards fitted values for parsimonious model [declutters nested plots]
+\item select up to two variables to display contributions towards fitted values for full model [declutters nested plots]
+\item select up to two variables to display contributions towards fitted values for interaction model [declutters nested plots]
+\item select a spatial model (spatIntercept, spatDate_Dec, spatDOY, spatInteraction)
+\item select a model to look at RMSE breakdown (predPars, predFull, predInt, predSpat1, predSpat2, predSpat3, predSpat4, predSpat3Pheo, predSpat3Tn, chlPred, flowPred )
+\item remove C10 as outlier for RMSE breakdown plots (yes/no)
+\end{itemize}
+
+\textbf{Plots}
+\begin{itemize}
+\item location of chosen station
+\item fitted values parsimonious model
+\item fitted values full model
+\item fitted values interaction model
+\item fitted values chosen spatial model
+\item fitted values from chl from other station model
+\item fitted values from flow model
+\item component-wise predictions parsimonious model
+\item component-wise predictions full model
+\item component-wise predictions interaction model
+\item component-wise predictions chosen spatial model
+\item component-wise predictions chosen chl flow model
+\item component-wise predictions chosen total flow model
+\item component-wise predictions parsimonious model choose 2 variables
+\item component-wise predictions full model choose 2 variables
+\item component-wise predictions interaction model choose 2 variables
+\item volumetric flow components (aggregated by year, aggregated by month)
+\item RMSE breakdown for chosen model by station
+\item commented out (app getting too unwieldly): show plots for all of spatial models at once for easier comparison
+\end{itemize}
+
 \subsection{In Progress}
 
 I am in the process of trying to use the method described in  O' Donnel, Rushworth, Bowman, and Scott's ``Flexible regression models over river networks'' in the Journal of the Royal Statistical Society, Applied Statistics, 2014.
@@ -160,6 +202,27 @@ The metrics of comparison are taken from Beck and Murphy's manuscript. They all 
 
 \textcolor{red}{come back and put results/observations}
 
+\subsection{Description of Shiny Functionality}
+
+\textbf{Choices}
+\begin{itemize}
+\item station (C10, C3, P8, D19, D26, D28, D4, D6, D7)
+\item response variable (din, nh, no23)
+\item plot type (observed, annual [avg])
+\item scale type (linear, natural log)
+\item date range (1975-2013)
+\end{itemize}
+
+\textbf{Plots}
+\begin{itemize}
+\item fitted values for GAM with and without flow
+\item fitted values for flow normalized GAM with and without flow 
+\item with flow model contributions of each component  on the fitted values
+\item no flow model contributions of each component  on the fitted values
+\item GAM with flow and WRTDS fitted value comparison
+\item dynagam plots (changes in relationship between response and flow across time) for GAM with flow 
+\item RMSE breakdown spatial plots
+\end{itemize}
 
 \subsection{In Progress}
 
