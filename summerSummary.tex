@@ -285,7 +285,14 @@ The metrics of comparison are taken from Beck and Murphy's manuscript. They all 
 \end{itemize}
 
 
-\textcolor{red}{come back and put results/observations}
+%\textcolor{red}{come back and put results/observations}
+
+Both methods have predictions that are at least visually very close to one another.
+The RMSE and deviance for GAM fitted values are less than that of WRTDS. In an experiment, D7 and D19 (in the center of the station network) were chosen to be fairly representative of the other stations. I expanded the maximum basis dimensions for the GAM models as far as I could under identifiability constraints, and visually the prediction look similar to those of the GAM model with the original choices basis dimension maximums. For the WRTDS models, the original window sizes were (0.5, 10, 0.5). I tried smaller window sizes (0.25, 5, 0.25), bigger window sizes (0.75, 15, 0.75) and an even bigger widows size (1,20,1). Still overall the expanded GAM does better than all of the WRTDS models. Of the WRTDS models, the smaller window model generally does better, with a few breakdown categories having the original WRTDS model being the best. From the Shiny app, it looks like WRTDS predictions are less extreme than the GAM predictions. So if GAMs are always ``winning" it means these models get predicted values high/low enough in the right places, and the models are not losing big by predicting values large in magnitude when they shouldn't be.
+
+The overall intercept is often significantly negative meaning GAM estimates were on average larger than those of WRTDS, and the slope is often significantly less than one, meaning that GAMs fit a wider range of values compared to WRTDS. These results are consistent with what we see when examining the comparison plots on the Shiny app.
+
+NOTE: For more detailed results, see compareModels.tex.
 
 \subsection{Description of Shiny Functionality}
 
