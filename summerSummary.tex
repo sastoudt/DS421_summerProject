@@ -4,6 +4,7 @@
 \geometry{a4paper} % or letter or a5paper or ... etc
 % \geometry{landscape} % rotated page geometry
 \usepackage{color}
+\usepackage{hyperref}
 % See the ``Article customise'' template for come common customisations
 
 \title{DS421 Summer 2016 Project Summary}
@@ -19,26 +20,26 @@
 \section{Investigation of Chlorophyll}
 
 \subsection{Goals and Approaches}
-The overarching goal of this portion of the project is to understand what variables help explain the variation of chlorophyll over time and at each station. We want to understand if these relationships differ over time and/or over space. My approach was to first see which other variables that we have information on at the same times and places as chlorophyll are correlated with chlorophyll. I included these variables in what I refer to as the ``parsimonious" model. I then added to a "full" model additional variables that were identified by David as variables whose relationships with chlorophyll, in context, would be interesting to understand. I build models including these variables separately for each station. Then I experimented with truly spatial models by using the station ID as a factor in a model, so I could fit one model and be able to predict chlorophyll for each station at once. After this I went back to make more ``bare bones" models per station that only incorporate the date (to incorporate trends over time) and the day of year (to incorporate seasonal trends) as well as the interaction between the two, allowing these trends to change depending on the value of the other one in order to have more fair comparisons between the various models. I then moved towards models that incorporate a sense of ``flow" using chlorophyll values from neighboring stations and measures of true flow throughout the area. 
+The overarching goal of this portion of the project is to understand what variables help explain the variation of chlorophyll over time and at each station. We want to understand if these relationships differ over time and/or over space. My approach was to first see which other variables that we have information on at the same times and places as chlorophyll are correlated with chlorophyll. I included these variables in what I refer to as the ``parsimonious" model. I then added to a ``full" model additional variables that were identified by David as variables whose relationships with chlorophyll, in context, would be interesting to understand. I built models including these variables separately for each station. Then I experimented with truly spatial models by using the station ID as a factor in a model, so I could fit one model and be able to predict chlorophyll for each station at once. After this I went back to make more ``bare bones" models per station that only incorporate the date (to incorporate trends over time) and the day of year (to incorporate seasonal trends) as well as the interaction between the two, allowing these trends to change depending on the value of the other one in order to have more fair comparisons between the various models. I then moved towards models that incorporate a sense of ``flow" using chlorophyll values from neighboring stations and measures of true flow throughout the area. 
 
-Throughout all of these models, I fitted the models in a nested way so that we could see how much each variable contributed to the overall fitted value. I created a Shiny application (a web application written in R) to be able to compare and contrast the fitted values from each model, the contributions of each variable to the fitted values in each model, the overall RMSE per station of each model plotted on a map, and the contribution of volumetric flow averaged yearly and averaged monthly for each station.
+Throughout all of these models, I fitted the models in a nested way so that we could see how much each variable contributed to the overall fitted value. I created a Shiny application (a web application written in R) to be able to compare and contrast the fitted values from each model, the contributions of each variable to the fitted values in each model, the overall root-mean-squared-error (RMSE) per station of each model plotted on a map, and the contribution of volumetric flow averaged yearly and averaged monthly for each station.
 
 \subsection{Details About the Setup}
-I chose to use a log link function in each Generalized Additive Model since the distribution of chlorophyll is highly skewed right. I was deciding between log transforming the response and fitting a linear model ($log(y)=X\beta)+\epsilon$) versus using a Generalized Linear Model using a log link function ($log(y+\epsilon)= X\beta$) The residuals versus fitted values plots all look reasonable for constant variance under the GAM approach, so it did not seem necessary to use the log transform which would affect the variance as well as the linearity. We also don't have to deal with the back-transform bias where the back transform of the mean of the response on a log scale is not equivalent to the mean of the response on the raw scale.
+I chose to use a log link function in each Generalized Additive Model (GAM) since the distribution of chlorophyll is highly skewed right. I was deciding between log transforming the response and fitting a linear model ($log(y)=X\beta)+\epsilon$) versus using a Generalized Linear Model using a log link function ($log(y+\epsilon)= X\beta$) The residuals versus fitted values plots all look reasonable for constant variance under the GAM approach, so it did not seem necessary to use the log transform which would affect the variance as well as the linearity. With this choice we also don't have to deal with the back-transform bias where the back transform of the mean of the response on a log scale is not equivalent to the mean of the response on the raw scale.
 
-I also had to choose which stations to focus on. I decided to pick stations that had records throughout the widest range of dates (from 1975-2015). These stations 15 stations (out of 41) are: C10, C3, D10, D12, D19, D22, D26, D28A, D4, D41, D6, D7, D8, MD10, and P8. This narrowed down the number of stations to a reasonable number (since I was often fitting a model per station) while still representing a wide spatial range. For a few of these stations, there was sufficient missingness in some of the variables of interest that I just decided to remove that variable from that particular model for that station. For full spatial models, I only used variables that were available across all of the stations.
+I also had to choose which stations to focus on. I decided to pick stations that had records throughout the widest range of dates (from 1975-2015). These stations 15 stations (out of 41) are: C10, C3, D10, D12, D19, D22, D26, D28A, D4, D41, D6, D7, D8, MD10, and P8. This narrowed down the number of stations to a reasonable number (since I was often fitting a model per station) while still representing a wide spatial range. For a few of these stations, there was sufficient missingness in some of the variables of interest that I just decided to remove the variable from that particular model for the station. For full spatial models, I only used variables that were available across all of the stations.
 
 
 \subsection{Parsimonious Model}
 
-The parsimonious model used variables that visually looked correlated with chlorophyll overall along with temporal components. The day of year was included to account for any seasonality and was fit with a cyclic spline so that the ends match up from year to year. The date was included to account for any trends over time. The non-time covariates that were looked correlated were pheo (pheophytin a), tn (total nitrogen), and do.per (dissolved oxygen per ?). Note that do.per was more highly correlated than do (dissolved oxygen), but I'm not sure what the ``per" means. If in context, the ``per" variable doesn't make sense, it can be replaced with ordinary dissolved oxygen. All but day of year were fit with thin plate regression splines. These splines have some optimality properties, are low rank (needing to fit many fewer coefficients), and isotropic (rotation of the covariate coordinate system will not change the smoothing). The same model form was fit for each station. The maximum basis dimensions per variable change per station to allow for extra flexibility if need be and subject to the constraints of the data at each station.  
+The parsimonious model used temporal components and variables that visually looked correlated with chlorophyll overall. The day of year was included to account for any seasonality and was fit with a cyclic spline so that the ends match up from year to year. The date was included to account for any trends over time. The non-time covariates that looked correlated were pheo (pheophytin a), tn (total nitrogen), and do.per (dissolved oxygen per ?). Note that do.per was more highly correlated than do (dissolved oxygen), but I'm not sure what the ``per" means. If in context, the ``per" variable doesn't make sense, it can be replaced with ordinary dissolved oxygen. All but day of year were fit with thin plate regression splines. These splines have some optimality properties, are low rank (needing to fit many fewer coefficients), and isotropic (rotation of the covariate coordinate system will not change the smoothing). The same model form was fit for each station. The maximum basis dimensions per variable change per station to allow for extra flexibility if need be and are subject to the constraints of the data at each station.  
 
 \textcolor{red}{come back and put results/observations}
 
 
 \subsection{Full Model}
 
-The full model included everything in the parsimonious model and then added some extra variables that are interesting in context but did not look particularly predictive of chlorophyll in pairwise scatterplots. The additional variables that were added are: sio2 (silica), tp (total phosphorus), tss (total suspended solids), nh4 (ammonia), sal (salinity). Again, all of these were fit with thin plate regression splines, the same model form was fit for each station, and the maximum basis dimensions per variable change per station.  Salinity, ammonia, and total nitrogen are the variables that have the most missingness and therefore don't occur in every station's model.
+The full model included everything in the parsimonious model and then added some extra variables that are interesting in context but did not look particularly predictive of chlorophyll in pairwise scatterplots. The additional variables that were added are: sio2 (silicon), tp (total phosphorus), tss (total suspended solids), nh4 (ammonium), sal (salinity). Again, all of these were fit with thin plate regression splines, the same model form was fit for each station, and the maximum basis dimensions per variable change per station.  Salinity, ammonium, and total nitrogen are the variables that have the most missingness and therefore don't occur in every station's model.
 
 \textcolor{red}{come back and put results/observations}
 
@@ -52,7 +53,7 @@ The above models were fit per station which did not allow for a true spatio-temp
 \item Spatial Model 1: Day of year and date with station as a factor. Same day of year and date trend, station just acts as an adjustment on the intercept.
 \item Spatial Model 2: Day of year and date with station as a factor. Date is allowed to differ by station.
 \item Spatial Model 3: Day of year and date with station as a factor. Date and day of year are both allowed to differ by station.
-\item Spatial Model 4:  Day of year and date with station as a factor. Date is allowed to differ by station. The interaction between date and day of year is allowed to differ by station. Note that I didn't let day of year to differ by station here to scale back the complexity.
+\item Spatial Model 4:  Day of year and date with station as a factor. Date is allowed to differ by station. The interaction between date and day of year is allowed to differ by station. Note that I didn't let day of year differ by station here to scale back the complexity.
 \end{enumerate}
 
 I went back and did Spatial Model 2 [which turned out to be the highest performing] but adding one covariate (pheophytin a, then total nitrogen separately) to see if we could get a boost from a highly correlated covariate from the parsimonious model that we hadn't allowed in a spatial model yet. 
@@ -81,26 +82,26 @@ In the spatial models, the station is just a factor. There is no explicit inform
 
 I had two approaches for trying to incorporate flow that approach the problem from different angles. Using the chlorophyll series of a neighboring station (correlation-wise) as a covariate, incorporates some information about the network that doesn't explicitly use Euclidean distance between stations. \textcolor{red}{A next step would be to do the same thing only using the station that is nearest in a Euclidean sense to see if there are any major differences.}
 
-I also used flow data from http://www.water.ca.gov/dayflow/ as a covariate. Since I used this in a by station approach, this doesn't actually incorporate information about the spatial network, but it does help us think about flow in general. 
+I also used flow data from \url{http://www.water.ca.gov/dayflow/} as a covariate. Since I used this in a by station approach, this doesn't actually incorporate information about the spatial network, but it does help us think about flow in general. 
 
 
 
 \subsubsection{Neighboring (Correlation-Wise) Station Chlorophyll}
 
-My first approach was to compare the chlorophyll series between each station and see which station's chlorophyll are most correlated. Since not every station was measured on the same days, merging the station series by day to get a true correlation left many missing value pairs between stations. Every station had about 600 measurements, so I decided that any correlation made with less than 100 pairwise comparisons that weren't NA were not to be used because they could be unduly high due to small numbers of comparisons. Then each station's ``best match" was merged on a "closest date" criteria to be a covariate for a by station model. This means that even if the chlorophyll measurements were taken a day apart, they would be merged. This was to help with missingness issue, although I admit that the treatment of missigness in this whole workflow is not necessarily the best way of doing things.
+My first approach was to compare the chlorophyll series between each station and see which station's chlorophyll are most correlated. Since not every station was measured on the same days, merging the station series by day to get a true correlation left many missing value pairs between stations. Every station had about 600 measurements, so I decided that any correlation made with less than 100 pairwise comparisons that weren't NA were not to be used because they could be unduly high due to small numbers of comparisons. Then each station's ``best match" was merged on a ``closest date" criteria to be a covariate for a by station model. This means that even if the chlorophyll measurements were taken a day apart, they would be merged. This was to help with missingness issue, although I admit that the treatment of missigness in this whole workflow is not necessarily the best way of doing things.
 
 \textcolor{red}{come back and put results/observations}
 
 
 \subsubsection{True Flow}
 
-My second approach was inspired by Marcus Beck's work on adjusting for flow in his Weighted Regression on Time, Discharge, and Season models. The use of flow as a covariate can help account for the variance in the response that is attributed to flow instead of allowing it to be potentially confounded with a temporal trend. \textcolor{To make this approach more spatial, I should go back and fit a spatial model with flow as a covariate allowing as many of the temporal components to vary by station as possible. Then at least the flows from each station can be leveraged.} A variant on the flow approach that I did try was to look at the volumetric flow data, determine which source made the largest contribution on average to each station, and then using flow data matching the largest contribution source from the water flow data. This was not always possible since for example, there was no obvious matching water flow data for the Carquinez Straight at Martinez even though a few stations had this as their highest volumetric component. To better understand flow over time, I  made plots that show the composition of flow at each station aggregated by year to see changes over time, and by month to see changes over seasons. These can be found in the Shiny app.
+My second approach was inspired by Marcus Beck's work on adjusting for flow in his Weighted Regression on Time, Discharge, and Season models. The use of flow as a covariate can help account for the variance in the response that is attributed to flow instead of allowing it to be potentially confounded with a temporal trend. \textcolor{red}{To make this approach more spatial, I should go back and fit a spatial model with flow as a covariate allowing as many of the temporal components to vary by station as possible. Then at least the flows from each station can be leveraged.} A variant on the flow approach that I did try was to look at the volumetric flow data, determine which source made the largest contribution on average to each station, and then using flow data matching the largest contribution source from the water flow data. This was not always possible since for example, there was no obvious matching water flow data for the Carquinez Straight at Martinez even though a few stations had this as their highest volumetric component. To better understand flow over time, I  made plots that show the composition of flow at each station aggregated by year to see changes over time, and by month to see changes over seasons. These can be found in the Shiny app.
 
 \textcolor{red}{come back and put results/observations}
 
 \subsection{In Progress}
 
-I am in the process of trying to use the method described in , O' Donnel, Rushworth, Bowman, and Scott's ``Flexible regression models over river networks'' in Journal of the Royal Statistical Society, Applied Statistics, 2014.
+I am in the process of trying to use the method described in  O' Donnel, Rushworth, Bowman, and Scott's ``Flexible regression models over river networks'' in the Journal of the Royal Statistical Society, Applied Statistics, 2014.
 
 The main idea here is to use penalized B-splines that respect the spatial network of the flow. Because it boils down to a spline approach, I thought it might be a nice comparison. However, the current obstacle is to get the data into the format expected by the smnet package that implements this approach. The data goes through extensive GIS preprocessing before being in the right format. I am trying to circumvent this process, drawing out the network by hand and trying to massage everything into the correct format so that we plug into the heart of main functionality of the smnet package. I am going through the source code, and making some progress, but it is not ready yet.
 
@@ -108,7 +109,7 @@ The main idea here is to use penalized B-splines that respect the spatial networ
 \section{Generalized Additive Model (GAM) and Weighted Regression on Time, Discharge, and Season (WRTDS) Comparison}
 
 \subsection{Goals and Approaches}
-The goal of this portion of the project is to mirror the comparison of GAMs and WRTDS done by Marcus Beck and Rachel Murphy (https://github.com/fawda123/patux_manu/blob/jawra/patux_manu.pdf) but provide the same framework in a new environment (Bay Delta). I have mainly gone through Marcus's work here (https://github.com/fawda123/sf_trends) and made the GAM models using the data that he pre-processed. I then built the comparison framework following the manuscript and a Shiny application mirroring (https://beckmw.shinyapps.io/sf_trends/). Throughout, I learned more about the inner workings of the WRTDStidal package and the context of the data from Marcus.
+The goal of this portion of the project is to mirror the comparison of GAMs and WRTDS done by Marcus Beck and Rachel Murphy (\url{https://github.com/fawda123/patux_manu/blob/jawra/patux_manu.pdf}) but provide the same framework in a new environment (Bay Delta). I have mainly gone through Marcus's work here (\url{https://github.com/fawda123/sf_trends}) and made the GAM models using the data that he pre-processed. I then built the comparison framework following the manuscript and a Shiny application mirroring Marcus's (\url{https://beckmw.shinyapps.io/sf_trends/}). Throughout, I learned more about the inner workings of the WRTDStidal package and the context of the data from Marcus.
 
 The context of the project is to understand the variability in dissolved inorganic nitrogen, ammonium, and nitrate at many of the same stations considered in the chlorophyll part of the project. Flow is represented by flow records from the San Joaquin River, Sacramento River, or salinity as a tracer of flow depending on the station.
 
@@ -127,7 +128,7 @@ Flow normalization attempts to correct for differences in flow that may obscure 
 
 We can also assess how the relationship between the response and flow by month (seasonal) changes over different years through plots. These are shown in the Shiny app using Marcus's dynagam function. 
 
-}
+
 
 
 
@@ -138,20 +139,22 @@ We can also assess how the relationship between the response and flow by month (
 
 The metrics of comparison are taken from Beck and Murphy's manuscript. They all are calculated on the log scale.  All of the metrics of comparison are calculated overall, in annual blocks, seasonal blocks, and flow levels. 
 
+\textbf{Breakdown}
 \begin{itemize}
 \item annual: [1976, 1983), [1983, 1990), [1990, 1997), [1997, 2004), [2004, 2015] \{has 2 extra years\}
 \item seasonal: (Jan, Feb, Mar), (Apr, May, Jun), (Jul, Aug, Sept), (Oct, Nov, Dev)
 \item flow: quartiles of the flow for that station
 \end{itemize}
 
+\textbf{Metrics}
 \begin{itemize}
-\item: root-mean-squared-error (RMSE): $\sqrt{\frac{\sum_{i}=1^n (\hat{y}-y)^2}{n}}$
+\item root-mean-squared-error (RMSE): $\sqrt{\frac{\sum_{i}=1^n (\hat{y}-y)^2}{n}}$
 \item deviance: sum of squared residuals
-\item average difference: \left(\frac{\sum_{i=1}^n \hat{y}_{WRTDS,i}-\sum_{i=1}^n \hat{y}_{GAM,i}}{\sum_{i=1}^n \hat{y}_{GAM,i}}\right)*100
+\item average difference: $\left(\frac{\sum_{i=1}^n \hat{y}_{WRTDS,i}-\sum_{i=1}^n \hat{y}_{GAM,i}}{\sum_{i=1}^n \hat{y}_{GAM,i}}\right)*100$
 \item percent change: annual mean estimates for the first and last three years of flow-normalized estimates, excluding the annual aggregations that had limited annual mean data (i.e., seven years per period) \textcolor{red}{double check, still might have done this wrong}
-\item RMSE between: $\sqrt{\frac{\sum_{i}=1^n (\hat{y}_{WRTDS,i}-\hat{y}_{GAM,i})^2}{n}}$
+\item RMSE between: $\sqrt{\frac{\sum_{i=1}^n (\hat{y}_{WRTDS,i}-\hat{y}_{GAM,i})^2}{n}}$
 \item regression of wrtdsPred ~ gamPred: is intercept significant? ( $>0$ WRTDS estimates were on average larger than GAMs) is slope significant? ( $<1$ GAMs fit a wider range of values compared to WRTDS)
-\item: visually compare fitted values on Shiny app
+\item visually compare fitted values on Shiny app
 \end{itemize}
 
 
@@ -162,9 +165,9 @@ The metrics of comparison are taken from Beck and Murphy's manuscript. They all 
 
 I am currently investigating what is going on at station P8. In context, P8 is downstream of a wastewater treatment plant. Changes happened in the mid-2000s to reduce ammonium outputs from the treatment plant. Water quality changes in ammonium and to a lesser extent dissolved inorganic nitrogen have been shown in other work.
 
-The biggest differences seen in the metrics of comparison between GAMs and WRTDS happens for P8, so I am looking into where the methods differ, and if these differences correspond to the times where we know something new is happening. Some of the differences in the metrics are huge, so first I want to make sure this isn't a missingness issue. 
+The biggest differences seen in the metrics of comparison between GAMs and WRTDS happens for P8, so I am looking into where the methods differ, and if these differences correspond to the times where we know something new is happening. Some of the differences in the metrics are huge, so first I want to make sure this isn't a missingness issue or some other artifact. 
 
-There is also a major discrepancy in the annual aggregated GAM with flow v. GAM without flow. The without flow model does much better, which is not consistent with the rest of the results. I refit the models to give higher maximum basis dimensions in case the model fit was off. This didn't help. It looks like there is some asymmetry around $y=0$ in the residuals v. predicted values plot, but there are so few points where this is true, and on the annual aggregation level, this shouldn't be a big issue. I took those points out and refit the model, but this still didn't help. For dissolved inorganic nitrogen and nitrate, this station has an increased mean, median, and spread than all of the other stations for that response, but C10 is also up there and seems to be fine on the Shiny app. Ammonium is still a mystery; the flow model consistently predicts larger values than the no flow predictions, but both the distributions of flow and the response is consistent with those of other stations.
+There is also a major discrepancy in the annual aggregated GAM with flow v. GAM without flow. The without flow model does much better, which is not consistent with the rest of the results. I refit the models to give higher maximum basis dimensions in case the model fit was off. This didn't help. It looks like there is some asymmetry around $y=0$ in the residuals v. predicted values plot, but there are so few points where this is true, and on the annual aggregation level, this shouldn't be a big issue. I took those points out and refit the model, but this still didn't help. For dissolved inorganic nitrogen and nitrate, this station has an increased mean, median, and spread than all of the other stations for that response, but C10 is also up there and seems to be fine on the Shiny app. Ammonium is still a mystery; the flow model consistently predicts larger values than the no flow predictions, but both the distributions of flow and the response are consistent with those of other stations.
 
 The annual, flow-normalized predictions for GAMs at P8 look weird compared to the WRTDS version, so I need to make sure the flow-normalization is not off or see why the model is behaving so poorly.
 
