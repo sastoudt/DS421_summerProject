@@ -2,6 +2,8 @@
 library(ggplot2)
 library(sp)
 library(gridExtra)
+library(reshape)
+library(mgcv)
 
 # raw data
 load(file = "~/Desktop/sfei/perStation.Rda")
