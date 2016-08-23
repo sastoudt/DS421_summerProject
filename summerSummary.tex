@@ -59,9 +59,15 @@ The above models were fit per station which did not allow for a true spatio-temp
 \item Spatial Model 4:  Day of year and date with station as a factor. Date is allowed to differ by station. The interaction between date and day of year is allowed to differ by station. Note that I didn't let day of year differ by station here to scale back the complexity.
 \end{enumerate}
 
-I went back and did Spatial Model 2 [which turned out to be the highest performing] but adding one covariate (pheophytin a, then total nitrogen separately) to see if we could get a boost from a highly correlated covariate from the parsimonious model that we hadn't allowed in a spatial model yet. 
+I went back and did Spatial Model 3 [which turned out to be the highest performing] but adding one covariate (pheophytin a, then total nitrogen separately) to see if we could get a boost from a highly correlated covariate from the parsimonious model that we hadn't allowed in a spatial model yet. 
 
-\textcolor{red}{come back and put results/observations}
+%\textcolor{red}{come back and put results/observations}
+
+It looks like there is some benefit of having a per station date term for some stations, and for others it doesn't really help that much. The middle stations benefit from a date term by station. Those on the extremes that are more isolated (left,  top, bottom) do not. The day of year term by station doesn't seem to help any of the stations, and similarly for the interaction term, it is just overkill. 
+
+The intercepts for each station are very similar for spatial models 1, 2, and 4 while model 3 has larger intercepts in general. The intercepts do tend to be similar at nearby stations which suggests that there is some similarity based on proximity that is picked up on without explicitly including spatial coordinates in the models. The deviance explained goes down as the models get more complicated, and most of the stations have the lowest RMSE for Spatial Model 3 which allows for a different day of year and date pattern by station. This makes sense since this allows for the most flexibility. 
+
+Looking at the RMSE per station,  overall we do better on left most stations (and the north most station), and do worse on stations to the right (including the southern most station). There is the same relative ordering of the RMSE by station across Spatial Models 1 and 2 and the interaction and parsimonious models, meaning that the ``hard" stations remain consistent across all of these models. However, the stations on the right do less poorly in the parsimonious model, suggesting that the extra covariates are helping there. 
 
 Now that we are incorporating more data and having many smooths being able to vary across each of 15 stations we have increasing complexity that carries over into the computational costs of fitting these models. 
 
