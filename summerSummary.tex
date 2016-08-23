@@ -195,8 +195,8 @@ NOTE: More detailed results per model per station can be found in perStationMode
 \item select up to two variables to display contributions towards fitted values for parsimonious model [declutters nested plots]
 \item select up to two variables to display contributions towards fitted values for full model [declutters nested plots]
 \item select up to two variables to display contributions towards fitted values for interaction model [declutters nested plots]
-\item select a spatial model (spatIntercept, spatDate_Dec, spatDOY, spatInteraction)
-\item select a model to look at RMSE breakdown (predPars, predFull, predInt, predSpat1, predSpat2, predSpat3, predSpat4, predSpat3Pheo, predSpat3Tn, chlPred, flowPred )
+\item select a spatial model (spatIntercept, spatDate.Dec, spatDOY, spatInteraction)
+\item select a model to look at RMSE breakdown (predPars, predFull, predInt, predSpat1, predSpat2, predSpat3, predSpat4, predSpat3Pheo, predSpat3Tn, chlPred, flowPred)
 \item remove C10 as outlier for RMSE breakdown plots (yes/no)
 \end{itemize}
 
@@ -209,15 +209,15 @@ NOTE: More detailed results per model per station can be found in perStationMode
 \item fitted values chosen spatial model
 \item fitted values from chl from other station model
 \item fitted values from flow model
-\item component-wise predictions parsimonious model
-\item component-wise predictions full model
-\item component-wise predictions interaction model
-\item component-wise predictions chosen spatial model
-\item component-wise predictions chosen chl flow model
-\item component-wise predictions chosen total flow model
-\item component-wise predictions parsimonious model choose 2 variables
-\item component-wise predictions full model choose 2 variables
-\item component-wise predictions interaction model choose 2 variables
+\item component-wise predictions parsimonious model  [log scale]
+\item component-wise predictions full model  [log scale]
+\item component-wise predictions interaction model  [log scale]
+\item component-wise predictions chosen spatial model  [log scale]
+\item component-wise predictions chosen chl flow model  [log scale]
+\item component-wise predictions chosen total flow model  [log scale]
+\item component-wise predictions parsimonious model choose 2 variables  [log scale]
+\item component-wise predictions full model choose 2 variables  [log scale]
+\item component-wise predictions interaction model choose 2 variables  [log scale]
 \item volumetric flow components (aggregated by year, aggregated by month)
 \item RMSE breakdown for chosen model by station
 \item commented out (app getting too unwieldly): show plots for all of spatial models at once for easier comparison
@@ -295,6 +295,7 @@ The overall intercept is often significantly negative meaning GAM estimates were
 NOTE: For more detailed results, see compareModels.tex.
 
 \subsection{Description of Shiny Functionality}
+
 
 \textbf{Choices}
 \begin{itemize}
