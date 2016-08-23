@@ -120,7 +120,19 @@ I started with the default parameters for the predictor variables day of year, d
 
 From checking the diagnostics of these, I got a sense for how much the maximum basis dimensions needed to be expanded. I picked reasonably large basis dimensions per parameter and then fit a consistent model to each station/response variable pair. A few of the models yielded warnings, and then I adjusted the basis dimensions a bit to get the warnings to go away, but keeping the adjustments as consistent with one another as possible. I also fit the models in a nested way so that we could isolate the impact of each interaction above and beyond the individual components. 
 
-\subsection{Annual Aggregation}
+\subsection{Analyzing Flow }
+%dynagam
+
+Flow normalization attempts to correct for differences in flow that may obscure the overall trend in the response. To flow normalize, we take the averages of the predictions at a point given the expected flow that occurs in the same month across all years. For example, for a value at January 1990 and a value at January 2000, all of the January observations would go into creating the expected flow for both, but the spline will be different even given the same flow input, because it occurs at two different times.
+
+We can also assess how the relationship between the response and flow by month (seasonal) changes over different years through plots. These are shown in the Shiny app using Marcus's dynagam function. 
+
+}
+
+
+
+
+
 
 \subsection{Metrics of Comparison}
 
@@ -145,8 +157,6 @@ The metrics of comparison are taken from Beck and Murphy's manuscript. They all 
 
 \textcolor{red}{come back and put results/observations}
 
-
-\subsection{Response-Flow relationships by Month Over Different Years}
 
 \subsection{In Progress}
 
