@@ -32,7 +32,7 @@ shiny::runGitHub("DS421_summerProject", "sastoudt", subdir = "GAM_weightedReg_co
 
 This is created by using https://beckmw.shinyapps.io/sf_trends/ as a framework.
 
-Or view it online: https://sastoudt.shinyapp.io/GAM_Delta
+Or view it online: https://sastoudt.shinyapps.io/GAM_Delta/
 
 ## Progress as of 8/7/16
 
