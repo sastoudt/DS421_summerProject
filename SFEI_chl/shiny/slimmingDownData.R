@@ -36,17 +36,17 @@ cleanModel1 = function(cm) {
 wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
 
 for(i in setdiff(1:41,wholeSeries)){
-  perStation[[i]]=NULL
+  perStation[[i]]=NA
 }
 save(perStation,file="perStation.Rda")
 
 for(i in setdiff(1:41,wholeSeries)){
-  perStationAdd[[i]]=NULL
+  perStationAdd[[i]]=NA
 }
 save(perStationAdd,file="perStationAdd.Rda")
 
 for(i in setdiff(1:41,wholeSeries)){
-  perStationPredVal[[i]]=NULL
+  perStationPredVal[[i]]=NA
 }
 save(perStationPredVal,file="perStationPredVal.Rda")
 
@@ -56,7 +56,7 @@ for(i in wholeSeries){
   print(i)
 }
 for(i in setdiff(1:41,wholeSeries)){
-  perStationParsMod[[i]]=NULL
+  perStationParsMod[[i]]=NA
 }
 save(perStationParsMod,file="perStationParsimoniousModels.Rda")
 
@@ -67,7 +67,7 @@ for(i in wholeSeries){
   print(i)
 }
 for(i in setdiff(1:41,wholeSeries)){
-  perStationFullMod[[i]]=NULL
+  perStationFullMod[[i]]=NA
 }
 save(perStationFullMod,file="perStationFullModels.Rda")
 
@@ -78,7 +78,7 @@ for(i in wholeSeries){
   print(i)
 }
 for(i in setdiff(1:41,wholeSeries)){
-  perStationIntMod[[i]]=NULL
+  perStationIntMod[[i]]=NA
 }
 save(perStationIntMod,file="perStationInteractionModels.Rda")
 
@@ -89,7 +89,7 @@ for(i in wholeSeries){
   print(i)
 }
 for(i in setdiff(1:41,wholeSeries)){
-  perStationFlowMod[[i]]=NULL
+  perStationFlowMod[[i]]=NA
 }
 save(perStationFlowMod,file="perStationFlowModels.Rda")
 
@@ -100,7 +100,7 @@ for(i in wholeSeries){
   print(i)
 }
 for(i in setdiff(1:41,wholeSeries)){
-  perStationFlowTOT[[i]]=NULL
+  perStationFlowTOT[[i]]=NA
 }
 save(perStationFlowTOT,file="perStationTOTModels.Rda")
 
