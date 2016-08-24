@@ -105,11 +105,11 @@ Some notes so far:
 
 ## Week 4 Goals
 
-- write up overall results
+- write up overall results DONE (summerSummary)
 - host slimmed down Shiny app
-- one page report describing what I did, what I learned, how I see the project contributing to your longer term career development
-- prepare presentation materials (3 minute lightning talk)
-- combine best pieces of all of the models tried so far?
+- one page report describing what I did, what I learned, how I see the project contributing to your longer term career development DONE
+- prepare presentation materials (3-5 minute lightning talk) [no slides]
+- more TO DOs marked in red in summerSummary
 
 ## Throughout
 
