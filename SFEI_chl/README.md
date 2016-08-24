@@ -8,6 +8,14 @@ Shiny app deployed here: https://sastoudt.shinyapps.io/SF_chl/
 
 DISCLAIMER: THIS IS BROKEN ON THE DEPLOYMENT SIDE. It is a memory issue, the app works locally. I am still trying to slim down the input data to fix this.
 
+8/24: I still can't get this to run on shiny io. The app works fine locally, but crashes with no error messages when deployed. I even moved all of the large files to Dropbox to remove the size issues, but to no avail. As a last resort, you can now run the app on your own computer, using the following two lines of code. 
+
+library(shiny)
+
+runGitHub("DS421_summerProject", "sastoudt", subdir = "SFEI_chl/shiny/",launch.browser=T)
+
+This will launch the app in your browser. It will take a little time to load since it is pulling a bunch of files from Dropbox and then processing them. There are still some glitches in this version that don't occur in the previous version that runs locally. I will focus on working on those next, but everything that does pop up on the Shiny app should be representative.
+
 ## Week 1 Goals
 
 - pick promising covariates for "parsimonious" model
