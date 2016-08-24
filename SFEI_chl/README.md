@@ -6,6 +6,7 @@
 
 Shiny app deployed here: https://sastoudt.shinyapps.io/SF_chl/ 
 
+DISCLAIMER: THIS IS BROKEN ON THE DEPLOYMENT SIDE. It is a memory issue, the app works locally. I am still trying to slim down the input data to fix this.
 
 ## Week 1 Goals
 
