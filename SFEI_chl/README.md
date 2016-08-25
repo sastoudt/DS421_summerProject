@@ -18,6 +18,8 @@ This will launch the app in your browser. It will take a little time to load sin
 
 8/24 evening: I fixed the glitches, but now pulling from Dropbox is crashing my R, and I can't use the runGitHub() option. Perhaps it is my internet connection at home? I will try again tomorrow from campus.
 
+8/25: This works from Berkeley internet, so now you should be able to use the runGitHub() command without any glitches. Be patient, things take awhile to load and change between options, sorry!
+
 Note: I can't simply put all of the data in the GitHub repo, because the files are larger than the allowed upload size.
 
 ## Week 1 Goals
