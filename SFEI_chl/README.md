@@ -16,6 +16,8 @@ runGitHub("DS421_summerProject", "sastoudt", subdir = "SFEI_chl/shiny/",launch.b
 
 This will launch the app in your browser. It will take a little time to load since it is pulling a bunch of files from Dropbox and then processing them. There are still some glitches in this version that don't occur in the previous version that runs locally. I will focus on working on those next, but everything that does pop up on the Shiny app should be representative.
 
+8/24 evening: I fixed the glitches, but now pulling from Dropbox is crashing my R, and I can't use the runGitHub() option. Perhaps it is my internet connection at home? I will try again tomorrow from campus.
+
 ## Week 1 Goals
 
 - pick promising covariates for "parsimonious" model

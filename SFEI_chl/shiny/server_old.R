@@ -4,86 +4,28 @@ library(sp)
 library(gridExtra)
 library(reshape)
 library(mgcv)
-library(lubridate)
-
-## all bugs worked out with data locally, same data as on Dropbox
-# load(file = "~/Desktop/sfei/perStationParsimoniousModels.Rda")
-# load(file = "~/Desktop/sfei/perStationFullModels.Rda")
-# load(file="~/Desktop/sfei/perStationInteractionModels.Rda")
-# load(file="~/Desktop/sfei/mod1Spatial.RData")
-# load(file="~/Desktop/sfei/mod2Spatial.RData")
-# load(file="~/Desktop/sfei/mod3Spatial.RData")
-# load(file="~/Desktop/sfei/mod4Spatial.RData")
-# load(file="~/Desktop/sfei/perStationAdd.Rda")
-# load(file="~/Desktop/sfei/perStationFlowMod.Rda")
-# load(file="~/Desktop/sfei/perStationFlowTOT.Rda")
-# load(file="~/Desktop/sfei/perStationPredVal.Rda")
 
 # raw data
-#load(file = "perStation.Rda")
-# load(file = "perStationParsimoniousModels.Rda")
-# load(file = "perStationFullModels.Rda")
-# load(file="perStationInteractionModels.Rda")
-# #load(file="~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data/delt_map.RData")
-# load(file="mod1Spatial.RData")
-# load(file="mod2Spatial.RData")
-# load(file="mod3Spatial.RData")
-# load(file="mod4Spatial.RData")
-# load(file="perStationAdd.Rda")
-# load(file="perStationFlowMod.Rda")
-# load(file="perStationFlowTOT.Rda")
-# load(file="perStationPredVal.Rda")
-#full=read.csv("sfeiPlusDates.csv")
-#allData=read.csv("allData.csv")
-volFlow=read.csv("VolFingerPrintsMaster.csv")
-require(httr)
-
-response<- GET(url="https://www.dropbox.com/s/nqvmugpezqb5uxu/mod1Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/7ldafvwffwer8e3/mod2Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/wkmn4a16i8ikdxl/mod3Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/lg27vg3a9wddexp/mod4Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-
-response<- GET(url="https://www.dropbox.com/s/4colbyhrto2jxwl/perStationAdd.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/5ab5if0hbjour78/perStationFlowModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/ea6oskjwyktxisk/perStationFlowSpecific.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/3tppvhwojkl0nu6/perStationFlowTOT.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/mo8kob5m8f3yykd/perStationFullModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/8z5l8hnssfuvh5f/perStationInteractionModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/mj7b9crkyaxaxjd/perStationParsimoniousModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/vqolh5rnp2w1iai/perStationPredVal.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/3ql5nihqjt1pxak/perStationTOTModels.Rda?dl=0")
-load(rawConnection(response$content))
+load(file = "~/Desktop/sfei/perStation.Rda")
+load(file = "~/Desktop/sfei/perStationParsimoniousModels.Rda")
+load(file = "~/Desktop/sfei/perStationFullModels.Rda")
+load(file="~/Desktop/sfei/perStationInteractionModels.Rda")
+load(file="~/Desktop/DS421_summerProject/GAM_weightedReg_comparison/shiny/data/delt_map.RData")
+load(file="~/Desktop/sfei/mod1Spatial.RData")
+load(file="~/Desktop/sfei/mod2Spatial.RData")
+load(file="~/Desktop/sfei/mod3Spatial.RData")
+load(file="~/Desktop/sfei/mod4Spatial.RData")
+load(file="~/Desktop/sfei/perStationAdd.Rda")
+load(file="~/Desktop/sfei/perStationFlowMod.Rda")
+load(file="~/Desktop/sfei/perStationFlowTOT.Rda")
+load(file="~/Desktop/sfei/perStationPredVal.Rda")
+full=read.csv("~/Desktop/sfei/sfeiPlusDates.csv")
+allData=read.csv("~/Desktop/sfei/allData.csv")
+volFlow=read.csv("~/Desktop/sfei/VolFingerPrintsMaster.csv")
 # Define server logic required to generate and plot data
 wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
-allData<- do.call("rbind", perStationAdd[wholeSeries])
 forMap=allData[,c("Longitude","Latitude","Station")]
 forMap=unique(forMap)
-
-dt_rng=c(NA,NA)
 
 getSummaryRMSE<-function(data,namePred){
   
@@ -242,7 +184,7 @@ shinyServer(function(input, output) {
     stat <- input$stat
     
     
-    out<-perStationAdd[[which(names(perStationAdd)==stat)]]
+    out<-perStation[[which(names(perStation)==stat)]]
     
     
     return(out)
@@ -254,7 +196,7 @@ shinyServer(function(input, output) {
     stat <- input$stat
     
     
-    out<-perStationAdd[[which(names(perStationAdd)==stat)]]
+    out<-perStationAdd[[which(names(perStation)==stat)]]
     
     
     return(out)
@@ -314,7 +256,7 @@ shinyServer(function(input, output) {
   output$plot5choice1<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(names(perStation)==input$stat)
     
     if(index %in% c(5,7,13)){
       selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"),"Intercept will be added to center results")
@@ -330,7 +272,7 @@ shinyServer(function(input, output) {
   output$plot5choice2<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(names(perStation)==input$stat)
     
     if(index %in% c(5,7,13)){
       selectInput("plot5choice2","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"))
@@ -346,7 +288,7 @@ shinyServer(function(input, output) {
   output$plot6choice1<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(names(perStation)==input$stat)
     
     if(index %in% c(5,7)){
       selectInput("plot6choice1","Select a variable in full model.",c("doy","date_dec","pheo","do_per",
@@ -370,7 +312,7 @@ shinyServer(function(input, output) {
   output$plot6choice2<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(names(perStation)==input$stat)
     
     if(index %in% c(5,7)){
       selectInput("plot6choice2","Select a variable in full model.",c("doy","date_dec","pheo","do_per",
@@ -403,15 +345,14 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
+    index=which(names(perStation)==stat)
     # data
     data<-dat()
     mod<-perStationParsMod[[index]]
     
     if(index %in% c(5,7,13)){
       toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
-      
+     
     }else{
       
       toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
@@ -423,7 +364,7 @@ shinyServer(function(input, output) {
     names(toUse)[ncol(toUse)]="fitted.values"
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-      ggtitle(paste(names(perStationAdd)[index], "Fitted Values Parsimonious Model",sep=" "))+
+      ggtitle(paste(names(perStation)[index], "Fitted Values Parsimonious Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -435,7 +376,7 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -471,13 +412,13 @@ shinyServer(function(input, output) {
     }else if(index==15){
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
         geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-        ggtitle(paste(names(perStationAdd)[index], "Fitted Values Full Model",sep=" "))+
+        ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
         theme(legend.position='none')+ylim(0,160)+
         scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     }else{
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
         geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-        ggtitle(paste(names(perStationAdd)[index], "Fitted Values Full Model",sep=" "))+
+        ggtitle(paste(names(perStation)[index], "Fitted Values Full Model",sep=" "))+
         theme(legend.position='none')+
         scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     }
@@ -494,7 +435,7 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -508,7 +449,7 @@ shinyServer(function(input, output) {
     names(toUse)[ncol(toUse)]="fitted.values"
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-      ggtitle(paste(names(perStationAdd)[index], "Fitted Values Interaction Model",sep=" "))+
+      ggtitle(paste(names(perStation)[index], "Fitted Values Interaction Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -524,27 +465,26 @@ shinyServer(function(input, output) {
     
     # data
     data<-subset(allData,Station==stat)
-    data$Date=as.Date(as.character(data$Date))
-    
+    data$Date=as.Date(data$Date)
     if(input$spatMod=="spatIntercept"){
-      index=68
+      index=38
     }else if(input$spatMod=="spatDate_Dec"){
-      index=69
+      index=39
     }else if(input$spatMod=="spatDOY"){
-      index=70
+      index=40
     }else if(input$spatMod=="spatinteraction"){
-      index=71
+      index=41
     }
-   # 68,69,70,71
-
+    
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-       geom_line(data=data,aes_string(x="Date",y = names(data)[index], color = shQuote("red")),lwd=1)+
-        ggtitle(paste(input$spatMod, "Fitted Values Model",sep=" "))+
+      geom_line(data=data,aes_string(x="Date",y = names(data)[index], color = shQuote("red")),lwd=1)+
+      
+      ggtitle(paste(input$spatMod, "Fitted Values Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
-
-
+    
+    
   }, height = 250, width = 1200)
   
   output$fittedChl<- renderPlot({
@@ -552,7 +492,7 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data=perStationAdd[[index]]
@@ -573,7 +513,7 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data=perStationAdd[[index]]
@@ -597,7 +537,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -632,7 +572,7 @@ shinyServer(function(input, output) {
                                       "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
                                                                                   "dodgerblue","blue","purple")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
@@ -647,7 +587,7 @@ shinyServer(function(input, output) {
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
                                                                                                          "dodgerblue","forestgreen","blue","purple")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
@@ -659,7 +599,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -698,7 +638,7 @@ shinyServer(function(input, output) {
                             values=c("red","orange",
                                      "dodgerblue","blue","mediumturquoise","black")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(index==13){
@@ -739,7 +679,7 @@ shinyServer(function(input, output) {
                                                                                          "dodgerblue","forestgreen","blue","purple","magenta",
                                                                                          "grey","mediumturquoise","chocolate3","black")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
       
@@ -776,7 +716,7 @@ shinyServer(function(input, output) {
                                                                        "dodgerblue","forestgreen","blue","purple","magenta",
                                                                        "grey","mediumturquoise","chocolate3")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
@@ -789,7 +729,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -819,7 +759,7 @@ shinyServer(function(input, output) {
                           labels =c('red'=input$plot5choice1,"dodgerblue"=input$plot5choice2)
                           ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
   }, height = 250, width = 1200)
@@ -830,7 +770,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -857,7 +797,7 @@ shinyServer(function(input, output) {
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else if(index==13){
       df <- data.frame()
@@ -883,7 +823,7 @@ shinyServer(function(input, output) {
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
       toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
@@ -907,7 +847,7 @@ shinyServer(function(input, output) {
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
@@ -917,8 +857,9 @@ shinyServer(function(input, output) {
   output$mapPlot <- renderPlot({
     wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
     
+    allData<- do.call("rbind", perStation[wholeSeries])
     
-    plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
+    plot(full$Longitude,full$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
     points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
     # plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
     #points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
@@ -931,7 +872,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -952,7 +893,7 @@ shinyServer(function(input, output) {
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Interaction Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Interaction Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
@@ -964,7 +905,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<-dat()
@@ -985,7 +926,7 @@ shinyServer(function(input, output) {
                           labels =c('red'=input$intVar1,"dodgerblue"=input$intVar2)
                           ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
   }, height = 250, width = 1200)
@@ -996,11 +937,11 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     data<-subset(allData,Station==stat)
     indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))
+    data$Date=as.Date(data$Date)
     
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
@@ -1138,11 +1079,12 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     data<-subset(allData,Station==stat)
     indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))    
+    data$Date=as.Date(data$Date)
+    
     if(input$spatMod2=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
       toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
@@ -1279,11 +1221,12 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     data<-subset(allData,Station==stat)
     indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))    
+    data$Date=as.Date(data$Date)
+    
     if(input$spatMod3=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
       toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
@@ -1421,11 +1364,12 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     data<-subset(allData,Station==stat)
     indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))    
+    data$Date=as.Date(data$Date)
+    
     if(input$spatMod4=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
       toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
@@ -1624,7 +1568,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<- datA()
@@ -1649,7 +1593,7 @@ shinyServer(function(input, output) {
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Chl Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Chl Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
@@ -1661,7 +1605,7 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(names(perStation)==stat)
     
     # data
     data<- datA()
@@ -1674,7 +1618,6 @@ shinyServer(function(input, output) {
     nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
     names(nestPred)=toName
     terms<-c("ti(doy)","ti(date_dec)","ti(tot)","intercept")
-
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
       geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
       geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
@@ -1685,7 +1628,7 @@ shinyServer(function(input, output) {
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Total Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(names(perStation)[index],"Component-Wise Predictions Total Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
