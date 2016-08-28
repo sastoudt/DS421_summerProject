@@ -50,11 +50,14 @@ dim(B)
 
 require(Matrix)
 
-D=Matrix(D,sparse=F)
+#D=Matrix(D,sparse=F)
 lambdaD=lambdaT=lambdaS=1
+
+require(fields)
+D=spam2full(D)
 P=bdiag(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 dim(P)
-## 142 x 142
+## 154 x 154
 
 ## doesn't this have to add witih t(B)%*%B which is 13 x 13?
 
