@@ -4,6 +4,8 @@
 ##https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/cSplineDes.html
 ## cyclic b spline model matrix (doy)
 require(mgcv)
+require(spam)
+
 setwd("~/Desktop/sfei")
 
 allData<-read.csv("allData.csv",stringsAsFactors=F)
