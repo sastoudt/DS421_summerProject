@@ -51,8 +51,17 @@ dim(B)
 require(Matrix)
 
 D=Matrix(D,sparse=F)
-P=bdiag(0,lambda*t(D)%*%D,lambda*t(temporal)%*%temporal, lambda*t(seasonal)%*%seasonal)
+lambdaD=lambdaT=lambdaS=1
+P=bdiag(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 dim(P)
 ## 142 x 142
 
 ## doesn't this have to add witih t(B)%*%B which is 13 x 13?
+
+### work on Q
+ridgeNuD=ridgeNuT=ridgeNuS=1
+Q=bdiag(0,ridgeNuD*as.vector(rep(1,nrow(D))),ridgeNuT*as.vector(rep(1,nrow(temporal))),
+        ridgeNuS*as.vector(rep(1,nrow(seasonal))))
+dim(Q)
+## 658 x 4
+
