@@ -60,8 +60,10 @@ dim(P)
 
 ### work on Q
 ridgeNuD=ridgeNuT=ridgeNuS=1
-Q=bdiag(0,ridgeNuD*as.vector(rep(1,nrow(D))),ridgeNuT*as.vector(rep(1,nrow(temporal))),
-        ridgeNuS*as.vector(rep(1,nrow(seasonal))))
+Q=diag(c(0,ridgeNuD*as.vector(rep(1,nrow(D))),ridgeNuT*as.vector(rep(1,nrow(temporal))),
+        ridgeNuS*as.vector(rep(1,nrow(seasonal)))))
 dim(Q)
-## 658 x 4
+## 658 x 658
+
+### new B
 
