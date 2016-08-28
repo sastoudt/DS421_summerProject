@@ -86,3 +86,18 @@ dim(betaHat)
 betaHat
 ## now have all betas but need to be able to predict from this
 
+## to predict, just need to create a model matrix and multiply it by the betaHats
+
+yHat=Bnew%*%betaHat
+
+plot(y,yHat)
+abline(0,1)
+
+plot(y,yHat,xlim=c(0,20))
+abline(0,1)
+
+rmse=sqrt(sum((y-yHat)^2)/length(y)) ## 4.057
+## not actually that bad when you look at some of the model RMSEs
+## scale up and see what happens
+
+
