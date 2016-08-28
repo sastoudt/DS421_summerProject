@@ -268,6 +268,8 @@ spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
   return((lambda)*(D2 + D1))  
 }
 
+D=spatial_penalty(adjacency,wgts,lambda,n.segments)
+
 weight=shreve.order
 #check_additive_weight <- function(adjacency, weight){
   # transpose the adjacency so that the rows are accessible (as cols in the transpose)

@@ -35,3 +35,19 @@ for(i in 1:nrow(B)){
   print(i)
 }
 
+B=as.spam(B)
+
+t(B)%*%B
+
+lambda=1
+
+t(D)%*%D
+
+inv=solve(t(B)%*%B+lambda*t(D)%*%D) ## fast, might have to worry as we scale up
+
+betaHat=inv%*%t(B)%*%y
+
+betaHat
+
+## everything ran, does this make even a little bit of sense?
+
