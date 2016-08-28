@@ -29,7 +29,8 @@ nrow(test)
 range(test$doy)
 
 knots=seq(1,365,by=5) ##73
-seasonal=as.spam(cSplineDes(test$doy, knots, ord = 4))
+seasonal=cSplineDes(test$doy, knots, ord = 4)
+seasonal=as.spam(seasonal)
 dim(seasonal)
 ## 310 x 72
 
@@ -38,10 +39,20 @@ require(splines)
 range(test$date_dec)
 knots=seq(2012, 2014,length.out=72)
 
-temporal=as.spam(splineDesign(knots, test$date_dec, ord = 4, outer.ok = T,
-             sparse = FALSE))
+temporal=splineDesign(knots, test$date_dec, ord = 4, outer.ok = T,
+             sparse = FALSE)
+temporal=as.spam(temporal)
 dim(temporal)
 ## 310 x 68
 
 dim(B)
 ## 310 x 13
+
+require(Matrix)
+
+D=Matrix(D,sparse=F)
+P=bdiag(0,lambda*t(D)%*%D,lambda*t(temporal)%*%temporal, lambda*t(seasonal)%*%seasonal)
+dim(P)
+## 142 x 142
+
+## doesn't this have to add witih t(B)%*%B which is 13 x 13?
