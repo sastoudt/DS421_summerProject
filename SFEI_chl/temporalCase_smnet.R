@@ -55,7 +55,7 @@ lambdaD=lambdaT=lambdaS=1
 
 require(fields)
 D=spam2full(D)
-P=bdiag(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 dim(P)
 ## 154 x 154
 
@@ -67,6 +67,7 @@ ridgeNuD=ridgeNuT=ridgeNuS=1
 Q=matrix(0,nrow=154,ncol=154)
 Q=diag(c(0,ridgeNuD*as.vector(rep(1,ncol(B))),ridgeNuT*as.vector(rep(1,ncol(temporal))),
         ridgeNuS*as.vector(rep(1,ncol(seasonal)))))
+Q=as.spam(Q)
 dim(Q)
 ## 154 x 154
 
@@ -75,4 +76,13 @@ dim(Q)
 Bnew=cbind(rep(1,nrow(B)),B,temporal,seasonal)
 dim(Bnew)
 ## 310 x 154
+
+class(Bnew)
+class(P)
+class(Q)
+betaHat=solve(t(Bnew)%*%Bnew+P+Q)%*%t(Bnew)%*%y
+dim(betaHat)
+
+betaHat
+## now have all betas but need to be able to predict from this
 
