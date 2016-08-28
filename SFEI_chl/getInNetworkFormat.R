@@ -229,6 +229,14 @@ adjacency
 wgts=shreve.order
 n.segments=nrow(adjacency)
 lambda=1
+
+##check_additive_weight
+## only gives a warning if not zero
+## we have 2.615385 instead of 0
+## Additivity of selected weight variable doesn't seem to hold. Proceed with caution.
+
+
+####spatial_penalty is D matrix
 spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
   adj.spam <- make_spam(adjacency)
   pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
