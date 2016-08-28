@@ -1,4 +1,4 @@
-##https://stat.ethz.ch/R-manual/R-devel/library/splines/html/bs.html
+##https://stat.ethz.ch/R-manual/R-devel/library/splines/html/splineDesign.html
 ## polynomial b spline model matrix (date_dec)
 
 ##https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/cSplineDes.html
@@ -30,8 +30,18 @@ range(test$doy)
 
 knots=seq(1,365,by=5) ##73
 seasonal=as.spam(cSplineDes(test$doy, knots, ord = 4))
+dim(seasonal)
 ## 310 x 72
 
 ####
-bs(test$date_dec, df = NULL, knots = NULL, degree = 3, intercept = FALSE,
-   Boundary.knots = range(x))
+require(splines)
+range(test$date_dec)
+knots=seq(2012, 2014,length.out=72)
+
+temporal=as.spam(splineDesign(knots, test$date_dec, ord = 4, outer.ok = T,
+             sparse = FALSE))
+dim(temporal)
+## 310 x 68
+
+dim(B)
+## 310 x 13
