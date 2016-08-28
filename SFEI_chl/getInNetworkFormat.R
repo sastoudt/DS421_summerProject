@@ -61,10 +61,14 @@ source("~/Desktop/DS421_summerProject/SFEI_chl/toSource.R")
 
 make_weights(sfeiAdjMatrix_sp) ## in right format
 
+bid=c("111011","111","1111","11111","11101","111110","111111","1110","1","10","11","1111101","1111101")
+
+
 adjacency = sfeiAdjMatrix_sp
 #adjacency_to_shreve <- function(adjacency){
   trips        <- triplet(adjacency)$indices
   shreve.order <- inverse.order <- vector("numeric", length = nrow(adjacency))
+
   #   INVERSE ORDER PROVIDES THE NUMBER OF STREAM SEGMENTS
   #   EACH SEGMENTS LIES UPSTREAM FROM THE SOURCE
   # the root node is the segment that has no downstream neighbours, ie. the outlet
@@ -72,6 +76,9 @@ adjacency = sfeiAdjMatrix_sp
   if(length(root.node) > 1){
     #bid_roots <- nchar(adjacency$rid_bid[root.node, 2]) ## which one has more going into it
     root.node <- root.node[1]
+    
+   # bid_roots <- nchar(bid)
+  #  root.node <- root.node[which(bid_roots == max(bid_roots))]
   }
   # inverse.order is a vector that accumulates from root.node upstream
   # each element indicates the 'height' in the network of each segment
@@ -80,7 +87,16 @@ adjacency = sfeiAdjMatrix_sp
   # A zero might indicate a lake or something disconnected from the network
   # to get the inverse.order, siply count the number of characters in the binaryID vector
   #inverse.order <- nchar(adjacency$rid_bid[, 2])
-  inverse.order<-c(5,2,3,4,4,5,5,3,1,1,2,6,6)
+  
+  ## BIDs http://www.fs.fed.us/rm/boise/AWAE/projects/SSN_STARS/downloads/STARS/STARS_tutorial_v204.pdf
+  ## pg 41
+  
+  #row.names
+  
+
+  inverse.order<-nchar(bid)
+  #[1] 6 3 4 5 5 6 6 4 1 2 2 7 7
+  
   for(i in 1:nrow(trips)) inverse.order[trips[i,1]] <- inverse.order[trips[i,2]] + 1
   # sources is a vector indicating the segments that have no upstream neighbours, ie the sources of the stream
   sources <- which(colSums(adjacency) == 0)
@@ -117,11 +133,13 @@ adjacency = sfeiAdjMatrix_sp
 
   ### do by hand
   
-  strahler.order<-c(1,2,2,2,1,2,1,1,1,1,1,2,1)
-  shreve.order<-c(1,4,3,3,1,2,1,1,4,4,4,1,1)
+  # strahler.order<-c(1,2,2,2,1,2,1,1,1,1,1,2,1)
+  # shreve.order<-c(1,4,3,3,1,2,1,1,4,4,4,1,1)
 
 #weight       <- adjacency_to_shreve(adjacency = sfeiAdjMatrix_sp)
 
+  shreve.order<-c(1,4,3,3,1,2,1,1,5,1,4,1,1)
+  
   
   wgt=shreve.order
   wgt
@@ -130,15 +148,15 @@ adjacency = sfeiAdjMatrix_sp
     if(class(wgt) == "numeric" & (!anyNA(wgt))){
       # pull out the bid from the adjacency object
       #bid  <- adj$rid_bid[,2]
-      #nbid <- nchar(bid) 
+      nbid <- nchar(bid) 
       
-      inverse.order<-c(5,2,3,4,4,5,5,3,1,1,2,6,6)
-      nbid=7-inverse.order
+      #inverse.order<-c(5,2,3,4,4,5,5,3,1,1,2,6,6)
+      #nbid=7-inverse.order
       ## this makes the most sense and gets closest to zero but still doesn't match
-      nbid[c(1,2,5,7,8)]=nbid[c(1,2,5,7,8)]-1
+      #nbid[c(1,2,5,7,8)]=nbid[c(1,2,5,7,8)]-1
       
-      nbid=c(0,3,3,2,1,1,0,2,5,5,4,0,0)
-      nbid=nbid+1
+      #nbid=c(0,3,3,2,1,1,0,2,5,5,4,0,0)
+      #nbid=nbid+1
       min_weight <- min(wgt)
       # the idea here is that for a network weight, the sum of the weights at the i^th 
       # level of the network heirarchy should equal the number of segments in the i-1^th level
@@ -188,16 +206,56 @@ adjacency = sfeiAdjMatrix_sp
   
     ## unrecognized
   ## can't go forward with smnet call without figuring this out :(
-  weight.type  <- check_weight(adjacency, shreve.order)
+ # weight.type  <- check_weight(adjacency, shreve.order)
   
   ## found where the issue is
   ## need to eliminate MD & P level to fix, see if this works
   
-  sfeiAdjMatrix=sfeiAdjMatrix[-c(12,13),]
-sfeiAdjMatrix=sfeiAdjMatrix[,-c(12,13)]
+#   sfeiAdjMatrix=sfeiAdjMatrix[-c(12,13),]
+# sfeiAdjMatrix=sfeiAdjMatrix[,-c(12,13)]
+# 
+# sfeiAdjMatrix
+# sfeiAdjMatrix_sp <- Matrix(sfeiAdjMatrix, sparse = TRUE) 
+# shreve.order=c(1,3,2,2,1,1,1,1,3,3,3)
+# 
+# nbid=c()
 
-sfeiAdjMatrix
-sfeiAdjMatrix_sp <- Matrix(sfeiAdjMatrix, sparse = TRUE) 
-shreve.order=c(1,3,2,2,1,1,1,1,3,3,3)
 
-nbid=c()
+
+####
+
+## ok even though we can't pass the weight check, can still get spatial penalty, can we move forward?
+adjacency
+wgts=shreve.order
+n.segments=nrow(adjacency)
+lambda=1
+spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
+  adj.spam <- make_spam(adjacency)
+  pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
+  ij.nzero.adj <- triplet(adj.spam)$indices
+  in.pseudo    <- ij.nzero.adj[,2] %in% pseudo.inds
+  ij.confl     <- ij.nzero.adj[!in.pseudo,]
+  n.nzero      <- nrow(ij.confl)
+  p.row.ind    <- rep(1:n.nzero, each = 2)
+  p.col.ind    <- c(t(ij.confl))
+  p.val        <- wgts[rep(ij.confl[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+  D2           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+  D2           <- t(D2)%*%D2 
+  
+  if(!is.null(pseudo.inds)){
+    ij.pseudo    <- ij.nzero.adj[in.pseudo,]
+    n.nzero      <- nrow(ij.pseudo)
+    if(is.null(n.nzero)) n.nzero <- 1
+    p.row.ind    <- rep(1:n.nzero, each = 2)
+    p.col.ind    <- c(t(ij.pseudo))
+    if(is.matrix(ij.pseudo)){
+      p.val        <- wgts[rep(ij.pseudo[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+    }
+    if(is.vector(ij.pseudo)){
+      p.val        <- wgts[rep(ij.pseudo[1], each = 2)]*rep(c(-1, 1), n.nzero)
+    }
+    D1           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+    D1            <- t(D1)%*%D1
+  }  
+  return((lambda)*(D2 + D1))  
+}
