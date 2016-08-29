@@ -1,21 +1,21 @@
 X=Bnew
 XTX=t(Bnew)%*%Bnew
-P=list(bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal))
+P=list(lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 response=log(allData$chl)
 cholFactor=chol.spam(XTX+P+Q,pivot="MMD",eps = 10^-6)
 n=nrow(allData)
-Xw=1
+Xw=1 ## Not used
 Xy=t(X)%*%response
 n.sm=3
 identifyBit=Q
 crit="GCV"
 
-objective<-function(rhoArgs){
 get_crit_exact<-function(rhoArgs, X, XTX, P, response, cholFactor, n, 
-                         np = nrow(XTX), Xw, Xy, n.sm=3, identifyBit, crit){    
+                         np = nrow(XTX), Xw, Xy, n.sm=n.sm, identifyBit, crit){    
   
   for(j in 1:n.sm) P[[j]]<-P[[j]]*exp(rhoArgs[j])
-  Psum     <- Reduce("+", P)
+  Psum=bdiag.spam(0,P[[1]],P[[2]], P[[3]])
+  #Psum     <- Reduce("+", P)
   info     <- XTX + Psum + identifyBit
   U        <- try(update.spam.chol.NgPeyton(cholFactor, info), silent = T)
   if(class(U) == "try-error"){
@@ -32,11 +32,15 @@ get_crit_exact<-function(rhoArgs, X, XTX, P, response, cholFactor, n,
   }
   out
 }
+
+objective<-function(rhoArgs){
+get_crit_exact(rhoArgs,X,XTX,P,response,cholFactor,n,nrow(XTX),Xw,Xy,n.sm,identifyBit,crit)
 }
-optimal  <- optim(par = start.vals, fn = objective, method = "Nelder-Mead", control=list(reltol = 10^-8, maxit = 500))
+
+system.time(optimal  <- optim(par = start.vals, fn = objective, method = "Nelder-Mead", control=list(reltol = 10^-8, maxit = 500)))
 
 
-start.vals <- rep(0, 3) ## length(P.flat)  
+start.vals <- rep(1, 3) ## length(P.flat)  
 
 ## 3 lambdas
 
