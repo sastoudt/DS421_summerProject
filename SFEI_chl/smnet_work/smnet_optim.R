@@ -2,7 +2,8 @@ X=Bnew
 XTX=t(Bnew)%*%Bnew
 P=list(lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 response=log(allData$chl)
-cholFactor=chol.spam(XTX+P+Q,pivot="MMD",eps = 10^-6)
+P2=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+cholFactor=chol.spam(XTX+P2+Q,pivot="MMD",eps = 10^-6)
 n=nrow(allData)
 Xw=1 ## Not used
 Xy=t(X)%*%response
@@ -37,10 +38,14 @@ objective<-function(rhoArgs){
 get_crit_exact(rhoArgs,X,XTX,P,response,cholFactor,n,nrow(XTX),Xw,Xy,n.sm,identifyBit,crit)
 }
 
-system.time(optimal  <- optim(par = start.vals, fn = objective, method = "Nelder-Mead", control=list(reltol = 10^-8, maxit = 500)))
+system.time(optimal  <- optim(par = start.vals,fn = objective, method = "Nelder-Mead", control=list(reltol = 10^-8, maxit = 500)))
 
 
-start.vals <- rep(1, 3) ## length(P.flat)  
+start.vals <- rep(0, 3) ## length(P.flat)  
 
 ## 3 lambdas
+## on log scale, take exp of params to get between 0 and 1
 
+
+
+  
