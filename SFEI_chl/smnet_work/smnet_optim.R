@@ -38,14 +38,15 @@ objective<-function(rhoArgs){
 get_crit_exact(rhoArgs,X,XTX,P,response,cholFactor,n,nrow(XTX),Xw,Xy,n.sm,identifyBit,crit)
 }
 
+start.vals <- rep(0, 3) 
 system.time(optimal  <- optim(par = start.vals,fn = objective, method = "Nelder-Mead", control=list(reltol = 10^-8, maxit = 500)))
-
-
-start.vals <- rep(0, 3) ## length(P.flat)  
+ 
 
 ## 3 lambdas
 ## on log scale, take exp of params to get between 0 and 1
 
+exp(optimal$par)
+## 3.211822e-01 1.673100e-07 8.029740e-03
 
-
+## for lambda parameters, still need to optimize nu parameters for ridge
   
