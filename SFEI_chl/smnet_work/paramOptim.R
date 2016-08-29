@@ -9,6 +9,12 @@ dim(paramGrid)
 
 ## function to be applied over paramGrid
 ## record desired metrics
+## probably just easier to return fitted values, then can pick metrics later
 
+paramTest=function(){
+  
+}
 
+## this is going to take forever with the k fold
+## spend some time seeing if we can take advantage of the optimization done in smnet
 
