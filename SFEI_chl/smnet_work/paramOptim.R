@@ -124,7 +124,7 @@ lambdaPar=lapply(nuOptim,function(x){x$lambdaPar})
 predVal=lapply(nuOptim,function(x){x$predVal})
 
 medRMSE=unlist(lapply(predVal,processPredVal))
-summary(medRMSE)
+summary(medRMSE) ## this seems weird, were doing much better before
 
 processPredVal=function(predVal){
   predVal=as.data.frame(predVal)
@@ -135,3 +135,7 @@ processPredVal=function(predVal){
   return(median(rmse))
 }
 
+paramGrid[which.min(medRMSE),]
+# 0.25 0.25 0.25
+
+## this seems suspicious, better when everything was =1
