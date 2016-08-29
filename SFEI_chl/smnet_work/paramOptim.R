@@ -95,9 +95,10 @@ paramTest=function(nu){
     
     start.vals <- rep(0, 3) 
 optimal  <- optim(par = start.vals,fn = objective, method = "Nelder-Mead", control=list(reltol = 10^-8, maxit = 500))
-    
+P3=bdiag.spam(0,exp(optimal$par[1])*t(D)%*%D,exp(optimal$par[2])*t(temporal)%*%temporal, exp(optimal$par[3])*t(seasonal)%*%seasonal)
+
 lambdaPar=rbind(lambdaPar,optimal$par)
-betaHat=solve(t(Bnew)%*%Bnew+P2+Q)%*%t(Bnew)%*%y 
+betaHat=solve(t(Bnew)%*%Bnew+P3+Q)%*%t(Bnew)%*%y 
 yHat=Bnew%*%betaHat  
 predVal=cbind(predVal,yHat)
   }
@@ -114,3 +115,23 @@ proc.time() - ptm ## 2.5 minu
 
 length(nuOptim)
 names(nuOptim[[1]])
+
+### process info in nuOptim
+
+## minimum median rmse across folds
+
+lambdaPar=lapply(nuOptim,function(x){x$lambdaPar})
+predVal=lapply(nuOptim,function(x){x$predVal})
+
+medRMSE=unlist(lapply(predVal,processPredVal))
+summary(medRMSE)
+
+processPredVal=function(predVal){
+  predVal=as.data.frame(predVal)
+  rmse<-c()
+  for(k in 1:5){
+   rmse<-c(rmse, sqrt(sum((folds[[k]]$chl-predVal[,k])^2)/nrow(folds[[k]])))
+  }
+  return(median(rmse))
+}
+
