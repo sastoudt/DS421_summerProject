@@ -156,6 +156,6 @@ abline(0,1,col="red")
 #abline(0,1,col="red")
 
 rmse=sqrt(sum((y-yHat)^2)/length(y)) 
-rmse ## 0.825147 really good!!1
+rmse ## 0.825147 really good!!
 
 ## ok, before I do anything, need to figure out cross validation, and training/testing
