@@ -12,6 +12,7 @@
 ## could do spatial smooths of other covariates
 
 require(mgcv)
+require(spam)
 setwd("~/Desktop/sfei")
 allData<-read.csv("allData.csv",stringsAsFactors=F)
 
@@ -66,8 +67,13 @@ spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
   }  
   return((lambda)*(D2 + D1))  
 }
-
+make_spam<-function(M){
+  if(class(M) == "matrix") as.spam(M)
+  if(class(M) == "spam") as.spam(M)
+  else as.spam(as.spam.dgCMatrix(as(M, "dgCMatrix")))
+}
 lambdaD=1
+adjacency=sfeiAdjMatrix
 D=spatial_penalty(adjacency,shreve.order,lambdaD,nrow(adjacency))
 
 
@@ -78,9 +84,10 @@ allData<-allData[-which(is.na(allData$chl)),]
 nrow(allData)
 
 y=allData$chl
+y=log(allData$chl)
 p=nrow(adjacency)
 B=matrix(0,nrow=length(y),ncol=p)
-
+seg=allData$Station
 lookUp=as.data.frame(cbind(unique(allData$Station),1:length(unique(allData$Station))))
 names(lookUp)=c("station","p")
 lookUp$station=as.character(lookUp$station)
@@ -104,7 +111,7 @@ dim(seasonal)
 
 ## I was using too many knots last time
 
-require(spam)
+
 require(splines)
 
 knots=seq(min(allData$date_dec), max(allData$date_dec),length.out=35)
@@ -117,6 +124,7 @@ dim(temporal)
 
 require(fields)
 D=spam2full(D)
+lambdaD=lambdaT=lambdaS=1
 P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 dim(P)
 ## 79 x 79
@@ -144,10 +152,10 @@ yHat=Bnew%*%betaHat
 plot(y,yHat)
 abline(0,1,col="red")
 
-plot(y,yHat,xlim=c(0,20))
-abline(0,1,col="red")
+#plot(y,yHat,xlim=c(0,20))
+#abline(0,1,col="red")
 
 rmse=sqrt(sum((y-yHat)^2)/length(y)) 
-rmse ## 7.05335
+rmse ## 0.825147 really good!!1
 
 ## ok, before I do anything, need to figure out cross validation, and training/testing
