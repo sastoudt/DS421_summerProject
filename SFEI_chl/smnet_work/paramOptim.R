@@ -337,19 +337,49 @@ lambdaPar=lapply(nuOptim,function(x){x$lambdaPar})
 predValOld=lapply(nuOptim,function(x){x$predValOld})
 predValNew=lapply(nuOptim,function(x){x$predValNew})
 
-medRMSE=unlist(lapply(predVal,processPredVal))
-summary(medRMSE) ## this seems weird, were doing much better before
+medRMSE=unlist(lapply(predValNew,processPredVal))
+summary(medRMSE) 
+
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+# 3.350   3.352   3.357   3.359   3.364   3.384 
+
+varRMSE=unlist(lapply(predValNew,processPredValVar))
+summary(varRMSE)
+
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+# 0.3752  0.3757  0.3759  0.3759  0.3761  0.3765 
+
 
 processPredVal=function(predVal){
   predVal=as.data.frame(predVal)
   rmse<-c()
   for(k in 1:5){
-   rmse<-c(rmse, sqrt(sum((folds[[k]]$chl-predVal[,k])^2)/nrow(folds[[k]])))
+   rmse<-c(rmse, sqrt(sum((fd[[k]]$chl-exp(predVal[,k]))^2)/nrow(folds[[k]])))
   }
   return(median(rmse))
 }
 
-paramGrid[which.min(medRMSE),]
-# 0.25 0.25 0.25
+processPredValVar=function(predVal){
+  predVal=as.data.frame(predVal)
+  rmse<-c()
+  for(k in 1:5){
+    rmse<-c(rmse, sqrt(sum((fd[[k]]$chl-exp(predVal[,k]))^2)/nrow(folds[[k]])))
+  }
+  return(sd(rmse))
+}
 
-## this seems suspicious, better when everything was =1
+paramGrid[which.min(medRMSE),]
+#148 0.25 0.25    1
+
+head(cbind(order(medRMSE),order(varRMSE)))
+
+paramGrid[which.min(varRMSE),]
+#Var1 Var2 Var3
+#43 0.25   20 0.25
+
+varRMSE[which.min(medRMSE)] ##0.3758893 
+varRMSE[which.min(varRMSE)] ##0.3752319 
+## so not a big deal variability wise
+
+medRMSE[which.min(medRMSE)] ##3.350335 
+medRMSE[which.min(varRMSE)] ##3.371482 
