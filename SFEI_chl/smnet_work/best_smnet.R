@@ -160,3 +160,37 @@ abline(0,1,col="red")
 rmse=sqrt(sum((y-yHat)^2)/length(y)) 
 rmse ##6.942123
 ## hm....
+
+
+names(allData)
+
+allData$smnetPred=as.vector(yHat)
+allData$smnetResidSq=as.vector((y-yHat)^2)
+
+require(dplyr)
+
+by_station=group_by(allData,Station)
+predByStation=summarise(by_station,count=n(),sumSqEr=sum(smnetResidSq))
+rmse=sqrt(predByStation$sumSqEr/predByStation$count)
+rmse ## Pretty variable by station
+
+forMap=allData[,c("Longitude","Latitude","Station")]
+forMap=unique(forMap)
+
+forMap$Station
+predByStation$Station
+
+forMap$toPlot=rmse
+
+require(ggplot2)
+shreve.order<-c(1,4,3,3,1,2,1,1,5,1,4,1,1)
+
+
+ggplot(forMap,aes(x = Longitude, y = Latitude,colour=toPlot,cex=2))+geom_point()+
+  ggtitle("smnet RMSE by Station")+scale_size(guide=F)+annotate("text", x=forMap$Longitude,y=forMap$Latitude, label = shreve.order,col="white",cex=5)
+
+## does not seem to be connected to shreve order (here the weights)
+
+## compare to another model, same general ordering?
+
+
