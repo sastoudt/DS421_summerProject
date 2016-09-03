@@ -708,7 +708,25 @@ dim(paramGridL) ## 125
 require(parallel)
 ptm <- proc.time()
 lambdaOptim=mclapply(split(paramGridL, 1:nrow(paramGridL)),paramTestL,mc.cores=4)
-proc.time() - ptm ## 30 minutes
+proc.time() - ptm ## 2 minutes
 
 setwd("~/Desktop/sfei")
 save(lambdaOptim,file="lambdaOptim.Rda")
+
+lambdaPar=lapply(lambdaOptim,function(x){x$lambdaPar})
+predValOld=lapply(lambdaOptim,function(x){x$predValOld})
+predValNew=lapply(lambdaOptim,function(x){x$predValNew})
+
+medRMSE=unlist(lapply(predValNew,processPredVal))
+summary(medRMSE) 
+##   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 6.701   6.701   6.704   6.710   6.717   6.745 
+
+## ok really hurt by less smoothing
+
+varRMSE=unlist(lapply(predValNew,processPredValVar))
+summary(varRMSE)
+## Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 0.3415  0.3415  0.3422  0.3435  0.3455  0.3501 
+
+## same variability
