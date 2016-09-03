@@ -163,10 +163,35 @@ folds[[5]]=rbind.data.frame(fold2,fold3,fold4,fold1)
   dim(predValOld)
 dim(predValNew)
 medRMSE=processPredVal(predValNew)
-summary(medRMSE) ## this seems weird, were doing much better before
+medRMSE  ##  6.709683 this seems weird, were doing much better before
+
+plot(density(exp(predValNew[,1])),main="",xlab="")
+for(i in 2:5){
+  lines(density(exp(predValNew[,i])))
+}
+lines(density(allData$chl),col="red")
+legend("topright",col=c("black","red"),lty=1,c("predict per fold","overall true"))
+
+plot(density(fd[[1]]$chl-exp(predValNew[,1])),main="",xlab="")
+for(i in 2:5){
+  lines(density(fd[[i]]$chl-exp(predValNew[,i])))
+}
+
+processPredValFull(predValNew)
+##  6.640046 6.954438 6.709683 7.243133 5.444410
+processPredValFull=function(predVal){
+  #predVal=as.data.frame(predVal)
+  rmse<-c()
+  for(k in 1:5){
+    rmse<-c(rmse, sqrt(sum((fd[[k]]$chl-exp(predVal[,k]))^2)/nrow(fd[[k]])))
+  }
+  return(rmse)
+}
+
+
 
 processPredVal=function(predVal){
-  predVal=as.data.frame(predVal)
+  #predVal=as.data.frame(predVal)
   rmse<-c()
   for(k in 1:5){
     rmse<-c(rmse, sqrt(sum((fd[[k]]$chl-exp(predVal[,k]))^2)/nrow(fd[[k]])))
