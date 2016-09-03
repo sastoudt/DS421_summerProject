@@ -383,3 +383,86 @@ varRMSE[which.min(varRMSE)] ##0.3752319
 
 medRMSE[which.min(medRMSE)] ##3.350335 
 medRMSE[which.min(varRMSE)] ##3.371482 
+
+lambdaPar[[148]] ## same for each fold
+
+exp(lambdaPar[[148]][1,])
+## 1.720064e-12 5.332215e-14 2.466260e-16
+
+## small amount of smoothing
+
+## smallest ridge param, we should try some smaller values just to be sure we aren't hitting a boundary
+
+ridgeParam1=ridgeParam2=ridgeParam3=c(0.05,0.1,0.15,0.2,0.25)
+paramGrid2=expand.grid(ridgeParam1,ridgeParam2,ridgeParam3)
+dim(paramGrid2) ## 125 
+
+ptm <- proc.time()
+nuOptim2=mclapply(split(paramGrid2, 1:nrow(paramGrid2)),paramTest,mc.cores=4)
+proc.time() - ptm ## about 10 minutes
+
+save(nuOptim2,file="nuOptim2.Rda")
+
+lambdaPar=lapply(nuOptim2,function(x){x$lambdaPar})
+predValOld=lapply(nuOptim2,function(x){x$predValOld})
+predValNew=lapply(nuOptim2,function(x){x$predValNew})
+
+medRMSE=unlist(lapply(predValNew,processPredVal))
+summary(medRMSE)
+
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+# 3.350   3.350   3.351   3.351   3.351   3.351 
+## same range, smaller max
+
+varRMSE=unlist(lapply(predValNew,processPredValVar))
+summary(varRMSE)
+# 
+# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+# 0.3405  0.3406  0.3407  0.3407  0.3407  0.3408 
+## a little bit less variable
+
+medRMSE[which.min(medRMSE)] ##3.35037 
+
+## not better
+
+varRMSE[which.min(medRMSE)] ## 0.3406506 
+## less variable
+
+medRMSE[which.min(varRMSE)] ## 3.350481
+varRMSE[which.min(varRMSE)] ## 0.340475 
+
+## practically the same median rmse, a little less variability across folds, 
+## might be worth taking advantage of
+
+paramGrid2[which.min(varRMSE),]
+##  0.05 0.05 0.05
+
+## still on boundary
+
+ridgeParam1=ridgeParam2=ridgeParam3=c(0.00005,0.0005,0.001,0.005,0.01)
+paramGrid3=expand.grid(ridgeParam1,ridgeParam2,ridgeParam3)
+dim(paramGrid3) ## 125
+
+ptm <- proc.time()
+nuOptim3=mclapply(split(paramGrid3, 1:nrow(paramGrid3)),paramTest,mc.cores=4)
+proc.time() - ptm ## about 10 minutes
+
+save(nuOptim3,file="nuOptim3.Rda")
+
+
+lambdaPar=lapply(nuOptim3,function(x){x$lambdaPar})
+predValOld=lapply(nuOptim3,function(x){x$predValOld})
+predValNew=lapply(nuOptim3,function(x){x$predValNew})
+
+medRMSE=unlist(lapply(predValNew,processPredVal))
+summary(medRMSE)
+##  3.35    3.35    3.35    3.35    3.35    3.35 
+## No real improvement
+
+varRMSE=unlist(lapply(predValNew,processPredValVar))
+summary(varRMSE)
+## slight improvment, but no real variability
+
+## overall, robust to choice of the 
+paramGrid3[which.min(medRMSE),]
+## 101 5e-05 5e-05 0.01

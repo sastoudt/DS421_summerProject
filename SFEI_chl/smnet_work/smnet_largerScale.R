@@ -136,6 +136,8 @@ Q=diag(c(0,ridgeNuD*as.vector(rep(1,ncol(B))),ridgeNuT*as.vector(rep(1,ncol(temp
 Q=as.spam(Q)
 dim(Q)
 ## 79  x 79
+## https://www.coursera.org/learn/ml-regression/lecture/3KZiN/how-to-handle-the-intercept
+## check doing right thing, not penalizing intercept
 
 Bnew=cbind(rep(1,nrow(B)),B,temporal,seasonal)
 dim(Bnew)
