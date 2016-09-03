@@ -201,7 +201,8 @@ processPredVal=function(predVal){
 
 paramTest=function(nu){
   lambdaPar=c()
-  predVal=c()
+  predValNew=c()
+  predValOld=c()
   for(k in 1:5){
     data=folds[[k]]
     #y=allData$chl
@@ -210,7 +211,7 @@ paramTest=function(nu){
     
     B=matrix(0,nrow=length(y),ncol=p)
     
-    lookUp=as.data.frame(cbind(unique(data$Station),1:length(unique(data$Station))))
+    lookUp=as.data.frame(cbind(unique(allData$Station),1:length(unique(allData$Station))))
     names(lookUp)=c("station","p")
     lookUp$station=as.character(lookUp$station)
     lookUp$p=as.numeric(as.character(lookUp$p))
@@ -228,7 +229,7 @@ paramTest=function(nu){
     seasonal=as.spam(seasonal)
 
     
-    knots=seq(min(data$date_dec), max(data$date_dec),length.out=35)
+    knots=seq(min(allData$date_dec), max(allData$date_dec),length.out=35)
     
     temporal=splineDesign(knots, data$date_dec, ord = 4, outer.ok = T,
                           sparse = FALSE)
@@ -271,29 +272,70 @@ P3=bdiag.spam(0,exp(optimal$par[1])*t(D)%*%D,exp(optimal$par[2])*t(temporal)%*%t
 
 lambdaPar=rbind(lambdaPar,optimal$par)
 betaHat=solve(t(Bnew)%*%Bnew+P3+Q)%*%t(Bnew)%*%y 
-yHat=Bnew%*%betaHat  
-predVal=cbind(predVal,yHat)
-  }
-  return(list(lambdaPar=lambdaPar,predVal=predVal))
+yHatOld=Bnew%*%betaHat  
+predValOld=cbind(predValOld,yHatOld)
+
+### predict for new values
+
+data=fd[[k]]
+#y=allData$chl
+y=log(data$chl)
+seg=data$Station
+
+B=matrix(0,nrow=length(y),ncol=p)
+
+## do without a loop later, just get a quick sense
+for(i in 1:nrow(B)){
+  index=which(lookUp$station==seg[i])
+  B[i,index]=1
+  #print(i)
 }
 
-system.time(paramTest(paramGrid[1,])) ## <1 sec
+B=as.spam(B)
+
+knots=seq(1,365,length.out=35) ##73
+seasonal=cSplineDes(data$doy, knots, ord = 4)
+seasonal=as.spam(seasonal)
+
+
+knots=seq(min(allData$date_dec), max(allData$date_dec),length.out=35)
+
+temporal=splineDesign(knots, data$date_dec, ord = 4, outer.ok = T,
+                      sparse = FALSE)
+temporal=as.spam(temporal)
+Bnew=cbind(rep(1,nrow(B)),B,temporal,seasonal)
+
+yHatNew=Bnew%*%betaHat  
+predValNew=cbind(predValNew,yHatNew)
+
+  }
+  return(list(lambdaPar=lambdaPar,predValOld=predValOld,predValNew=predValNew))
+}
+
+system.time(paramTest(paramGrid[1,])) ## 16 seconds
 test=paramTest(paramGrid[1,])
 
-#require(parallel)
+require(parallel)
 ptm <- proc.time()
-nuOptim=apply(paramGrid,1,paramTest)
-proc.time() - ptm ## 2.5 minu
+
+nuOptim=mclapply(split(paramGrid, 1:nrow(paramGrid)),paramTest,mc.cores=4)
+proc.time() - ptm ## 30 minutes
+
+save(nuOptim,file="nuOptim.Rda")
 
 length(nuOptim)
-names(nuOptim[[1]])
+dim(nuOptim[[1]]$predValOld)
+dim(nuOptim[[1]]$predValNew)
+dim(nuOptim[[1]]$lambdaPar)
+
 
 ### process info in nuOptim
 
 ## minimum median rmse across folds
 
 lambdaPar=lapply(nuOptim,function(x){x$lambdaPar})
-predVal=lapply(nuOptim,function(x){x$predVal})
+predValOld=lapply(nuOptim,function(x){x$predValOld})
+predValNew=lapply(nuOptim,function(x){x$predValNew})
 
 medRMSE=unlist(lapply(predVal,processPredVal))
 summary(medRMSE) ## this seems weird, were doing much better before
