@@ -65,8 +65,10 @@ else as.spam(as.spam.dgCMatrix(as(M, "dgCMatrix")))
 lambdaD=1
 adjacency=sfeiAdjMatrix
 D=spatial_penalty(adjacency,shreve.order,lambdaD,nrow(adjacency))
-D=spatial_penalty(adjacency,wgts,lambdaD,nrow(adjacency))
-
+#D=D2
+#D=spatial_penalty(adjacency,wgts,lambdaD,nrow(adjacency))
+#D3=spatial_penalty(adjacency,rep(1,nrow(adjacency)),lambdaD,nrow(adjacency))
+#D4=spatial_penalty(adjacency,shreve.order/sum(shreve.order),lambdaD,nrow(adjacency))
 
 
 allData<-allData[-which(allData$Station=="C10"),]
@@ -120,8 +122,33 @@ D=spam2full(D)
 lambdaD=1.720064e-12
 lambdaT=5.332215e-14
 lambdaS=2.466260e-16
-
+D5=matrix(1,nrow=13,ncol=13)
+D6=matrix(0,nrow=13,ncol=13)
 P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P2=bdiag.spam(0,lambdaD*t(D2)%*%D2,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P3=bdiag.spam(0,lambdaD*t(D3)%*%D3,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P4=bdiag.spam(0,lambdaD*t(D4)%*%D4,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P5=bdiag.spam(0,lambdaD*t(D5)%*%D5,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P=bdiag.spam(0,lambdaD*t(D5)%*%D5,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P=bdiag.spam(0,lambdaD*t(D6)%*%D6,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
+# P=bdiag.spam(0,lambdaD*t(D)%*%D)
+# max(abs(P-P2)) ##5.271966e-09
+# max(abs(P-P3)) ##1.855174e-11
+# max(abs(P-P4)) ## 1.206212e-11
+# max(abs(P-P5)) ## 2.907768e-11
+# ## difference in D really doesn't make a huge difference in P
+
+## structure of D must be impactful though right?
+## same rmse for P5 and P6, this doesn't make sense
+## P6, no penalty on which station
+# max(D) ## 2.28
+# max(D2) ## 48
+# max(D3) ## 3
+# max(D4) ## 0.06122449
+# max(D5) ## 1
+# max(D6) ## 0
+
+
 dim(P)
 ## 79 x 79
 
@@ -131,12 +158,14 @@ ridgeNuS=1
 
 Q=diag(c(0,ridgeNuD*as.vector(rep(1,ncol(B))),ridgeNuT*as.vector(rep(1,ncol(temporal))),
        ridgeNuS*as.vector(rep(1,ncol(seasonal)))))
+#Q=diag(c(0,ridgeNuD*as.vector(rep(1,ncol(B)))))
 Q=as.spam(Q)
 dim(Q)
 ## 79  x 79
 
 
 Bnew=cbind(rep(1,nrow(B)),B,temporal,seasonal)
+#Bnew=cbind(rep1,nrow(B),B)
 dim(Bnew)
 ## 7634   79
 
