@@ -1,0 +1,95 @@
+
+\documentclass[12pt]{amsart}
+\usepackage{geometry} % see geometry.pdf on how to lay out the page. There's lots.
+\geometry{a4paper} % or letter or a5paper or ... etc
+% \geometry{landscape} % rotated page geometry
+\usepackage{float}
+% See the ``Article customise'' template for come common customisations
+
+\title{Overview of Leveraging smnet for Our Problem}
+\author{Sara Stoudt}
+%\date{} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+smnet is an R package based on the paper: ``Flexible regression models over river networks" by O' Donnell, Rushworth, Bowman, and Scott (2014). litReview\_flowStructure.tex contains an overview of this method. The main hurdle to testing out this method in this situation is that the main function relies on the data being in a format that requires extensive preprocessing in GIS. I was able to more or less work around this and reproduce the main functionality of this approach using the source code of the package, building the network structure manually, and massaging the data into a format that could reasonable be propagated forward throughout the method.
+
+I removed C10 and D41 from the network to simplify the network structure. I chose D6 to be the sink. This was somewhat an arbitrary choice between D6 and D7. I also fudged the system so that D7 and D8 ``flow into" D6 which is not really true, since I needed one sink. Below, I have included the spatial information needed to determine the spatial penalty matrix (shreve order, binary ID, and adjacency matrix). This information is usually obtained through GIS routines. Note: the spatial penalty matrix $D$ is $13 \times 13$.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+Station & Shreve Order & Binary ID \\
+C3      & 1            & 111011    \\
+D10     & 4            & 111       \\
+D12     & 3            & 1111      \\
+D19     & 3            & 11111     \\
+D22     & 1            & 11101     \\
+D26     & 2            & 111110    \\
+D28A    & 1            & 111111    \\
+D4      & 1            & 1110      \\
+D6      & 5            & 1         \\
+D7      & 1            & 10        \\
+D8      & 4            & 11        \\
+MD10    & 1            & 1111100   \\
+P8      & 1            & 1111101  
+\end{tabular}
+\caption{Manual Network Information}
+\label{tab:networkInfo}
+\end{table}
+
+\begin{verbatim}
+
+sfeiAdjMatrix<-matrix(0,nrow=13,ncol=13)
+
+sfeiAdjMatrix[1,5]=1 ## C3 --> D22
+
+sfeiAdjMatrix[2,11]=1 ## D10 --> D8
+
+sfeiAdjMatrix[3,2]=1 ## D12 --> D10
+
+sfeiAdjMatrix[4,3]=1 ## D19 --> D12
+
+sfeiAdjMatrix[5,8]=1 ## D22 --> D4
+
+sfeiAdjMatrix[6,4]=1 ## D26 --> D19
+
+sfeiAdjMatrix[7,4]=1 ## D28A --> D19
+
+sfeiAdjMatrix[8,2]=1 ## D4 --> D10
+
+sfeiAdjMatrix[11,9]=1 ## D8 --> D6
+
+sfeiAdjMatrix[11,10]=1 ## D8 --> D7
+
+sfeiAdjMatrix[12,6]=1 ## MD10 --> D28A
+
+sfeiAdjMatrix[13,6]=1 ## P8 --> D28A
+\end{verbatim}
+
+Since in our case we are only interested in predicting values at the stations, not other points in the stream network, each station is on its own ``stream segment" instead of breaking the system into many more small ``stream segments". 
+
+For temporal smooths of both day of year (cyclical: cSplineDes) and date trend (cubic regression splines: splineDesign), I use already established functions in R to generate the model matrix.
+
+The spatial penalty matrix needs weights to combine penalties for smoothness across each flow path of the confluences. These weights are supposed to be determined by relative flow volumes, but there is an option to use shreve weights. Unfortunately, I have not quite gotten the hang of choosing these weights. My shreve values do not pass the weight check implemented by smnet. Since I move forward, reproducing the functionality, I can go ahead and use these weights anyway, but they are somehow not optimal. I am still trying to understand the necessity of the weight check and why my version of shreve order does not pass.
+
+I tried other weights: normalized shreve order, weights $w$ as described in the O'Donnell paper, all zero, and all one. There is no variation in the overall RMSE with these different weights, which is puzzling. This could be because the smoothing parameter is so small, so any differences are neglible on that scale, but I still have a hard time buying that the spatial weights don't impact the overall performance. I am especially confused why the all zero weights scenario doesn't make a difference, since this should essentially boil down to knowing what station each point is at, but having no information about the flow structure.
+
+The smoothness parameters and the ridge parameters must also be chosen. The smnet functions optimize these, so I try to leverage that work in my deconstructed implementation. 
+
+
+
+
+%discussion of weights
+% temporal smooths
+% optimizing lambda and nu parameters
+
+
+
+\textbf{}
+
+\end{document}
