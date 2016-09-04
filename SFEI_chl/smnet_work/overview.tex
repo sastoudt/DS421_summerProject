@@ -73,20 +73,19 @@ sfeiAdjMatrix[13,6]=1 ## P8 --> D28A
 
 Since in our case we are only interested in predicting values at the stations, not other points in the stream network, each station is on its own ``stream segment" instead of breaking the system into many more small ``stream segments". 
 
-For temporal smooths of both day of year (cyclical: cSplineDes) and date trend (cubic regression splines: splineDesign), I use already established functions in R to generate the model matrix.
+For temporal smooths of both day of year (cyclical: cSplineDes) and date trend (cubic regression splines: splineDesign), I use already established functions in R to generate the model matrices.
 
 The spatial penalty matrix needs weights to combine penalties for smoothness across each flow path of the confluences. These weights are supposed to be determined by relative flow volumes, but there is an option to use shreve weights. Unfortunately, I have not quite gotten the hang of choosing these weights. My shreve values do not pass the weight check implemented by smnet. Since I move forward, reproducing the functionality, I can go ahead and use these weights anyway, but they are somehow not optimal. I am still trying to understand the necessity of the weight check and why my version of shreve order does not pass.
 
 I tried other weights: normalized shreve order, weights $w$ as described in the O'Donnell paper, all zero, and all one. There is no variation in the overall RMSE with these different weights, which is puzzling. This could be because the smoothing parameter is so small, so any differences are neglible on that scale, but I still have a hard time buying that the spatial weights don't impact the overall performance. I am especially confused why the all zero weights scenario doesn't make a difference, since this should essentially boil down to knowing what station each point is at, but having no information about the flow structure.
 
-The smoothness parameters and the ridge parameters must also be chosen. The smnet functions optimize these, so I try to leverage that work in my deconstructed implementation. 
+The smoothness parameters and the ridge parameters must also be chosen. The smnet functions optimize these, so I try to leverage that work in my deconstructed implementation. I pulled out the relevant optimization procedure that uses Generalized Cross Validation to optimize the smoothing parameters ($\lambda$s). I then manually did five fold cross validation to optimize the ridge parameters ($\nu$s). Overall, the RMSE seems robust to the choice of the ridge parameter within a reasonable range. However, weirdly, when the ``best" combination of smoothing and ridge parameters were applied to the entire data set, the overall RMSE doubled that of the RMSEs for the folds that were left out. 
+
+Breaking down the RMSEs by station, there isn't a major change from which stations are ``hard" when compared to results from other model attempts. The RMSEs per station are pretty variable and overall bigger than the RMSEs of our more successful models. 
+
+Breaking down the RMSEs by time, the RMSEs get better over time and are generally better at the beginning and the end of the year. The overall fitted values are not nearly extreme enough but the predictions generally seem to be in phase with the true values.
 
 
-
-
-%discussion of weights
-% temporal smooths
-% optimizing lambda and nu parameters
 
 
 
