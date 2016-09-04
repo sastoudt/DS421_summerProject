@@ -322,3 +322,30 @@ getSummaryRMSE<-function(data,namePred){
 test=getSummaryRMSE(allData,"smnetPred")
 test
 ## gets better over time, better at beginning and end of year
+
+makeFittedValPlot=function(fullData,station){
+  data=subset(fullData,Station==station)
+  data$Date=as.Date(data$Date)
+  ggplot(data,aes(x = Date, y = chl))+geom_point()+
+    geom_line(aes(x=Date,y =smnetPred ,col="red"),lwd=1)+
+    ggtitle(paste(station, "Fitted Values smnet Model",sep=" "))+
+    theme(legend.position='none')+ylab("chl a (microgram/L)")+xlab("Date")
+  
+}
+
+forMap$Station
+makeFittedValPlot(allData,"C3")
+makeFittedValPlot(allData,"D10")
+makeFittedValPlot(allData,"D12")
+makeFittedValPlot(allData,"D19")
+makeFittedValPlot(allData,"D22")
+makeFittedValPlot(allData,"D26")
+makeFittedValPlot(allData,"D28A")
+makeFittedValPlot(allData,"D4")
+makeFittedValPlot(allData,"D6")
+makeFittedValPlot(allData,"D7")
+makeFittedValPlot(allData,"D8")
+makeFittedValPlot(allData,"MD10")
+makeFittedValPlot(allData,"P8")
+
+## definitely not extreme enough, seems to be in phase though
