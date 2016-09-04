@@ -28,39 +28,39 @@ shreve.order<-c(1,4,3,3,1,2,1,1,5,1,4,1,1)
 #wgts<-c(1,4,3/4,3,1,2/3,1/3,1/4,5,1/5,4/5,1/2,1/2)
 wgts<-c(1,1,3/4,1,1,2/3,1/3,1/4,1,1/5,4/5,1/2,1/2)
 spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
-  adj.spam <- make_spam(adjacency)
-  pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
-  ij.nzero.adj <- triplet(adj.spam)$indices
-  in.pseudo    <- ij.nzero.adj[,2] %in% pseudo.inds
-  ij.confl     <- ij.nzero.adj[!in.pseudo,]
-  n.nzero      <- nrow(ij.confl)
+adj.spam <- make_spam(adjacency)
+pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
+ij.nzero.adj <- triplet(adj.spam)$indices
+in.pseudo    <- ij.nzero.adj[,2] %in% pseudo.inds
+ij.confl     <- ij.nzero.adj[!in.pseudo,]
+n.nzero      <- nrow(ij.confl)
+p.row.ind    <- rep(1:n.nzero, each = 2)
+p.col.ind    <- c(t(ij.confl))
+p.val        <- wgts[rep(ij.confl[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+D2           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+D2           <- t(D2)%*%D2 
+
+if(!is.null(pseudo.inds)){
+  ij.pseudo    <- ij.nzero.adj[in.pseudo,]
+  n.nzero      <- nrow(ij.pseudo)
+  if(is.null(n.nzero)) n.nzero <- 1
   p.row.ind    <- rep(1:n.nzero, each = 2)
-  p.col.ind    <- c(t(ij.confl))
-  p.val        <- wgts[rep(ij.confl[,1], each = 2)]*rep(c(-1, 1), n.nzero)
-  D2           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
-  D2           <- t(D2)%*%D2 
-  
-  if(!is.null(pseudo.inds)){
-    ij.pseudo    <- ij.nzero.adj[in.pseudo,]
-    n.nzero      <- nrow(ij.pseudo)
-    if(is.null(n.nzero)) n.nzero <- 1
-    p.row.ind    <- rep(1:n.nzero, each = 2)
-    p.col.ind    <- c(t(ij.pseudo))
-    if(is.matrix(ij.pseudo)){
-      p.val        <- wgts[rep(ij.pseudo[,1], each = 2)]*rep(c(-1, 1), n.nzero)
-    }
-    if(is.vector(ij.pseudo)){
-      p.val        <- wgts[rep(ij.pseudo[1], each = 2)]*rep(c(-1, 1), n.nzero)
-    }
-    D1           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
-    D1            <- t(D1)%*%D1
-  }  
-  return((lambda)*(D2 + D1))  
+  p.col.ind    <- c(t(ij.pseudo))
+  if(is.matrix(ij.pseudo)){
+    p.val        <- wgts[rep(ij.pseudo[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+  }
+  if(is.vector(ij.pseudo)){
+    p.val        <- wgts[rep(ij.pseudo[1], each = 2)]*rep(c(-1, 1), n.nzero)
+  }
+  D1           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+  D1            <- t(D1)%*%D1
+}  
+return((lambda)*(D2 + D1))  
 }
 make_spam<-function(M){
-  if(class(M) == "matrix") as.spam(M)
-  if(class(M) == "spam") as.spam(M)
-  else as.spam(as.spam.dgCMatrix(as(M, "dgCMatrix")))
+if(class(M) == "matrix") as.spam(M)
+if(class(M) == "spam") as.spam(M)
+else as.spam(as.spam.dgCMatrix(as(M, "dgCMatrix")))
 }
 lambdaD=1
 adjacency=sfeiAdjMatrix
@@ -86,9 +86,9 @@ lookUp$station=as.character(lookUp$station)
 lookUp$p=as.numeric(as.character(lookUp$p))
 ## do without a loop later, just get a quick sense
 for(i in 1:nrow(B)){
-  index=which(lookUp$station==seg[i])
-  B[i,index]=1
-  print(i)
+index=which(lookUp$station==seg[i])
+B[i,index]=1
+print(i)
 }
 
 B=as.spam(B)
@@ -109,7 +109,7 @@ require(splines)
 knots=seq(min(allData$date_dec), max(allData$date_dec),length.out=35)
 
 temporal=splineDesign(knots, allData$date_dec, ord = 4, outer.ok = T,
-                      sparse = FALSE)
+                    sparse = FALSE)
 temporal=as.spam(temporal)
 dim(temporal)
 ##  7634   31
@@ -130,7 +130,7 @@ ridgeNuT=0.25
 ridgeNuS=1
 
 Q=diag(c(0,ridgeNuD*as.vector(rep(1,ncol(B))),ridgeNuT*as.vector(rep(1,ncol(temporal))),
-         ridgeNuS*as.vector(rep(1,ncol(seasonal)))))
+       ridgeNuS*as.vector(rep(1,ncol(seasonal)))))
 Q=as.spam(Q)
 dim(Q)
 ## 79  x 79
@@ -144,6 +144,7 @@ class(Bnew)
 class(P)
 class(Q)
 betaHat=solve(t(Bnew)%*%Bnew+P+Q)%*%t(Bnew)%*%y ## still fast
+#betaHat=solve(t(Bnew)%*%Bnew+P)%*%t(Bnew)%*%y
 dim(betaHat) 
 
 yHat=Bnew%*%betaHat
