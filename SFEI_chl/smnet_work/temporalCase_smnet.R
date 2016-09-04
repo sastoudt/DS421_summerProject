@@ -98,8 +98,6 @@ abline(0,1)
 plot(y,yHat,xlim=c(0,20))
 abline(0,1)
 
-rmse=sqrt(sum((y-yHat)^2)/length(y)) ## 4.057
-## not actually that bad when you look at some of the model RMSEs
-## scale up and see what happens
-
-
+rmse=sqrt(sum((exp(y)-exp(yHat))^2)/length(y)) 
+## scale issue
+rmse ##  2.379967e+25 huge
