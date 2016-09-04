@@ -193,4 +193,51 @@ ggplot(forMap,aes(x = Longitude, y = Latitude,colour=toPlot,cex=2))+geom_point()
 
 ## compare to another model, same general ordering?
 
+wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+
+load(file="perStationMod3Compare.RData")
+load(file="perStation.Rda")
+rmsePerStationCompare<-c()
+for(i in wholeSeries){
+  true=perStation[[i]]$chl
+  fitted=predict(perStationMod3Compare[[i]],perStation[[i]],type="response")
+  rmsePerStationCompare=c(rmsePerStationCompare, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
+}
+rmsePerStationCompare
+names(perStation[wholeSeries])
+forMap$Station
+rmsePerStationCompare=rmsePerStationCompare[-c(1,10)]
+forMap$mod3=rmsePerStationCompare
+
+load("perStationInteractionModels.Rda")
+rmsePerStationSepPlain<-c()
+for(i in wholeSeries){
+  true=perStation[[i]]$chl
+  fitted=as.vector(predict(perStationIntMod[[i]],perStation[[i]],type="response"))
+  rmsePerStationSepPlain=c(rmsePerStationSepPlain, sqrt(sum((true-fitted)^2,na.rm=T)/sum(!is.na(fitted))))
+}
+
+rmsePerStationSepPlain
+rmsePerStationCompare=rmsePerStationCompare[-c(1,10)]
+forMap$interaction=rmsePerStationCompare
+
+forMap$interaction[4]=NA
+forMap$mod3[4]=NA
+## this helps a bit to diversify the colors on bottom 2 plots
+
+
+g1<-ggplot(forMap,aes(x = Longitude, y = Latitude,colour=toPlot,cex=2))+geom_point()+
+  ggtitle("smnet RMSE by Station")+scale_size(guide=F)+annotate("text", x=forMap$Longitude,y=forMap$Latitude, label = shreve.order,col="white",cex=5)
+
+g2<-ggplot(forMap,aes(x = Longitude, y = Latitude,colour=mod3,cex=2))+geom_point()+
+  ggtitle("Mod 3 RMSE by Station")+scale_size(guide=F)
+
+g3<-ggplot(forMap,aes(x = Longitude, y = Latitude,colour=interaction,cex=2))+geom_point()+
+  ggtitle("Interaction RMSE by Station")+scale_size(guide=F)
+
+require(gridExtra)
+grid.arrange(g1,g2,g3)
+
+## can't really see what might be going on, doesn't diverge from general idea
+## of which stations are "hard"
 
