@@ -25,7 +25,7 @@ row.names(sfeiAdjMatrix)=row.names
 colnames(sfeiAdjMatrix)=col.names
 bid=c("111011","111","1111","11111","11101","111110","111111","1110","1","10","11","1111101","1111101")
 shreve.order<-c(1,4,3,3,1,2,1,1,5,1,4,1,1)
-
+wgts<-c(1,4,3/4,3,1,2/3,1/3,1/4,5,1/5,4/5,1/2,1/2)
 spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
   adj.spam <- make_spam(adjacency)
   pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
@@ -64,6 +64,8 @@ make_spam<-function(M){
 lambdaD=1
 adjacency=sfeiAdjMatrix
 D=spatial_penalty(adjacency,shreve.order,lambdaD,nrow(adjacency))
+D=spatial_penalty(adjacency,wgts,lambdaD,nrow(adjacency))
+
 
 
 allData<-allData[-which(allData$Station=="C10"),]
@@ -161,6 +163,7 @@ rmse=sqrt(sum((y-yHat)^2)/length(y))
 rmse ##6.942123
 ## hm....
 
+## same for weights derived by hand using w formulation from ODonnell paper
 
 names(allData)
 

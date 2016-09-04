@@ -140,6 +140,9 @@ adjacency = sfeiAdjMatrix_sp
 
   shreve.order<-c(1,4,3,3,1,2,1,1,5,1,4,1,1)
   
+  bid=c("111011","111","1111","11111","11101","111110","111111","1110","1","10","11","1111101","1111101")
+  
+  wgt<-c(1,4,3/4,3,1,2/3,1/3,1/4,5,1/5,4/5,1/2,1/2)
   
   wgt=shreve.order
   wgt
@@ -204,6 +207,14 @@ adjacency = sfeiAdjMatrix_sp
     }
     weight.type
   
+    ##shreve.order 
+    dis_additive ## 1
+    dis_network ## 38
+    ## wgts
+    dis_additive ## 47.36
+    dis_network ## 8
+    
+    
     ## unrecognized
   ## can't go forward with smnet call without figuring this out :(
  # weight.type  <- check_weight(adjacency, shreve.order)
