@@ -451,9 +451,10 @@ test=paramTest(paramGrid[1,])
 require(parallel)
 ptm <- proc.time()
 nuOptim=mclapply(split(paramGrid, 1:nrow(paramGrid)),paramTest,mc.cores=4)
-proc.time() - ptm ## 30 minutes
+proc.time() - ptm ## 30 minutes, 39 min
 
-save(nuOptim,file="nuOptim.Rda")
+
+save(nuOptim,file="nuOptim_1pt2.Rda")
 
 length(nuOptim)
 dim(nuOptim[[1]]$predValOld)
@@ -472,21 +473,21 @@ predValNew=lapply(nuOptim,function(x){x$predValNew})
 medRMSE=unlist(lapply(predValNew,processPredVal))
 summary(medRMSE) 
 
-# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 3.350   3.352   3.357   3.359   3.364   3.384 
+#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#7.520   7.527   7.543   7.556   7.583   7.641 
 
 varRMSE=unlist(lapply(predValNew,processPredValVar))
 summary(varRMSE)
 
-# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 0.3752  0.3757  0.3759  0.3759  0.3761  0.3765 
+#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#0.2151  0.2167  0.2191  0.2193  0.2215  0.2284 
 
 
 processPredVal=function(predVal){
   predVal=as.data.frame(predVal)
   rmse<-c()
   for(k in 1:5){
-   rmse<-c(rmse, sqrt(sum((fd[[k]]$chl-exp(predVal[,k]))^2)/nrow(folds[[k]])))
+   rmse<-c(rmse, sqrt(sum((rbind(fd[[k]],testing)$chl-exp(predVal[,k]))^2)/nrow(rbind(fd[[k]],testing))))
   }
   return(median(rmse))
 }
@@ -495,7 +496,7 @@ processPredValVar=function(predVal){
   predVal=as.data.frame(predVal)
   rmse<-c()
   for(k in 1:5){
-    rmse<-c(rmse, sqrt(sum((fd[[k]]$chl-exp(predVal[,k]))^2)/nrow(folds[[k]])))
+    rmse<-c(rmse, sqrt(sum((rbind(fd[[k]],testing)$chl-exp(predVal[,k]))^2)/nrow(rbind(fd[[k]],testing))))
   }
   return(sd(rmse))
 }
@@ -509,17 +510,17 @@ paramGrid[which.min(varRMSE),]
 #Var1 Var2 Var3
 #43 0.25   20 0.25
 
-varRMSE[which.min(medRMSE)] ##0.3758893 
-varRMSE[which.min(varRMSE)] ##0.3752319 
+varRMSE[which.min(medRMSE)] ##0.2152567 
+varRMSE[which.min(varRMSE)] ##0.2151498  
 ## so not a big deal variability wise
 
-medRMSE[which.min(medRMSE)] ##3.350335 
-medRMSE[which.min(varRMSE)] ##3.371482 
+medRMSE[which.min(medRMSE)] ##7.520387  
+medRMSE[which.min(varRMSE)] ##7.521771 
 
 lambdaPar[[148]] ## same for each fold
 
 exp(lambdaPar[[148]][1,])
-## 1.720064e-12 5.332215e-14 2.466260e-16
+## 3.233715e-01 5.469683e-06 1.289552e-02
 
 ## small amount of smoothing
 
@@ -531,9 +532,9 @@ dim(paramGrid2) ## 125
 
 ptm <- proc.time()
 nuOptim2=mclapply(split(paramGrid2, 1:nrow(paramGrid2)),paramTest,mc.cores=4)
-proc.time() - ptm ## about 10 minutes
+proc.time() - ptm ## about 10 minutes, 13 min
 
-save(nuOptim2,file="nuOptim2.Rda")
+save(nuOptim2,file="nuOptim2_pt2.Rda")
 
 lambdaPar=lapply(nuOptim2,function(x){x$lambdaPar})
 predValOld=lapply(nuOptim2,function(x){x$predValOld})
@@ -542,22 +543,20 @@ predValNew=lapply(nuOptim2,function(x){x$predValNew})
 medRMSE=unlist(lapply(predValNew,processPredVal))
 summary(medRMSE)
 
-# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 3.350   3.350   3.351   3.351   3.351   3.351 
-## same range, smaller max
+#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#7.520   7.520   7.521   7.521   7.522   7.522 
 
 varRMSE=unlist(lapply(predValNew,processPredValVar))
 summary(varRMSE)
 # 
-# Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-# 0.3405  0.3406  0.3407  0.3407  0.3407  0.3408 
-## a little bit less variable
+#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#0.2141  0.2148  0.2150  0.2150  0.2151  0.2152
 
 medRMSE[which.min(medRMSE)] ##3.35037 
 
 ## not better
 
-varRMSE[which.min(medRMSE)] ## 0.3406506 
+varRMSE[which.min(medRMSE)] ## 7.519621
 ## less variable
 
 medRMSE[which.min(varRMSE)] ## 3.350481
@@ -577,9 +576,9 @@ dim(paramGrid3) ## 125
 
 ptm <- proc.time()
 nuOptim3=mclapply(split(paramGrid3, 1:nrow(paramGrid3)),paramTest,mc.cores=4)
-proc.time() - ptm ## about 10 minutes
+proc.time() - ptm ## about 10 minutes,14 min
 
-save(nuOptim3,file="nuOptim3.Rda")
+save(nuOptim3,file="nuOptim3_pt2.Rda")
 
 
 lambdaPar=lapply(nuOptim3,function(x){x$lambdaPar})
