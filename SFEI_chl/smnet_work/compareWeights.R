@@ -821,5 +821,63 @@ arrows(toPlotM3$long1,toPlotM3$lat1,toPlotM3$long2,toPlotM3$lat2,angle=90,code=2
 
 legend("topleft",col=rbPal(10),levels(cut(toPlotM3$V3,breaks = 10)),lty=1,lwd=2)
 
+vizSpatialPenalty=function(Dfull,lab){
+  #Dfull=spam2full(D)
+  
+  flatten<-c()
+  for(i in 1:13){
+    for(j in 1:13){
+      flatten=rbind(flatten,c(i,j,Dfull[i,j]))
+    }
+  }
+  
+  
+  toPlot=as.data.frame(flatten[which(flatten[,3]!=0),])
+  nam=unique(allData$Station)
+  toPlot$stat1=nam[toPlot[,1]]
+  toPlot$stat2=nam[toPlot[,2]]
+ 
+  forMap=allData[,c("Longitude","Latitude","Station")]
+  forMap=unique(forMap)
+  
+  toPlotM=merge(toPlot,forMap,by.x=c("stat1"),by.y=c("Station"))
+  toPlotM
+  names(toPlotM)[c(6,7)]=c("long1","lat1")
+  
+  toPlotM2=merge(toPlotM,forMap,by.x=c("stat2"),by.y=c("Station"))
+  toPlotM2
+  names(toPlotM2)[c(8,9)]=c("long2","lat2")
+  
+  
+  rbPal <- colorRampPalette(c('red','blue'))
+  toPlotM3=toPlotM2[-which(toPlotM2$V1==toPlotM2$V2),]
+  b <- rbPal(10)[as.numeric(cut(toPlotM3$V3,breaks = 10))]
+  plot(forMap$Longitude,forMap$Latitude,main=lab)
+  arrows(toPlotM3$long1,toPlotM3$lat1,toPlotM3$long2,toPlotM3$lat2,angle=90,code=2,length=0,lwd=5,col=b)
+  
+  legend("topleft",col=rbPal(10),levels(cut(toPlotM3$V3,breaks = 10)),lty=1,lwd=2,cex=.75)
+  
+}
 
-legend('topright', legend=c("[20.7 - 30.7]", "[60.4 - 70.3]"), col=c("#C60038","#5500AA"), pch=16)
+## from diffWeights
+
+par(mfrow=c(1,2))
+vizSpatialPenalty(test1$D,"shreve")
+vizSpatialPenalty(test2$D,"shreveNorm") ## same relative ordering, makes sense, good sanity check
+
+vizSpatialPenalty(test2$D,"shreveNorm") 
+vizSpatialPenalty(test4$D,"wgtsMax1") ## noticeable difference
+##
+text(forMap$Longitude,forMap$Latitude,forMap$Station)
+
+## upper left part of y, flipped
+## shreve norm, smallest in magnitude weights, other weights, highest in magnitude
+## upper right part of y, same, smallest in magnitude
+
+## ending portion, more extreme (highest in magnitude) for shreve, 
+## middle of the pack for the other wieghts
+
+## big change in weight magnitude D10 to D4 and D22 on wgtsMax1,
+ ##D12 to D19 and that portion of network
+
+## smoother transition of weights on shreve

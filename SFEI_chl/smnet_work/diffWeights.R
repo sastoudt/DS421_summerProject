@@ -214,7 +214,7 @@ abline(0,1,col="red")
 rmse=sqrt(sum((y-yHat)^2)/length(y)) 
 rmse ##6.942123
 
-return(list(betaHat=betaHat,yHat=yHat,rmse=rmse,P=P))
+return(list(betaHat=betaHat,yHat=yHat,rmse=rmse,P=P,D=D))
 }
 ## hm....
 
