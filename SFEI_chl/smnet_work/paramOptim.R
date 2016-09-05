@@ -302,10 +302,37 @@ for(i in 2:5){
 processPredValFull(predValNew)
 ##  6.640046 6.954438 6.709683 7.243133 5.444410
 
-
+setwd("~/Desktop/sfei/crossValid_smnet")
+testing<-read.csv("testing.csv",stringsAsFactors=F)
 
 
 paramTest=function(nu){
+  get_crit_exact<-function(rhoArgs, X, XTX, P, response, cholFactor, n, 
+                           np = nrow(XTX), Xw, Xy, n.sm=n.sm, identifyBit, crit){    
+    
+    for(j in 1:n.sm) P[[j]]<-P[[j]]*exp(rhoArgs[j])
+    Psum=bdiag.spam(0,P[[1]],P[[2]], P[[3]])
+    #Psum     <- Reduce("+", P)
+    info     <- XTX + Psum + identifyBit
+    U        <- try(update.spam.chol.NgPeyton(cholFactor, info), silent = T)
+    if(class(U) == "try-error"){
+      out <- 10^20
+    } else {
+      beta_hat <- backsolve.spam(U, forwardsolve.spam(U, Xy))  
+      left1    <- forwardsolve.spam(U, t(X))
+      ED1      <- sum(left1*left1)
+      ED       <- ED1
+      fit      <- X %*% beta_hat  
+      if(crit == "AICC") out <- log(sum((response - fit)^2)) + (2*(ED+1)/(n-ED-2))
+      if(crit == "AIC")  out <- log(sum((response - fit)^2)) + 2*ED/n
+      if(crit == "GCV")  out <- sum((response - fit)^2)/(1-(ED/n))^2
+    }
+    out
+  }
+  
+  objective<-function(rhoArgs){
+    get_crit_exact(rhoArgs,X,XTX,P,response,cholFactor,n,nrow(XTX),Xw,Xy,n.sm,identifyBit,crit)
+  }
   lambdaPar=c()
   predValNew=c()
   predValOld=c()
@@ -383,7 +410,7 @@ predValOld=cbind(predValOld,yHatOld)
 
 ### predict for new values
 
-data=fd[[k]]
+data=rbind(fd[[k]],testing)
 #y=allData$chl
 y=log(data$chl)
 seg=data$Station
@@ -423,7 +450,6 @@ test=paramTest(paramGrid[1,])
 
 require(parallel)
 ptm <- proc.time()
-
 nuOptim=mclapply(split(paramGrid, 1:nrow(paramGrid)),paramTest,mc.cores=4)
 proc.time() - ptm ## 30 minutes
 
