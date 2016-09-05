@@ -795,7 +795,31 @@ for(i in 1:13){
 
 flatten
 
-toPlot=flatten[which(flatten[,3]!=0),]
+toPlot=as.data.frame(flatten[which(flatten[,3]!=0),])
 nam=unique(allData$Station)
-toPlot$stat1=
-toPlot$stat2=unique(allData$Station)[toPlot[,2]]
+toPlot$stat1=nam[toPlot[,1]]
+toPlot$stat2=nam[toPlot[,2]]
+class(toPlot)
+names(toPlot)
+forMap=allData[,c("Longitude","Latitude","Station")]
+forMap=unique(forMap)
+
+toPlotM=merge(toPlot,forMap,by.x=c("stat1"),by.y=c("Station"))
+toPlotM
+names(toPlotM)[c(6,7)]=c("long1","lat1")
+
+toPlotM2=merge(toPlotM,forMap,by.x=c("stat2"),by.y=c("Station"))
+toPlotM2
+names(toPlotM2)[c(8,9)]=c("long2","lat2")
+
+
+rbPal <- colorRampPalette(c('red','blue'))
+toPlotM3=toPlotM2[-which(toPlotM2$V1==toPlotM2$V2),]
+b <- rbPal(10)[as.numeric(cut(toPlotM3$V3,breaks = 10))]
+plot(forMap$Longitude,forMap$Latitude)
+arrows(toPlotM3$long1,toPlotM3$lat1,toPlotM3$long2,toPlotM3$lat2,angle=90,code=2,length=0,lwd=5,col=b)
+
+legend("topleft",col=rbPal(10),levels(cut(toPlotM3$V3,breaks = 10)),lty=1,lwd=2)
+
+
+legend('topright', legend=c("[20.7 - 30.7]", "[60.4 - 70.3]"), col=c("#C60038","#5500AA"), pch=16)
