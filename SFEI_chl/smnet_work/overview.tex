@@ -96,6 +96,9 @@ Even though the overall RMSEs don't differ very much between the different spati
 
 If we just set up the temporal smooths in the O'Donnell framework without the spatial penalty matrix $D$ we get an overall RMSE that is only 0.21 larger than when we include $D$. However, we should note that this isn't a completely fair comparison since we use the ``optimal" smoothing parameters from the case derived with the $D$ matrix which may no longer be optimal for this case. Even with this caveat, it seems like the spatial penalty is not actually helping us very much in this case. When we break down the RMSE by station, the RMSEs are a little worse for the rightmost stations and the cluster of three stations close to the right than the RMSEs from other models. When we break down the RMSEs over time and seasons, we see the same patterns as when we included $D$.
 
+When we try different lambda values (1. extreme case of all 1s 2. keep general ordering of lambdas but make less small), we see the same behavior of the RMSEs being very similar across different $D$ weights. So it does not seem like the dilution in the difference in $D$ matrices comes solely from the small smoothing parameters. Could it be possible that the $D$ matrices we are considering are all fairly good for this problem (even the all zero case since we saw that without the D matrix, there is only a slight increase in the overall RMSE) so it is hard to see a real difference in performance?
+
+
 
 
 
