@@ -470,6 +470,7 @@ lambdaPar=lapply(nuOptim,function(x){x$lambdaPar})
 predValOld=lapply(nuOptim,function(x){x$predValOld})
 predValNew=lapply(nuOptim,function(x){x$predValNew})
 
+
 medRMSE=unlist(lapply(predValNew,processPredVal))
 summary(medRMSE) 
 
@@ -521,6 +522,10 @@ lambdaPar[[148]] ## same for each fold
 
 exp(lambdaPar[[148]][1,])
 ## 3.233715e-01 5.469683e-06 1.289552e-02
+
+apply(exp(lambdaPar[[which.min(medRMSE)]]),2,mean)
+##3.145803e-01 1.866849e-06 1.193907e-02
+## really should do some kind of weighting based on performance on the fold, but go with this for now
 
 ## small amount of smoothing
 

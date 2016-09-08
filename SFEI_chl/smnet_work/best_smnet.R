@@ -119,9 +119,14 @@ dim(temporal)
 require(fields)
 D=spam2full(D)
 
-lambdaD=1.720064e-12
-lambdaT=5.332215e-14
-lambdaS=2.466260e-16
+#lambdaD=1.720064e-12
+#lambdaT=5.332215e-14
+#lambdaS=2.466260e-16
+
+lambdaD=3.145803e-01
+lambdaT= 1.866849e-06
+lambdaS= 1.193907e-02
+
 D5=matrix(1,nrow=13,ncol=13)
 D6=matrix(0,nrow=13,ncol=13)
 P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
@@ -193,6 +198,8 @@ abline(0,1,col="red")
 rmse=sqrt(sum((y-yHat)^2)/length(y)) 
 rmse ##6.942123
 ## hm....
+
+##6.947993
 
 ## same for weights derived by hand using w formulation from ODonnell paper
 ## same for updated weights
