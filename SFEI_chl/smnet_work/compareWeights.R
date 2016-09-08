@@ -946,5 +946,34 @@ text(forMap$Longitude,forMap$Latitude,forMap$Station)
 
 
 
-### rmse by station differ between weighting schems even though overall pretty similar
+### rmse by station differ between weighting schemes even though overall pretty similar
 
+toCompare=as.data.frame(cbind.data.frame(allData$chl,allData$Station,yHat,yHat2,yHat3,yHat4,yHat5,yHat6))
+names(toCompare)=c("trueVal","station","shreve","shreveNorm","wgt","wgtMax1","all1","all0")
+
+toCompare$residSq1=(toCompare$trueVal-toCompare$shreve)^2
+toCompare$residSq2=(toCompare$trueVal-toCompare$shreveNorm)^2
+toCompare$residSq3=(toCompare$trueVal-toCompare$wgt)^2
+toCompare$residSq4=(toCompare$trueVal-toCompare$wgtMax1)^2
+toCompare$residSq5=(toCompare$trueVal-toCompare$all1)^2
+toCompare$residSq6=(toCompare$trueVal-toCompare$all0)^2
+
+by_station=group_by(toCompare,station)
+predByStation=summarise(by_station,count=n(),sumSqEr1=sum(residSq1),sumSqEr2=sum(residSq2),
+                        sumSqEr3=sum(residSq3),sumSqEr4=sum(residSq4),sumSqEr5=sum(residSq5),
+                        sumSqEr6=sum(residSq6))
+rmse1=sqrt(predByStation$sumSqEr1/predByStation$count)
+rmse2=sqrt(predByStation$sumSqEr2/predByStation$count)
+rmse3=sqrt(predByStation$sumSqEr3/predByStation$count)
+rmse4=sqrt(predByStation$sumSqEr4/predByStation$count)
+rmse5=sqrt(predByStation$sumSqEr5/predByStation$count)
+rmse6=sqrt(predByStation$sumSqEr6/predByStation$count)
+
+combineRMSEbyStation=cbind.data.frame(unique(allData$Station),rmse1,rmse2,rmse3,rmse4,rmse5,rmse6)
+
+
+unique(allData$Station)[order(apply(combineRMSEbyStation[,-1],1,sd))] ## increasing variability
+## "D28A" "D22"  "C3"   "D4"   "MD10" "P8"   "D26"  "D6"   "D19"  "D12"  "D7"   "D8"   "D10"
+
+shreve.order[order(apply(combineRMSEbyStation[,-1],1,sd))]
+## 1 1 1 1 1 1 2 5 3 3 1 4 4
