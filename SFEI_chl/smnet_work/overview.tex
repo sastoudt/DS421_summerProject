@@ -77,13 +77,24 @@ For temporal smooths of both day of year (cyclical: cSplineDes) and date trend (
 
 The spatial penalty matrix needs weights to combine penalties for smoothness across each flow path of the confluences. These weights are supposed to be determined by relative flow volumes, but there is an option to use shreve weights. Unfortunately, I have not quite gotten the hang of choosing these weights. My shreve values do not pass the weight check implemented by smnet. Since I move forward, reproducing the functionality, I can go ahead and use these weights anyway, but they are somehow not optimal. I am still trying to understand the necessity of the weight check and why my version of shreve order does not pass.
 
-I tried other weights: normalized shreve order, weights $w$ as described in the O'Donnell paper, all zero, and all one. There is no variation in the overall RMSE with these different weights, which is puzzling. This could be because the smoothing parameter is so small, so any differences are negligible on that scale, but I still have a hard time buying that the spatial weights don't impact the overall performance. I am especially confused why the all zero weights scenario doesn't make a difference, since this should essentially boil down to knowing what station each point is at, but having no information about the flow structure.
+I tried other weights: normalized shreve order, weights $w$ as described in the O'Donnell paper, all zero, and all one. There is only a slight amount of variation in the overall RMSE with these different weights, which is puzzling. This could be because the smoothing parameter is so small, so any differences are negligible on that scale, but I still have a hard time buying that the spatial weights don't impact the overall performance. I am especially confused why the all zero weights scenario doesn't make a difference (and actually has the smallest RMSE, albeit marginally), since this should essentially boil down to knowing what station each point is at, but having no information about the flow structure.
 
 The smoothness parameters and the ridge parameters must also be chosen. The smnet functions optimize these, so I try to leverage that work in my deconstructed implementation. I pulled out the relevant optimization procedure that uses Generalized Cross Validation to optimize the smoothing parameters ($\lambda$s). I then manually did five fold cross validation to optimize the ridge parameters ($\nu$s). Overall, the RMSE seems robust to the choice of the ridge parameter within a reasonable range. 
 
 Breaking down the RMSEs by station, there isn't a major change from which stations are ``hard" when compared to results from other model attempts. The RMSEs per station are pretty variable and overall bigger than the RMSEs of our more successful models. 
 
 Breaking down the RMSEs by time, the RMSEs get better over time and are generally better at the beginning and the end of the year. The overall fitted values are not nearly extreme enough but the predictions generally seem to be in phase with the true values.
+
+\textit{Trying to Understand Spatial Weights Matrix D}
+
+I visualized the spatial weights matrix by flattening it, color coding the weights, and plotting on top of the actual flow map. When I do this, I find different properties of the different weighting schemes, so the different weights \textbf{are} defining different structures. This just does not seem to propagate forward into the predictions.
+
+
+For the normalized shreve (and regular shreve since proportional), the upper branch segments have weights that are the smallest in magnitude weights. Weights based off of the O'Donnell approach for the upper branch have weights that are highest in magnitude.  The left most segments (end of flow) are the highest in magnitude for the shreve weights while the magnitudes of the segments in this region are more in the middle of the weight spectrum. There is a big change in the weight magnitudes between D10, D4, and D22 and between D12 and D19 on the weights based on the O'Donnell approach. The transitions between weights are smoother for the shreve weights.
+
+
+
+
 
 
 

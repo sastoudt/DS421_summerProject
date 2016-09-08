@@ -1,3 +1,38 @@
+spatial_penalty<-function(adjacency, wgts, lambda, n.segments){
+  adj.spam <- make_spam(adjacency)
+  pseudo.inds  <- which(colSums.spam(adj.spam) == 1)
+  ij.nzero.adj <- triplet(adj.spam)$indices
+  in.pseudo    <- ij.nzero.adj[,2] %in% pseudo.inds
+  ij.confl     <- ij.nzero.adj[!in.pseudo,]
+  n.nzero      <- nrow(ij.confl)
+  p.row.ind    <- rep(1:n.nzero, each = 2)
+  p.col.ind    <- c(t(ij.confl))
+  p.val        <- wgts[rep(ij.confl[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+  D2           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+  D2           <- t(D2)%*%D2 
+  
+  if(!is.null(pseudo.inds)){
+    ij.pseudo    <- ij.nzero.adj[in.pseudo,]
+    n.nzero      <- nrow(ij.pseudo)
+    if(is.null(n.nzero)) n.nzero <- 1
+    p.row.ind    <- rep(1:n.nzero, each = 2)
+    p.col.ind    <- c(t(ij.pseudo))
+    if(is.matrix(ij.pseudo)){
+      p.val        <- wgts[rep(ij.pseudo[,1], each = 2)]*rep(c(-1, 1), n.nzero)
+    }
+    if(is.vector(ij.pseudo)){
+      p.val        <- wgts[rep(ij.pseudo[1], each = 2)]*rep(c(-1, 1), n.nzero)
+    }
+    D1           <- spam(list(i=p.row.ind, j=p.col.ind, p.val), nrow = n.nzero, ncol = n.segments)
+    D1            <- t(D1)%*%D1
+  }  
+  return((lambda)*(D2 + D1))  
+}
+make_spam<-function(M){
+  if(class(M) == "matrix") as.spam(M)
+  if(class(M) == "spam") as.spam(M)
+  else as.spam(as.spam.dgCMatrix(as(M, "dgCMatrix")))
+}
 require(mgcv)
 require(spam)
 setwd("~/Desktop/sfei")
@@ -105,9 +140,13 @@ dim(temporal)
 require(fields)
 #D=spam2full(D)
 
-lambdaD=1.720064e-12
-lambdaT=5.332215e-14
-lambdaS=2.466260e-16
+# lambdaD=1.720064e-12
+# lambdaT=5.332215e-14
+# lambdaS=2.466260e-16
+
+lambdaD=3.145803e-01
+lambdaT= 1.866849e-06
+lambdaS= 1.193907e-02
 
 P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 P2=bdiag.spam(0,lambdaD*t(D2)%*%D2,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
@@ -186,7 +225,12 @@ rmse5=sqrt(sum((y-yHat5)^2)/length(y))
 rmse6=sqrt(sum((y-yHat6)^2)/length(y)) 
 
 c(rmse,rmse2,rmse3,rmse4,rmse5,rmse6)
-tail(cbind(betaHat,betaHat2,betaHat3,betaHat4,betaHat5,betaHat6))
+
+##6.947993 6.944975 6.945503 6.944997 6.945240 6.944975
+
+apply(tail(cbind(betaHat,betaHat2,betaHat3,betaHat4,betaHat5,betaHat6)),1,sd)
+##0.0001921493 0.0004534601 0.0002542380 0.0001521291 0.0002092609 0.0001773758 
+## very small deviations
 
 
 #####
@@ -298,9 +342,13 @@ dim(temporal)
 require(fields)
 #D=spam2full(D)
 
-lambdaD=1.720064e-12
-lambdaT=5.332215e-14
-lambdaS=2.466260e-16
+# lambdaD=1.720064e-12
+# lambdaT=5.332215e-14
+# lambdaS=2.466260e-16
+
+lambdaD=3.145803e-01
+lambdaT= 1.866849e-06
+lambdaS= 1.193907e-02
 
 P=bdiag.spam(0,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
 # P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
@@ -497,9 +545,13 @@ dim(temporal)
 require(fields)
 #D=spam2full(D)
 
-lambdaD=1.720064e-12
-lambdaT=5.332215e-14
-lambdaS=2.466260e-16
+# lambdaD=1.720064e-12
+# lambdaT=5.332215e-14
+# lambdaS=2.466260e-16
+
+lambdaD=3.145803e-01
+lambdaT= 1.866849e-06
+lambdaS= 1.193907e-02
 
 #P=bdiag.spam(0,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
  P=bdiag.spam(0,lambdaD*t(D)%*%D,lambdaT*t(temporal)%*%temporal, lambdaS*t(seasonal)%*%seasonal)
@@ -687,10 +739,14 @@ dim(temporal)
 require(fields)
 #D=spam2full(D)
 
-lambdaD=1.720064e-12
-lambdaT=5.332215e-14
-lambdaS=2.466260e-16
+# lambdaD=1.720064e-12
+# lambdaT=5.332215e-14
+# lambdaS=2.466260e-16
 #lambdaD=1
+
+lambdaD=3.145803e-01
+lambdaT= 1.866849e-06
+lambdaS= 1.193907e-02
 
 #lambdaD=lambdaT=lambdaS=1
 
@@ -862,11 +918,17 @@ vizSpatialPenalty=function(Dfull,lab){
 ## from diffWeights
 
 par(mfrow=c(1,2))
-vizSpatialPenalty(test1$D,"shreve")
-vizSpatialPenalty(test2$D,"shreveNorm") ## same relative ordering, makes sense, good sanity check
+#vizSpatialPenalty(test1$D,"shreve")
+vizSpatialPenalty(D,"shreve")
+#vizSpatialPenalty(test2$D,"shreveNorm") ## same relative ordering, makes sense, good sanity check
+vizSpatialPenalty(D2,"shreveNorm")
 
-vizSpatialPenalty(test2$D,"shreveNorm") 
-vizSpatialPenalty(test4$D,"wgtsMax1") ## noticeable difference
+#vizSpatialPenalty(test2$D,"shreveNorm") 
+#vizSpatialPenalty(test4$D,"wgtsMax1") ## noticeable difference
+
+vizSpatialPenalty(D2,"shreveNorm")
+vizSpatialPenalty(D4,"wgtsMax1")
+
 ##
 text(forMap$Longitude,forMap$Latitude,forMap$Station)
 
@@ -881,3 +943,8 @@ text(forMap$Longitude,forMap$Latitude,forMap$Station)
  ##D12 to D19 and that portion of network
 
 ## smoother transition of weights on shreve
+
+
+
+### rmse by station differ between weighting schems even though overall pretty similar
+
