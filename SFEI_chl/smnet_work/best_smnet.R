@@ -260,7 +260,7 @@ for(i in wholeSeries){
 }
 
 rmsePerStationSepPlain
-rmsePerStationCompare=rmsePerStationCompare[-c(1,10)]
+rmsePerStationSepPlain=rmsePerStationSepPlain[-c(1,10)]
 forMap$interaction=rmsePerStationCompare
 
 forMap$interaction[4]=NA
