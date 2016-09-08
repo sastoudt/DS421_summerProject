@@ -228,7 +228,7 @@ c(rmse,rmse2,rmse3,rmse4,rmse5,rmse6)
 
 ##6.947993 6.944975 6.945503 6.944997 6.945240 6.944975
 
-apply(tail(cbind(betaHat,betaHat2,betaHat3,betaHat4,betaHat5,betaHat6)),1,sd)
+apply(tail(cbind(betaHat1,betaHat2,betaHat3,betaHat4,betaHat5,betaHat6)),1,sd)
 ##0.0001921493 0.0004534601 0.0002542380 0.0001521291 0.0002092609 0.0001773758 
 ## very small deviations
 
