@@ -128,3 +128,13 @@ Some notes so far:
 ## Throughout
 
 - continue progress on the WRTDS/GAM comparisons
+
+## Into the Semester- Working with smnet
+
+- use smnet framework but build up from source code to bypass GIS preprocessing
+- build spatial network manually
+- different spatial penalty matrices, trying to understand spatial weights
+- optimization of smoothing paramters and ridge parameters
+- penalty approach v. covariance approach (correlation: make empirical covariance matrix, is it PSD? can we massage it to be?)
+- how to improve smnet approach to be more effective for this particular problem, have already gotten a sense of the ``benefit" of the spatial penalty approach
+
