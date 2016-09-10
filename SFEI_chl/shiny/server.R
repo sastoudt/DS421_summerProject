@@ -1,6 +1,6 @@
 ## bugs in fittedSpat and all of the nested plots
 ## discrete value supplied to continuous scale (mostly)
-## data of class uneval
+## data of class uneval, fixed now discrete value issue
 ## $ operator invalid
 
 
@@ -976,7 +976,7 @@ shinyServer(function(input, output) {
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
       toPlot=which(grepl("spatM1_",names(data)))
-      
+      int=data[,toPlot[3]][1]
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
    
         geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
@@ -987,7 +987,7 @@ shinyServer(function(input, output) {
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(int,2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDate_Dec"){
@@ -1004,7 +1004,7 @@ shinyServer(function(input, output) {
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(int,2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
@@ -1019,7 +1019,7 @@ shinyServer(function(input, output) {
                             labels =c('red'="station","dodgerblue"="ti(doy_Station)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(int,2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
@@ -1037,7 +1037,7 @@ shinyServer(function(input, output) {
                                       "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
                                                                                     "forestgreen","purple")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(int,2)))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }
