@@ -251,24 +251,24 @@ shinyServer(function(input, output) {
     stat <- input$stat
     
     
-    out<-perStationAdd[[which(names(perStationAdd)==stat)]]
+    out<-perStationPredVal[[which(stationNames==stat)]]
     
     
     return(out)
     
   })
   
-  datA <- reactive({
-    
-    stat <- input$stat
-    
-    
-    out<-perStationAdd[[which(names(perStationAdd)==stat)]]
-    
-    
-    return(out)
-    
-  })
+  # datA <- reactive({
+  #   
+  #   stat <- input$stat
+  #   
+  #   
+  #   out<-perStationAdd[[which(names(perStationAdd)==stat)]]
+  #   
+  #   
+  #   return(out)
+  #   
+  # })
   
   # for initial date range
   output$daterng <- renderUI({
@@ -778,11 +778,13 @@ shinyServer(function(input, output) {
       toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
       toName=c("doy","date_dec","pheo","do_per","date","intercept")
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
+      getID=c("doy","date_dec","pheo","do_per")  
       
     }else{
       toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
       toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
+      getID=c("doy","date_dec","pheo","tn","do_per")
       
     }
     
@@ -791,9 +793,16 @@ shinyServer(function(input, output) {
     nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
     names(nestPred)=toName
     
+    
+    id1=which(getID==input$plot5choice1)
+    id2=which(getID==input$plot5choice3)
+    toPlot=which(grepl("parsMod_",names(data)))
+    
+    
+    
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes_string(x="date",y = input$plot5choice1, color = "as.character(input$plot5choice1)"),lwd=1)+
-      geom_line(data=nestPred,aes_string(x="date",y = input$plot5choice2, color = "as.character(input$plot5choice2)"),lwd=1)+
+      geom_line(data=nestPred,aes_string(x="date",y = names(data)[toPlot[id1]], color = "as.character(input$plot5choice1)"),lwd=1)+
+      geom_line(data=nestPred,aes_string(x="date",y = names(data)[toPlot[id2]], color = "as.character(input$plot5choice2)"),lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=input$plot5choice1,"dodgerblue"=input$plot5choice2)
                           ,values=c("red", "dodgerblue")
