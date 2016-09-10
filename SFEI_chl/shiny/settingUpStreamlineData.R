@@ -1,0 +1,45 @@
+#### fitted value plots
+
+
+setwd("~/Desktop/sfei")
+
+ load(file = "perStationParsimoniousModels.Rda")
+# load(file = "perStationFullModels.Rda")
+
+# load(file="mod1Spatial.RData")
+# load(file="mod2Spatial.RData")
+# load(file="mod3Spatial.RData")
+# load(file="mod4Spatial.RData")
+# load(file="perStationAdd.Rda")
+load(file="perStationFlowMod.Rda")
+# load(file="perStationFlowTOT.Rda")
+ load(file="perStationPredVal.Rda")
+ load(file="perStationAdd.Rda")
+head(perStationPredVal[[1]])
+wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
+
+for(index in wholeSeries){
+
+  data=perStationPredVal[[index]]
+  
+  byTerm=predict(perStationParsMod[[index]],data,type="terms")
+
+nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationParsMod[[index]])$p.coeff)))
+
+if(index %in% c(5,7,13)){
+  toName=c("doy","date_dec","pheo","do_per","intercept")
+  terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
+  
+}else{
+  toName=c("doy","date_dec","pheo","tn","do_per","intercept")
+  terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
+ 
+}
+
+
+names(nestPred)=paste("parsMod",toName,sep="_")
+
+perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+
+}
+save(perStationPredVal,file="perStationPredVal.Rda")

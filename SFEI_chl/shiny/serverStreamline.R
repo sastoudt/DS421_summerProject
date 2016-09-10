@@ -427,7 +427,7 @@ shinyServer(function(input, output) {
     # names(toUse)[ncol(toUse)]="fitted.values"
     data=perStationPredVal[[index]]
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
-      geom_line(data,aes(x=Date,y =predPars ,col="red"),lwd=1)+
+      geom_line(aes(x=Date,y =predPars ,col="red"),lwd=1)+
       ggtitle(paste(stationNames[index], "Fitted Values Parsimonious Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
@@ -472,7 +472,7 @@ shinyServer(function(input, output) {
     
    data=perStationPredVal[[index]]
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
-        geom_line(data,aes(x=Date,y =predFull ,col="red"),lwd=1)+
+        geom_line(aes(x=Date,y =predFull ,col="red"),lwd=1)+
         ggtitle(paste(stationNames[index], "Fitted Values Full Model",sep=" "))+
         theme(legend.position='none')+ylim(0,160)+
         scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
@@ -504,7 +504,7 @@ shinyServer(function(input, output) {
     # names(toUse)[ncol(toUse)]="fitted.values"
     data=perStationPredVal[[index]]
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
-      geom_line(data,aes(x=Date,y =predInt ,col="red"),lwd=1)+
+      geom_line(aes(x=Date,y =predInt ,col="red"),lwd=1)+
       ggtitle(paste(stationNames[index], "Fitted Values Interaction Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
@@ -537,7 +537,7 @@ shinyServer(function(input, output) {
     
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-      geom_line(data=data,aes_string(x="Date",y = names(data)[indexCol], color = shQuote("red")),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[indexCol], color = shQuote("red")),lwd=1)+
       ggtitle(paste(input$spatMod,stationNames[index], "Fitted Values Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
@@ -557,7 +557,7 @@ shinyServer(function(input, output) {
     data=perStationPredVal[[index]]
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-      geom_line(data=data,aes(x=Date,y = chlPred, color = "red"),lwd=1)+
+      geom_line(aes(x=Date,y = chlPred, color = "red"),lwd=1)+
       
       ggtitle(paste(stationNames[index],"Chl from Other Station Fitted Values Model",sep=" "))+
       theme(legend.position='none')+
@@ -579,7 +579,7 @@ shinyServer(function(input, output) {
     
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-      geom_line(data=data,aes(x=Date,y = flowPred, color = "red"),lwd=1)+
+      geom_line(aes(x=Date,y = flowPred, color = "red"),lwd=1)+
       
       ggtitle(paste(stationNames[index],"Flow Fitted Values Model",sep=""))+
       theme(legend.position='none')+
@@ -596,59 +596,56 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationParsMod[[index]]
+   # data<-dat()
+    #mod<-perStationParsMod[[index]]
+    data=perStationPredVal[[index]]
     
     if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
-      toName=c("doy","date_dec","pheo","do_per","date","intercept")
+      #toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
+      #toName=c("doy","date_dec","pheo","do_per","date","intercept")
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
-      
-    }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
-      toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
-      
-    }
-    
-    byTerm=predict(mod,toUse,type="terms")
-    
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
-    if(index %in% c(5,7,13)){
+      toPlot=which(grepl("parsMod_",names(data)))
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
                                                                                   "dodgerblue","blue","purple")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }else{
+      #toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
+      #toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
+      toPlot=which(grepl("parsMod_",names(data)))
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        
+        geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = 'ti(doy)'), lwd=1)+
+        geom_line(data,aes_string(x="Date",y=names(data)[toPlot[2]], color = 'ti(date_dec)'), lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[3]], color = 'ti(pheo)'),lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[4]], color = 'ti(tn)'),lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[5]], color = 'ti(do_per)'), lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[6]], color = 'intercept'), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
-                                                                                                         "dodgerblue","forestgreen","blue","purple")
+                                      "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
+                                                                                  "dodgerblue","blue","purple")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }
+    
+    
     
   }, height = 250, width = 1200)
   
