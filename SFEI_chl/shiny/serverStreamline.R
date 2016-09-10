@@ -768,46 +768,39 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationParsMod[[index]]
+    data<-perStationPredVal[[index]]
+   
     
     if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
-      toName=c("doy","date_dec","pheo","do_per","date","intercept")
+    
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
       getID=c("doy","date_dec","pheo","do_per")  
       
     }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
-      toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
+     
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
       getID=c("doy","date_dec","pheo","tn","do_per")
       
     }
     
-    byTerm=predict(mod,toUse,type="terms")
-    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
-    
+   
     
     id1=which(getID==input$plot5choice1)
-    id2=which(getID==input$plot5choice3)
+    id2=which(getID==input$plot5choice2)
     toPlot=which(grepl("parsMod_",names(data)))
     
-    
-    
+
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes_string(x="date",y = names(data)[toPlot[id1]], color = "as.character(input$plot5choice1)"),lwd=1)+
-      geom_line(data=nestPred,aes_string(x="date",y = names(data)[toPlot[id2]], color = "as.character(input$plot5choice2)"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot5choice1"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot5choice2"),lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=input$plot5choice1,"dodgerblue"=input$plot5choice2)
                           ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
   }, height = 250, width = 1200)
@@ -818,86 +811,67 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationFullMod[[index]]
     
+    data=perStationPredVal[[index]]
+
     if(index %in% c(5,7)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
-                            "sal","Date")])
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)",
-               "ti(sal)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","do_per","sal","date","intercept")
-      
-      byTerm=predict(mod,toUse,type="terms")
-      
-      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
+      getID=c("doy","date_dec","pheo","do_per","sal")
+      id1=which(getID==input$plot6choice1)
+      id2=which(getID==input$plot6choice2)
+      toPlot=which(grepl("parsFull_",names(data)))
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot6choice2"),lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }else if(index==13){
       df <- data.frame()
       ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
-    }else if(index %in% c(17,18,21,22,23)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","sal","Date")])
       
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
-               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)","ti(sal)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","sal","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
-      
-      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
+    }else if(index %in% c(17, 18, 21, 22, 23)){
+      getID=c("doy","date_dec","pheo","tn","do_per", "sio2","tp","tss","nh4","sal")
+      id1=which(getID==input$plot6choice1)
+      id2=which(getID==input$plot6choice2)
+      toPlot=which(grepl("parsFull_",names(data)))
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot6choice2"),lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","Date")])
-      
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
-               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
-      
-      
-      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
-      
+      getID=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4")
+      id1=which(getID==input$plot6choice1)
+      id2=which(getID==input$plot6choice2)
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot6choice2"),lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }
+    
+    
+    
+   
+  
     
     
   }, height = 250, width = 1200)
