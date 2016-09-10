@@ -931,28 +931,25 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationIntMod[[index]]
-    toUse=na.omit(data[,c("doy","date_dec","Date")])
-    toName=c("doy","date_dec","interaction","date","intercept")
+    data=perStationPredVal[[index]]
+   
     terms<-c("ti(doy)","ti(date_dec)","ti(doy,date_dec)","intercept")
     
-    byTerm=predict(mod,toUse,type="terms")
-    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
-    
+    getID=c('doy', 'date_dec', 'interaction')
+    toPlot=which(grepl("parsInt_",names(data)))
+    id1=which(getID==input$intVar1)
+    id2=which(getID==input$intVar2)
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes_string(x="date",y = input$intVar1, color = "as.character(input$intVar1)"),lwd=1)+
-      geom_line(data=nestPred,aes_string(x="date",y = input$intVar2, color = "as.character(input$intVar2)"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$intVar1"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$intVar2"),lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=input$intVar1,"dodgerblue"=input$intVar2)
                           ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
   }, height = 250, width = 1200)
