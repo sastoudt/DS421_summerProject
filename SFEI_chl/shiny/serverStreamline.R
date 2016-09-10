@@ -629,12 +629,12 @@ shinyServer(function(input, output) {
       toPlot=which(grepl("parsMod_",names(data)))
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         
-        geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = 'ti(doy)'), lwd=1)+
-        geom_line(data,aes_string(x="Date",y=names(data)[toPlot[2]], color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[3]], color = 'ti(pheo)'),lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[4]], color = 'ti(tn)'),lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[5]], color = 'ti(do_per)'), lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[6]], color = 'intercept'), lwd=1)+
+        geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(data,aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(tn)')),lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
@@ -655,78 +655,63 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationFullMod[[index]]
+   data=perStationPredVal[[index]]
     
     if(index %in% c(5,7)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
-                            "sal","Date")])
+      #toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
+                           # "sal","Date")])
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)",
                "ti(sal)",
                "intercept")
-      toName=c("doy","date_dec","pheo","do_per","sal","date","intercept")
+      toPlot=which(grepl("parsFull_",names(data)))
       
-      byTerm=predict(mod,toUse,type="terms")
-      
-      
-      
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        #geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        #geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        #geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sal, color = 'ti(sal)'), lwd=1)+
         
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(do_per)')), lwd=1)+
+        
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(sal)')), lwd=1)+
+        
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "blue"=terms[4],'mediumturquoise'=terms[5],"black"=terms[6]),
                             values=c("red","orange",
                                      "dodgerblue","blue","mediumturquoise","black")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(index==13){
       df <- data.frame()
       ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
     }else if(index %in% c(17,18,21,22,23)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","sal","Date")])
       
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
                "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)","ti(sal)",
                "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","sal","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
-      
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      
-      names(nestPred)=toName
+      toPlot=which(grepl("parsFull_",names(data)))
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(nh4)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(sal)'), lwd=1)+
+       
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y= names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[4]], color = shQuote('ti(tn)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[6]], color = shQuote('ti(sio2)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[7]], color = shQuote('ti(tp)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[8]], color = shQuote('ti(tss)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[9]], color = shQuote('ti(nh4)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[10]], color = shQuote('ti(sal)')), lwd=1)+
         
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        geom_line(aes(x="Date",y =  names(data)[toPlot[11]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
@@ -735,35 +720,28 @@ shinyServer(function(input, output) {
                                                                                          "dodgerblue","forestgreen","blue","purple","magenta",
                                                                                          "grey","mediumturquoise","chocolate3","black")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
-      
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","Date")])
-      
+
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
                "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
                "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
+      toPlot=which(grepl("parsFull_",names(data)))
       
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      
-      names(nestPred)=toName
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(nh4)'), lwd=1)+
-        
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+       
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(tn)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('ti(sio2)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[7]], color = shQuote('ti(tp)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[8]], color = shQuote('ti(tss)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[9]], color = shQuote('ti(nh4)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[10]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
@@ -772,7 +750,7 @@ shinyServer(function(input, output) {
                                                                        "dodgerblue","forestgreen","blue","purple","magenta",
                                                                        "grey","mediumturquoise","chocolate3")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
