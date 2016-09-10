@@ -13,7 +13,7 @@ setwd("~/Desktop/sfei")
 # load(file="mod4Spatial.RData")
 # load(file="perStationAdd.Rda")
 load(file="perStationFlowMod.Rda")
-# load(file="perStationFlowTOT.Rda")
+ load(file="perStationFlowTOT.Rda")
  load(file="perStationPredVal.Rda")
  load(file="perStationAdd.Rda")
 head(perStationPredVal[[1]])
@@ -185,4 +185,43 @@ for(index in wholeSeries){
 
 
 
+save(perStationPredVal,file="perStationPredVal.Rda")
+
+####
+
+for(index in wholeSeries){
+  
+  data=perStationPredVal[[index]]
+  
+  byTerm=predict(perStationFlowMod[[index]],data,type="terms")
+  
+  nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationFlowMod[[index]])$p.coeff)))
+  
+  
+    toName=c("doy","date_dec","chl","date","intercept")
+
+  names(nestPred)=paste("chlFlow",toName,sep="_")
+  
+  perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+  
+}
+save(perStationPredVal,file="perStationPredVal.Rda")
+
+####
+for(index in wholeSeries){
+  
+  data=perStationPredVal[[index]]
+  
+  byTerm=predict(perStationFlowTOT[[index]],data,type="terms")
+  
+  nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationFlowTOT[[index]])$p.coeff)))
+  
+  
+  toName=c("doy","date_dec","tot","intercept")
+  
+  names(nestPred)=paste("totFlow",toName,sep="_")
+  
+  perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+  
+}
 save(perStationPredVal,file="perStationPredVal.Rda")
