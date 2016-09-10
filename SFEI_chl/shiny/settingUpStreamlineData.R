@@ -7,7 +7,7 @@ setwd("~/Desktop/sfei")
  load(file = "perStationFullModels.Rda")
  load(file="perStationInteractionModels.Rda")
 
-# load(file="mod1Spatial.RData")
+ load(file="mod1Spatial.RData")
 # load(file="mod2Spatial.RData")
 # load(file="mod3Spatial.RData")
 # load(file="mod4Spatial.RData")
@@ -97,3 +97,92 @@ for(index in wholeSeries){
 
 save(perStationPredVal,file="perStationPredVal.Rda")
 
+
+####
+
+summary(mod1)
+
+stationNames[wholeSeries]
+
+stationEffect=unname(mod1$coefficients[1:length(wholeSeries)])
+stationEffect[2:length(stationEffect)]=stationEffect[2:length(stationEffect)]+stationEffect[1]
+
+for(index in wholeSeries){
+data=perStationPredVal[[index]]
+byTerm=predict(mod1,data,type="terms")
+nestPred=as.data.frame(cbind.data.frame(byTerm[,2:3],stationEffect[index]))
+toName=c("doy","date_dec","intercept")
+names(nestPred)=paste("spatM1",toName,sep="_")
+
+perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+}
+
+save(perStationPredVal,file="perStationPredVal.Rda")
+
+###
+
+
+####
+
+summary(mod2)
+
+stationEffect=unname(mod2$coefficients[1:length(wholeSeries)])
+stationEffect[2:length(stationEffect)]=stationEffect[2:length(stationEffect)]+stationEffect[1]
+
+for(index in wholeSeries){
+  data=perStationPredVal[[index]]
+  byTerm=predict(mod2,data,type="terms")
+  dateDecStat=apply(byTerm[,3:ncol(byTerm)],1,sum)
+  nestPred=as.data.frame(cbind.data.frame(byTerm[,2],dateDecStat,stationEffect[index]))
+  toName=c("doy","date_decByStation","intercept")
+  names(nestPred)=paste("spatM2",toName,sep="_")
+  
+  perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+}
+
+save(perStationPredVal,file="perStationPredVal.Rda")
+
+####
+summary(mod3)
+
+stationEffect=unname(mod3$coefficients[1:length(wholeSeries)])
+stationEffect[2:length(stationEffect)]=stationEffect[2:length(stationEffect)]+stationEffect[1]
+
+for(index in wholeSeries){
+  data=perStationPredVal[[index]]
+  byTerm=predict(mod3,data,type="terms")
+  dateDecStat=apply(byTerm[,2:16],1,sum)
+  doyStat=apply(byTerm[,17:31],1,sum)
+  nestPred=as.data.frame(cbind.data.frame(dateDecStat,doyStat,stationEffect[index]))
+  toName=c("doyByStation","date_decByStation","intercept")
+  names(nestPred)=paste("spatM3",toName,sep="_")
+  
+  perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+}
+
+
+
+save(perStationPredVal,file="perStationPredVal.Rda")
+
+####
+
+summary(mod4)
+
+stationEffect=unname(mod4$coefficients[1:length(wholeSeries)])
+stationEffect[2:length(stationEffect)]=stationEffect[2:length(stationEffect)]+stationEffect[1]
+
+for(index in wholeSeries){
+  data=perStationPredVal[[index]]
+  byTerm=predict(mod4,data,type="terms")
+  dateDecStat=apply(byTerm[,3:17],1,sum)
+  intStat=apply(byTerm[,18:32],1,sum)
+  nestPred=as.data.frame(cbind.data.frame(byTerm[,2],dateDecStat,intStat,stationEffect[index]))
+  toName=c("doy","date_decByStation","intByStation","intercept")
+  names(nestPred)=paste("spatM3",toName,sep="_")
+  
+  perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+}
+
+
+
+save(perStationPredVal,file="perStationPredVal.Rda")

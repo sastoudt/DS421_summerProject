@@ -980,11 +980,11 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
-    data<-subset(allData,Station==stat)
-    indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))
+    index=which(stationNames==stat)
+    data=perStationPredVal[[index]]
+    # data<-subset(allData,Station==stat)
+    # indices<-which(allData$Station==stat)
+    # data$Date=as.Date(as.character(data$Date))
     
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
