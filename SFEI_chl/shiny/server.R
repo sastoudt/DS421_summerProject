@@ -642,15 +642,15 @@ shinyServer(function(input, output) {
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         
         geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = shQuote('ti(doy)')), lwd=1)+
-        geom_line(data,aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(tn)')),lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
-        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('intercept')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(tn)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
-                                                                                  "dodgerblue","blue","purple")
+                                      "blue"=terms[4],"purple"=terms[5],"forestgreen"=terms[6]),values=c("red","orange",
+                                                                                  "dodgerblue","blue","purple","forestgreen")
         ) +
         ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
