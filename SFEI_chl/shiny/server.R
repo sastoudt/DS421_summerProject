@@ -1,3 +1,10 @@
+## bugs in fittedSpat and all of the nested plots
+## discrete value supplied to continuous scale (mostly)
+## data of class uneval
+## $ operator invalid
+
+
+
 # packages to use
 library(ggplot2)
 library(sp)
@@ -38,45 +45,45 @@ library(lubridate)
 volFlow=read.csv("VolFingerPrintsMaster.csv")
 require(httr)
 
-response<- GET(url="https://www.dropbox.com/s/nqvmugpezqb5uxu/mod1Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/7ldafvwffwer8e3/mod2Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/wkmn4a16i8ikdxl/mod3Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/lg27vg3a9wddexp/mod4Spatial.RData?dl=0")
-load(rawConnection(response$content))
-
-
-response<- GET(url="https://www.dropbox.com/s/4colbyhrto2jxwl/perStationAdd.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/5ab5if0hbjour78/perStationFlowModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/ea6oskjwyktxisk/perStationFlowSpecific.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/3tppvhwojkl0nu6/perStationFlowTOT.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/mo8kob5m8f3yykd/perStationFullModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/8z5l8hnssfuvh5f/perStationInteractionModels.Rda?dl=0")
-load(rawConnection(response$content))
-
-response<- GET(url="https://www.dropbox.com/s/mj7b9crkyaxaxjd/perStationParsimoniousModels.Rda?dl=0")
-load(rawConnection(response$content))
+# response<- GET(url="https://www.dropbox.com/s/nqvmugpezqb5uxu/mod1Spatial.RData?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/7ldafvwffwer8e3/mod2Spatial.RData?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/wkmn4a16i8ikdxl/mod3Spatial.RData?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/lg27vg3a9wddexp/mod4Spatial.RData?dl=0")
+# load(rawConnection(response$content))
+# 
+# 
+# response<- GET(url="https://www.dropbox.com/s/4colbyhrto2jxwl/perStationAdd.Rda?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/5ab5if0hbjour78/perStationFlowModels.Rda?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/ea6oskjwyktxisk/perStationFlowSpecific.Rda?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/3tppvhwojkl0nu6/perStationFlowTOT.Rda?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/mo8kob5m8f3yykd/perStationFullModels.Rda?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/8z5l8hnssfuvh5f/perStationInteractionModels.Rda?dl=0")
+# load(rawConnection(response$content))
+# 
+# response<- GET(url="https://www.dropbox.com/s/mj7b9crkyaxaxjd/perStationParsimoniousModels.Rda?dl=0")
+# load(rawConnection(response$content))
 
 response<- GET(url="https://www.dropbox.com/s/vqolh5rnp2w1iai/perStationPredVal.Rda?dl=0")
 load(rawConnection(response$content))
 
-response<- GET(url="https://www.dropbox.com/s/3ql5nihqjt1pxak/perStationTOTModels.Rda?dl=0")
-load(rawConnection(response$content))
+#response<- GET(url="https://www.dropbox.com/s/3ql5nihqjt1pxak/perStationTOTModels.Rda?dl=0")
+#load(rawConnection(response$content))
 # Define server logic required to generate and plot data
 wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
 allData<- do.call("rbind", perStationAdd[wholeSeries])
@@ -84,6 +91,15 @@ forMap=allData[,c("Longitude","Latitude","Station")]
 forMap=unique(forMap)
 
 dt_rng=c(NA,NA)
+
+stationNames= c("C10", "C3", "C7" , "C9","D10","D11","D12","D14A","D15","D16","D19",    
+"D2","D22", "D24","D26","D28A", "D4","D41","D41A","D42", "D6","D7", "D8","D9","EZ2","EZ2-SJR", "EZ6","EZ6-SJR",
+"MD10","MD6", "MD7","NZ002","NZ004","NZ032","NZ325","NZS42","P10" ,"P12","P2", "P8","S42")
+
+longitude=c(-121.2647, -121.5205, -121.9183, -121.8063, -121.6148, -121.7391, -121.5669, -121.5730, -121.8205,
+            -122.3729, -122.1177,-122.0397, -121.9900, -121.4199, -121.3823)
+latitude=c(37.67934, 38.36771, 38.04631, 38.02161, 38.04376, 38.08453, 38.07664, 37.97048, 38.06248, 38.03022,
+           38.04436, 38.11714, 38.05992, 38.04226, 37.97817)
 
 getSummaryRMSE<-function(data,namePred){
   
@@ -242,24 +258,24 @@ shinyServer(function(input, output) {
     stat <- input$stat
     
     
-    out<-perStationAdd[[which(names(perStationAdd)==stat)]]
+    out<-perStationPredVal[[which(stationNames==stat)]]
     
     
     return(out)
     
   })
   
-  datA <- reactive({
-    
-    stat <- input$stat
-    
-    
-    out<-perStationAdd[[which(names(perStationAdd)==stat)]]
-    
-    
-    return(out)
-    
-  })
+  # datA <- reactive({
+  #   
+  #   stat <- input$stat
+  #   
+  #   
+  #   out<-perStationAdd[[which(names(perStationAdd)==stat)]]
+  #   
+  #   
+  #   return(out)
+  #   
+  # })
   
   # for initial date range
   output$daterng <- renderUI({
@@ -403,27 +419,28 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationParsMod[[index]]
+    #data<-dat()
+    #mod<-perStationParsMod[[index]]
     
-    if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
-      
-    }else{
-      
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
-      
-    }
-    
-    fullPred=predict(mod,toUse,type="response")
-    toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-    names(toUse)[ncol(toUse)]="fitted.values"
+    #if(index %in% c(5,7,13)){
+     # toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
+    #   
+    # }else{
+    #   
+    #   toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
+    #   
+    # }
+    # 
+    # fullPred=predict(mod,toUse,type="response")
+    # toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+    # names(toUse)[ncol(toUse)]="fitted.values"
+    data=perStationPredVal[[index]]
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
-      geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-      ggtitle(paste(names(perStationAdd)[index], "Fitted Values Parsimonious Model",sep=" "))+
+      geom_line(aes(x=Date,y =predPars ,col="red"),lwd=1)+
+      ggtitle(paste(stationNames[index], "Fitted Values Parsimonious Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -435,52 +452,43 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationFullMod[[index]]
+    # data<-dat()
+    # mod<-perStationFullMod[[index]]
+    # 
+    # if(index %in% c(5,7)){
+    #   toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
+    #                         "sal","Date")])
+    #   fullPred=predict(mod,toUse,type="response")
+    #   toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+    #   names(toUse)[ncol(toUse)]="fitted.values"
+    #   
+    # }else if(index==13){
+    #   
+    # }else if(index %in% c(17, 18, 21, 22, 23)){
+    #   toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+    #                         "sio2","tp","tss","nh4","sal","Date")])
+    #   fullPred=predict(mod,toUse,type="response")
+    #   toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+    #   names(toUse)[ncol(toUse)]="fitted.values"
+    # }else{
+    #   toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
+    #                         "sio2","tp","tss","nh4","Date")])
+    #   fullPred=predict(mod,toUse,type="response")
+    #   toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+    #   names(toUse)[ncol(toUse)]="fitted.values"
+    # }
+    # 
     
-    if(index %in% c(5,7)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
-                            "sal","Date")])
-      fullPred=predict(mod,toUse,type="response")
-      toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-      names(toUse)[ncol(toUse)]="fitted.values"
-      
-    }else if(index==13){
-      
-    }else if(index %in% c(17, 18, 21, 22, 23)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","sal","Date")])
-      fullPred=predict(mod,toUse,type="response")
-      toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-      names(toUse)[ncol(toUse)]="fitted.values"
-    }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","Date")])
-      fullPred=predict(mod,toUse,type="response")
-      toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-      names(toUse)[ncol(toUse)]="fitted.values"
-    }
-    
-    
-    if(index==13){
-      df <- data.frame()
-      ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
-    }else if(index==15){
+   data=perStationPredVal[[index]]
       ggplot(data,aes(x = Date, y = chl))+geom_point()+
-        geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-        ggtitle(paste(names(perStationAdd)[index], "Fitted Values Full Model",sep=" "))+
+        geom_line(aes(x=Date,y =predFull ,col="red"),lwd=1)+
+        ggtitle(paste(stationNames[index], "Fitted Values Full Model",sep=" "))+
         theme(legend.position='none')+ylim(0,160)+
         scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
-    }else{
-      ggplot(data,aes(x = Date, y = chl))+geom_point()+
-        geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-        ggtitle(paste(names(perStationAdd)[index], "Fitted Values Full Model",sep=" "))+
-        theme(legend.position='none')+
-        scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
-    }
+   
     
     
     
@@ -494,21 +502,22 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationIntMod[[index]]
-    
-    
-    toUse=na.omit(data[,c("doy","date_dec","Date")])
-    
-    fullPred=predict(mod,toUse,type="response")
-    toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
-    names(toUse)[ncol(toUse)]="fitted.values"
+    # data<-dat()
+    # mod<-perStationIntMod[[index]]
+    # 
+    # 
+    # toUse=na.omit(data[,c("doy","date_dec","Date")])
+    # 
+    # fullPred=predict(mod,toUse,type="response")
+    # toUse=as.data.frame(cbind.data.frame(toUse,fullPred))
+    # names(toUse)[ncol(toUse)]="fitted.values"
+    data=perStationPredVal[[index]]
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
-      geom_line(data=toUse,aes(x=Date,y =fitted.values ,col="red"),lwd=1)+
-      ggtitle(paste(names(perStationAdd)[index], "Fitted Values Interaction Model",sep=" "))+
+      geom_line(aes(x=Date,y =predInt ,col="red"),lwd=1)+
+      ggtitle(paste(stationNames[index], "Fitted Values Interaction Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -520,31 +529,32 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    #index=which(names(perStation)==stat)
+  index=which(stationNames==stat)
     
     # data
-    data<-subset(allData,Station==stat)
-    data$Date=as.Date(as.character(data$Date))
+   # data<-subset(allData,Station==stat)
+    #data$Date=as.Date(as.character(data$Date))
+  data=perStationPredVal[[index]]
     
     if(input$spatMod=="spatIntercept"){
-      index=68
+      indexCol=79
     }else if(input$spatMod=="spatDate_Dec"){
-      index=69
+      indexCol=80
     }else if(input$spatMod=="spatDOY"){
-      index=70
+      indexCol=81
     }else if(input$spatMod=="spatinteraction"){
-      index=71
+      indexCol=82
     }
-   # 68,69,70,71
-
+   
+    
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-       geom_line(data=data,aes_string(x="Date",y = names(data)[index], color = shQuote("red")),lwd=1)+
-        ggtitle(paste(input$spatMod, "Fitted Values Model",sep=" "))+
+      geom_line(aes_string(x="Date",y = names(data)[indexCol], color = shQuote("red")),lwd=1)+
+      ggtitle(paste(input$spatMod,stationNames[index], "Fitted Values Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
-
-
+    
+    
   }, height = 250, width = 1200)
   
   output$fittedChl<- renderPlot({
@@ -552,16 +562,16 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data=perStationAdd[[index]]
-    
+    #data=perStationAdd[[index]]
+    data=perStationPredVal[[index]]
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-      geom_line(data=data,aes(x=Date,y = chlPred, color = "red"),lwd=1)+
+      geom_line(aes(x=Date,y = chlPred, color = "red"),lwd=1)+
       
-      ggtitle("Chl from Other Station Fitted Values Model")+
+      ggtitle(paste(stationNames[index],"Chl from Other Station Fitted Values Model",sep=" "))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -573,16 +583,17 @@ shinyServer(function(input, output) {
     # inputs
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data=perStationAdd[[index]]
+    #data=perStationAdd[[index]]
+    data=perStationPredVal[[index]]
     
     ggplot(data,aes(x = Date, y = chl))+geom_point()+
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-      geom_line(data=data,aes(x=Date,y = flowPred, color = "red"),lwd=1)+
+      geom_line(aes(x=Date,y = flowPred, color = "red"),lwd=1)+
       
-      ggtitle("Flow Fitted Values Model")+
+      ggtitle(paste(stationNames[index],"Flow Fitted Values Model",sep=""))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -597,59 +608,56 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationParsMod[[index]]
+   # data<-dat()
+    #mod<-perStationParsMod[[index]]
+    data=perStationPredVal[[index]]
     
     if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
-      toName=c("doy","date_dec","pheo","do_per","date","intercept")
+      #toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
+      #toName=c("doy","date_dec","pheo","do_per","date","intercept")
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
-      
-    }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
-      toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
-      
-    }
-    
-    byTerm=predict(mod,toUse,type="terms")
-    
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
-    if(index %in% c(5,7,13)){
+      toPlot=which(grepl("parsMod_",names(data)))
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
                                                                                   "dodgerblue","blue","purple")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }else{
+      #toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
+      #toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
+      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
+      toPlot=which(grepl("parsMod_",names(data)))
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        
+        geom_line(aes_string(x="Date",y =names(data)[toPlot[1]] , color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(data,aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(tn)')),lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(data,aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
-                                      "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6]),values=c("red","orange",
-                                                                                                         "dodgerblue","forestgreen","blue","purple")
+                                      "blue"=terms[4],"purple"=terms[5]),values=c("red","orange",
+                                                                                  "dodgerblue","blue","purple")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }
+    
+    
     
   }, height = 250, width = 1200)
   
@@ -659,78 +667,63 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationFullMod[[index]]
+   data=perStationPredVal[[index]]
     
     if(index %in% c(5,7)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
-                            "sal","Date")])
+      #toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
+                           # "sal","Date")])
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)",
                "ti(sal)",
                "intercept")
-      toName=c("doy","date_dec","pheo","do_per","sal","date","intercept")
+      toPlot=which(grepl("parsFull_",names(data)))
       
-      byTerm=predict(mod,toUse,type="terms")
-      
-      
-      
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        # geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        #geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        #geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        #geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sal, color = 'ti(sal)'), lwd=1)+
         
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(do_per)')), lwd=1)+
+        
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(sal)')), lwd=1)+
+        
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "blue"=terms[4],'mediumturquoise'=terms[5],"black"=terms[6]),
                             values=c("red","orange",
                                      "dodgerblue","blue","mediumturquoise","black")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(index==13){
       df <- data.frame()
       ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
     }else if(index %in% c(17,18,21,22,23)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","sal","Date")])
       
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
                "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)","ti(sal)",
                "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","sal","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
-      
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      
-      names(nestPred)=toName
+      toPlot=which(grepl("parsFull_",names(data)))
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(nh4)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(sal)'), lwd=1)+
+       
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y= names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[4]], color = shQuote('ti(tn)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[6]], color = shQuote('ti(sio2)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[7]], color = shQuote('ti(tp)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[8]], color = shQuote('ti(tss)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[9]], color = shQuote('ti(nh4)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[10]], color = shQuote('ti(sal)')), lwd=1)+
         
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+        geom_line(aes(x="Date",y =  names(data)[toPlot[11]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
@@ -739,35 +732,28 @@ shinyServer(function(input, output) {
                                                                                          "dodgerblue","forestgreen","blue","purple","magenta",
                                                                                          "grey","mediumturquoise","chocolate3","black")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
-      
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","Date")])
-      
+
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
                "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
                "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
+      toPlot=which(grepl("parsFull_",names(data)))
       
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      
-      names(nestPred)=toName
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes(x=date,y = pheo, color = 'ti(pheo)'),lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tn, color = 'ti(tn)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = do_per, color = 'ti(do_per)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = sio2, color = 'ti(sio2)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tp, color = 'ti(tp)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = tss, color = 'ti(tss)'), lwd=1)+
-        geom_line(data=nestPred,aes(x=date,y = nh4, color = 'ti(nh4)'), lwd=1)+
-        
-        geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+       
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(pheo)')),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('ti(tn)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[5]], color = shQuote('ti(do_per)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[6]], color = shQuote('ti(sio2)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[7]], color = shQuote('ti(tp)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[8]], color = shQuote('ti(tss)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[9]], color = shQuote('ti(nh4)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[10]], color = shQuote('intercept')), lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=terms[1],'orange'=terms[2],"dodgerblue"=terms[3],
                                       "forestgreen"=terms[4],"blue"=terms[5],"purple"=terms[6],
@@ -776,7 +762,7 @@ shinyServer(function(input, output) {
                                                                        "dodgerblue","forestgreen","blue","purple","magenta",
                                                                        "grey","mediumturquoise","chocolate3")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }
     
@@ -789,37 +775,39 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationParsMod[[index]]
+    data<-perStationPredVal[[index]]
+   
     
     if(index %in% c(5,7,13)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per","Date")])
-      toName=c("doy","date_dec","pheo","do_per","date","intercept")
+    
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)","intercept")
+      getID=c("doy","date_dec","pheo","do_per")  
       
     }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per","Date")])
-      toName=c("doy","date_dec","pheo","tn","do_per","date","intercept")
+     
       terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)","intercept")
+      getID=c("doy","date_dec","pheo","tn","do_per")
       
     }
     
-    byTerm=predict(mod,toUse,type="terms")
-    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
+   
     
+    id1=which(getID==input$plot5choice1)
+    id2=which(getID==input$plot5choice2)
+    toPlot=which(grepl("parsMod_",names(data)))
+    
+
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes_string(x="date",y = input$plot5choice1, color = "as.character(input$plot5choice1)"),lwd=1)+
-      geom_line(data=nestPred,aes_string(x="date",y = input$plot5choice2, color = "as.character(input$plot5choice2)"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot5choice1"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot5choice2"),lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=input$plot5choice1,"dodgerblue"=input$plot5choice2)
                           ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Parsimonious Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
   }, height = 250, width = 1200)
@@ -830,86 +818,67 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationFullMod[[index]]
     
+    data=perStationPredVal[[index]]
+
     if(index %in% c(5,7)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","do_per",
-                            "sal","Date")])
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(do_per)",
-               "ti(sal)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","do_per","sal","date","intercept")
-      
-      byTerm=predict(mod,toUse,type="terms")
-      
-      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
+      getID=c("doy","date_dec","pheo","do_per","sal")
+      id1=which(getID==input$plot6choice1)
+      id2=which(getID==input$plot6choice2)
+      toPlot=which(grepl("parsFull_",names(data)))
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot6choice2"),lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }else if(index==13){
       df <- data.frame()
       ggplot(df) + geom_point() +  scale_x_date(limits = dt_rng)+ggtitle("no data for extra variables in full model")
-    }else if(index %in% c(17,18,21,22,23)){
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","sal","Date")])
       
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
-               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)","ti(sal)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","sal","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
-      
-      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
+    }else if(index %in% c(17, 18, 21, 22, 23)){
+      getID=c("doy","date_dec","pheo","tn","do_per", "sio2","tp","tss","nh4","sal")
+      id1=which(getID==input$plot6choice1)
+      id2=which(getID==input$plot6choice2)
+      toPlot=which(grepl("parsFull_",names(data)))
       
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot6choice2"),lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     }else{
-      toUse=na.omit(data[,c("doy","date_dec","pheo","tn","do_per",
-                            "sio2","tp","tss","nh4","Date")])
-      
-      terms<-c("ti(pheo)","ti(doy)","ti(date_dec)","ti(tn)","ti(do_per)",
-               "ti(sio2)","ti(tp)","ti(tss)","ti(nh4)",
-               "intercept")
-      toName=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4","date","intercept")
-      byTerm=predict(mod,toUse,type="terms")
-      
-      
-      byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-      nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-      names(nestPred)=toName
-      
+      getID=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4")
+      id1=which(getID==input$plot6choice1)
+      id2=which(getID==input$plot6choice2)
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice1, color = "as.character(input$plot6choice1)"),lwd=1)+
-        geom_line(data=nestPred,aes_string(x="date",y = input$plot6choice2, color = "as.character(input$plot6choice2)"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$plot6choice2"),lwd=1)+
         scale_colour_manual(name = '',
                             labels =c('red'=input$plot6choice1,"dodgerblue"=input$plot6choice2)
                             ,values=c("red", "dodgerblue")
         ) +
-        ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stationNames[index],"Component-Wise Predictions Full Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
+      
     }
+    
+    
+    
+   
+  
     
     
   }, height = 250, width = 1200)
@@ -917,9 +886,12 @@ shinyServer(function(input, output) {
   output$mapPlot <- renderPlot({
     wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
     
+    index=which(stationNames==input$stat)
     
-    plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
-    points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
+    plot(longitude,latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
+    
+    
+    points(perStationPredVal[[index]]$Longitude[1],perStationPredVal[[index]]$Latitude[1],col="red",pch=19)
     # plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
     #points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
   },height=300,width=300)
@@ -931,28 +903,30 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
+    index=which(stationNames==stat)
+    data=perStationPredVal[[index]]
     # data
-    data<-dat()
-    mod<-perStationIntMod[[index]]
-    toUse=na.omit(data[,c("doy","date_dec","Date")])
-    byTerm=predict(mod,toUse,type="terms")
-    toName=c("doy","date_dec","interaction","date","intercept")
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
+    # data<-dat()
+    # mod<-perStationIntMod[[index]]
+    # toUse=na.omit(data[,c("doy","date_dec","Date")])
+    # byTerm=predict(mod,toUse,type="terms")
+    # toName=c("doy","date_dec","interaction","date","intercept")
+    # nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
+    # names(nestPred)=toName
     terms<-c("ti(doy)","ti(date_dec)","ti(doy,date_dec)","intercept")
+    toPlot=which(grepl("parsInt_",names(data)))
+    
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = interaction, color = 'ti(doy,date_dec)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+      geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(doy,date_dec)')), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('intercept')), lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=terms[1],"dodgerblue"=terms[2],
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Interaction Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Interaction Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
@@ -964,28 +938,25 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<-dat()
-    mod<-perStationIntMod[[index]]
-    toUse=na.omit(data[,c("doy","date_dec","Date")])
-    toName=c("doy","date_dec","interaction","date","intercept")
+    data=perStationPredVal[[index]]
+   
     terms<-c("ti(doy)","ti(date_dec)","ti(doy,date_dec)","intercept")
     
-    byTerm=predict(mod,toUse,type="terms")
-    byTerm=apply(byTerm,2,function(x){x+summary(mod)$p.coeff})
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
-    
+    getID=c('doy', 'date_dec', 'interaction')
+    toPlot=which(grepl("parsInt_",names(data)))
+    id1=which(getID==input$intVar1)
+    id2=which(getID==input$intVar2)
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes_string(x="date",y = input$intVar1, color = "as.character(input$intVar1)"),lwd=1)+
-      geom_line(data=nestPred,aes_string(x="date",y = input$intVar2, color = "as.character(input$intVar2)"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$intVar1"),lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[id2]], color = "input$intVar2"),lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=input$intVar1,"dodgerblue"=input$intVar2)
                           ,values=c("red", "dodgerblue")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Interaction Model \n Intercept added in order to center components",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
   }, height = 250, width = 1200)
@@ -996,31 +967,21 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
-    data<-subset(allData,Station==stat)
-    indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))
+    index=which(stationNames==stat)
+    data=perStationPredVal[[index]]
+    # data<-subset(allData,Station==stat)
+    # indices<-which(allData$Station==stat)
+    # data$Date=as.Date(as.character(data$Date))
     
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
-      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
-      names(toPlot)=c("station","doy","date_dec","date")
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod1$coefficients[1]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod1$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]+mod1$coefficients[indexS]
-      }
+      toPlot=which(grepl("spatM1_",names(data)))
+      
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+   
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('station')), lwd=1)+
         
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy)",
@@ -1031,29 +992,13 @@ shinyServer(function(input, output) {
       
     }else if(input$spatMod=="spatDate_Dec"){
       
+      toPlot=which(grepl("spatM2_",names(data)))
       
-      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod2$coefficients[1]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod2$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]+mod2$coefficients[indexS]
-      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+      
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec,Station)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('station')), lwd=1)+
         
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy)",
@@ -1063,28 +1008,12 @@ shinyServer(function(input, output) {
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+1
-      toPlot=toPlot[,c(1,index,ncol(toPlot))]
+      toPlot=which(grepl("spatM3_",names(data)))
       
-      names(toPlot)=c("station","doy_Station","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod3$coefficients[1]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod3$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]+mod3$coefficients[indexS]
-      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[1]], color = shQuote('ti(doy_Station)')), lwd=1)+
+        geom_line(aes_string(x="Date",y= names(data)[toPlot[2]], color = shQuote('ti(date_dec,Station)')), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[3]], color = shQuote('station')), lwd=1)+
         
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy_Station)",
@@ -1094,31 +1023,14 @@ shinyServer(function(input, output) {
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
+      toPlot=which(grepl("spatM4_",names(data)))
       
-      names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod4$coefficients[1]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod4$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=interactionStation, color = 'ti(date_dec,doy_Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec,Station)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[3]], color = shQuote('ti(date_dec,doy_Station)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('station')), lwd=1)+
+        
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec,Station)",
@@ -1126,430 +1038,6 @@ shinyServer(function(input, output) {
                                                                                     "forestgreen","purple")
         ) +
         ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }
-    
-  }, height = 250, width = 1200)
-  
-  output$nestedPlotSpat2 <- renderPlot({
-    
-    # inputs
-    
-    dt_rng <- input$dt_rng
-    stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
-    data<-subset(allData,Station==stat)
-    indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))    
-    if(input$spatMod2=="spatIntercept"){
-      ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
-      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
-      names(toPlot)=c("station","doy","date_dec","date")
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod1$coefficients[1]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod1$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]+mod1$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod2 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod2=="spatDate_Dec"){
-      
-      
-      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod2$coefficients[1]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod2$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]+mod2$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod2 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod2=="spatDOY"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+1
-      toPlot=toPlot[,c(1,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy_Station","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod3$coefficients[1]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod3$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]+mod3$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy_Station)",
-                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod2 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod2=="spatinteraction"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod4$coefficients[1]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod4$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=interactionStation, color = 'ti(date_dec,doy_Station)'), lwd=1)+
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec,Station)",
-                                      "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
-                                                                                    "forestgreen","purple")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod2 ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }
-    
-  }, height = 250, width = 1200)
-  
-  output$nestedPlotSpat3 <- renderPlot({
-    
-    # inputs
-    
-    dt_rng <- input$dt_rng
-    stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
-    data<-subset(allData,Station==stat)
-    indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))    
-    if(input$spatMod3=="spatIntercept"){
-      ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
-      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
-      names(toPlot)=c("station","doy","date_dec","date")
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod1$coefficients[1]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod1$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]+mod1$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod3 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod3=="spatDate_Dec"){
-      
-      
-      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod2$coefficients[1]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod2$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]+mod2$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod3 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod3=="spatDOY"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+1
-      toPlot=toPlot[,c(1,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy_Station","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod3$coefficients[1]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod3$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]+mod3$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy_Station)",
-                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod3 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod3=="spatinteraction"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod4$coefficients[1]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod4$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=interactionStation, color = 'ti(date_dec,doy_Station)'), lwd=1)+
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec,Station)",
-                                      "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
-                                                                                    "forestgreen","purple")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod3 ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }
-    
-  }, height = 250, width = 1200)
-  
-  
-  output$nestedPlotSpat4 <- renderPlot({
-    
-    # inputs
-    
-    dt_rng <- input$dt_rng
-    stat <- input$stat
-    index=which(names(perStationAdd)==stat)
-    
-    data<-subset(allData,Station==stat)
-    indices<-which(allData$Station==stat)
-    data$Date=as.Date(as.character(data$Date))    
-    if(input$spatMod4=="spatIntercept"){
-      ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
-      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
-      names(toPlot)=c("station","doy","date_dec","date")
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod1$coefficients[1]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod1$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]+mod1$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod4 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod4=="spatDate_Dec"){
-      
-      
-      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod2$coefficients[1]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod2$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]+mod2$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod4 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod4=="spatDOY"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+1
-      toPlot=toPlot[,c(1,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy_Station","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod3$coefficients[1]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod3$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]+mod3$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy_Station)",
-                                      "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod4 ,"Model \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
-        ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
-      
-    }else if(input$spatMod4=="spatinteraction"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod4$coefficients[1]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod4$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-      }
-      ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=interactionStation, color = 'ti(date_dec,doy_Station)'), lwd=1)+
-        scale_colour_manual(name = '',
-                            labels =c('red'="station","dodgerblue"="ti(doy)",
-                                      "forestgreen"="ti(date_dec,Station)",
-                                      "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
-                                                                                    "forestgreen","purple")
-        ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod4 ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(toPlot$station[1],2),sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }
@@ -1624,26 +1112,20 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<- datA()
+    data=perStationPredVal[[index]]
     
     
-    
-    
-    mod<-perStationFlowMod[[index]]
-    toUse=na.omit(data[,c("doy","date_dec","Date","chl","chl.1")])
-    byTerm=predict(mod,toUse,type="terms")
-    toName=c("doy","date_dec","chl","date","intercept")
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
     terms<-c("ti(doy)","ti(date_dec)","ti(chl)","intercept")
+    toPlot=which(grepl("chlFlow_",names(data)))
+    
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = chl, color = 'ti(chl)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+      geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(chl)')), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('intercept')), lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=terms[1],"dodgerblue"=terms[2],
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
@@ -1661,31 +1143,28 @@ shinyServer(function(input, output) {
     
     dt_rng <- input$dt_rng
     stat <- input$stat
-    index=which(names(perStationAdd)==stat)
+    index=which(stationNames==stat)
     
     # data
-    data<- datA()
+    data=perStationPredVal[[index]]
     data$TOT=0.028316847*data$TOT
-    mod<-perStationFlowTOT[[index]]
-    toUse=na.omit(data[,c("doy","date_dec","Date","TOT")])
-    byTerm=predict(mod,toUse,type="terms")
-    toName=c("doy","date_dec","tot","date","intercept")
+   
     
-    nestPred=as.data.frame(cbind.data.frame(byTerm,toUse$Date,rep(summary(mod)$p.coeff,nrow(toUse))))
-    names(nestPred)=toName
+   
     terms<-c("ti(doy)","ti(date_dec)","ti(tot)","intercept")
-
+    toPlot=which(grepl("totFlow_",names(data)))
+    
     ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-      geom_line(data=nestPred,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = tot, color = 'ti(tot)'), lwd=1)+
-      geom_line(data=nestPred,aes(x=date,y = intercept, color = 'intercept'), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+      geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('ti(tot)')), lwd=1)+
+      geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = shQuote('intercept')), lwd=1)+
       scale_colour_manual(name = '',
                           labels =c('red'=terms[1],"dodgerblue"=terms[2],
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Total Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Total Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
