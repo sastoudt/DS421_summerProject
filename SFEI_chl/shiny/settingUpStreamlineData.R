@@ -5,6 +5,7 @@ setwd("~/Desktop/sfei")
 
  load(file = "perStationParsimoniousModels.Rda")
  load(file = "perStationFullModels.Rda")
+ load(file="perStationInteractionModels.Rda")
 
 # load(file="mod1Spatial.RData")
 # load(file="mod2Spatial.RData")
@@ -50,7 +51,7 @@ for(index in wholeSeries){
   
   if(index!=13){
   byTerm=predict(perStationFullMod[[index]],data,type="terms")
-  nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationParsMod[[index]])$p.coeff)))
+  nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationFullMod[[index]])$p.coeff)))
   
   }
   
@@ -80,3 +81,19 @@ for(index in wholeSeries){
 }
 }
 save(perStationPredVal,file="perStationPredVal.Rda")
+
+
+
+for(index in wholeSeries){
+  data=perStationPredVal[[index]]
+  
+  toName=c("doy","date_dec","interaction","intercept")
+  byTerm=predict(perStationIntMod[[index]],data,type="terms")
+  nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationIntMod[[index]])$p.coeff)))
+  names(nestPred)=paste("parsInt",toName,sep="_")
+  perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
+  
+}
+
+save(perStationPredVal,file="perStationPredVal.Rda")
+
