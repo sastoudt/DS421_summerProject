@@ -193,12 +193,23 @@ for(index in wholeSeries){
   
   data=perStationPredVal[[index]]
   
-  byTerm=predict(perStationFlowMod[[index]],data,type="terms")
-  
-  nestPred=as.data.frame(cbind.data.frame(byTerm,rep(summary(perStationFlowMod[[index]])$p.coeff)))
+  test=na.omit(data[,c("doy","date_dec","chl.1")])
   
   
-    toName=c("doy","date_dec","chl","date","intercept")
+  byTerm=predict(perStationFlowMod[[index]],test,type="terms") ## getting errors
+  
+  pred1=pred2=pred3=pred4=rep(NA,nrow(data))
+
+  pred1[setdiff(1:nrow(data), which(is.na(data$chl.1)))]=byTerm[,1]
+  pred2[setdiff(1:nrow(data), which(is.na(data$chl.1)))]=byTerm[,2]
+  pred3[setdiff(1:nrow(data), which(is.na(data$chl.1)))]=byTerm[,3]
+  pred4[setdiff(1:nrow(data), which(is.na(data$chl.1)))]=perStationFlowMod[[1]]$coefficients[1]
+  #byTerm=predict(perStationFlowMod[[index]],data,type="terms") ## getting errors
+  
+  nestPred=as.data.frame(cbind.data.frame(pred1,pred2,pred3,pred4))
+  
+  
+    toName=c("doy","date_dec","chl","intercept")
 
   names(nestPred)=paste("chlFlow",toName,sep="_")
   
