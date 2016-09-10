@@ -89,6 +89,11 @@ stationNames= c("C10", "C3", "C7" , "C9","D10","D11","D12","D14A","D15","D16","D
 "D2","D22", "D24","D26","D28A", "D4","D41","D41A","D42", "D6","D7", "D8","D9","EZ2","EZ2-SJR", "EZ6","EZ6-SJR",
 "MD10","MD6", "MD7","NZ002","NZ004","NZ032","NZ325","NZS42","P10" ,"P12","P2", "P8","S42")
 
+longitude=c(-121.2647, -121.5205, -121.9183, -121.8063, -121.6148, -121.7391, -121.5669, -121.5730, -121.8205,
+            -122.3729, -122.1177,-122.0397, -121.9900, -121.4199, -121.3823)
+latitude=c(37.67934, 38.36771, 38.04631, 38.02161, 38.04376, 38.08453, 38.07664, 37.97048, 38.06248, 38.03022,
+           38.04436, 38.11714, 38.05992, 38.04226, 37.97817)
+
 getSummaryRMSE<-function(data,namePred){
   
   trueVal=data$chl 
@@ -891,9 +896,12 @@ shinyServer(function(input, output) {
   output$mapPlot <- renderPlot({
     wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
     
+    index=which(stationNames==input$stat)
     
-    plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
-    points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
+    plot(longitude,latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
+    
+    
+    points(perStationPredVal[[index]]$Longitude[1],perStationPredVal[[index]]$Latitude[1],col="red",pch=19)
     # plot(allData$Longitude,allData$Latitude,pch=19,main="Location of Station",xlab="longitude",ylab="latitude")
     #points(dat()$Longitude,dat()$Latitude,col="red",pch=19)
   },height=300,width=300)
