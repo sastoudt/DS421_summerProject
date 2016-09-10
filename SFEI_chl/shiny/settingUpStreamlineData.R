@@ -178,7 +178,7 @@ for(index in wholeSeries){
   intStat=apply(byTerm[,18:32],1,sum)
   nestPred=as.data.frame(cbind.data.frame(byTerm[,2],dateDecStat,intStat,stationEffect[index]))
   toName=c("doy","date_decByStation","intByStation","intercept")
-  names(nestPred)=paste("spatM3",toName,sep="_")
+  names(nestPred)=paste("spatM4",toName,sep="_")
   
   perStationPredVal[[index]]=cbind.data.frame(data,nestPred)
 }

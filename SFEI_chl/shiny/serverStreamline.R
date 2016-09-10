@@ -988,23 +988,13 @@ shinyServer(function(input, output) {
     
     if(input$spatMod=="spatIntercept"){
       ## maybe just boost everything by the intercept so that it lines up, no need to do two plot?
-      toPlot=as.data.frame(cbind.data.frame(predict(mod1,data,type="terms"),data$Date))
-      names(toPlot)=c("station","doy","date_dec","date")
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod1$coefficients[1]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod1$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod1$coefficients[1]+mod1$coefficients[indexS]
-        toPlot$date_dec=toPlot$date_dec+mod1$coefficients[1]+mod1$coefficients[indexS]
-      }
+      toPlot=which(grepl("spatM1_",names(data)))
+      
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_dec, color = 'ti(date_dec)'), lwd=1)+
+   
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = shQuote('ti(doy)')), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = shQuote('ti(date_dec)')), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = shQuote('station')), lwd=1)+
         
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy)",
@@ -1015,29 +1005,13 @@ shinyServer(function(input, output) {
       
     }else if(input$spatMod=="spatDate_Dec"){
       
+      toPlot=which(grepl("spatM2_",names(data)))
       
-      toPlot=as.data.frame(cbind.data.frame(predict(mod2,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
-      
-      names(toPlot)=c("station","doy","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod2$coefficients[1]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod2$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod2$coefficients[1]+mod2$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod2$coefficients[1]+mod2$coefficients[indexS]
-      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+      
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = 'ti(doy)'), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = 'ti(date_dec,Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[3]], color = 'station'), lwd=1)+
         
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy)",
@@ -1047,28 +1021,12 @@ shinyServer(function(input, output) {
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod3,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+1
-      toPlot=toPlot[,c(1,index,ncol(toPlot))]
+      toPlot=which(grepl("spatM3_",names(data)))
       
-      names(toPlot)=c("station","doy_Station","date_decStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod3$coefficients[1]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod3$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$doy_Station=toPlot$doy_Station+mod3$coefficients[1]+mod3$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod3$coefficients[1]+mod3$coefficients[indexS]
-      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy_Station, color = 'ti(doy_Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[1]], color = 'ti(doy_Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y= names(data)[toPlot[2]], color = 'ti(date_dec,Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y =  names(data)[toPlot[3]], color = 'station'), lwd=1)+
         
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy_Station)",
@@ -1078,31 +1036,14 @@ shinyServer(function(input, output) {
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
-      toPlot=as.data.frame(cbind.data.frame(predict(mod4,data,type="terms"),data$Date))
-      findS=unlist(lapply( names(toPlot)[-c(1,2,ncol(toPlot))], function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-      index=which(findS==stat)+2
-      toPlot=toPlot[,c(1,2,index,ncol(toPlot))]
+      toPlot=which(grepl("spatM4_",names(data)))
       
-      names(toPlot)=c("station","doy","date_decStation","interactionStation","date")
-      
-      if(stat=="C10"){
-        toPlot$station=toPlot$station+mod4$coefficients[1]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]
-      }else{
-        findS= unlist(lapply(names(mod4$coefficients),function(x){y<-strsplit(x,"Station)");unlist(y)[2]}))
-        indexS=which(findS==stat) 
-        toPlot$station=toPlot$station+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$doy=toPlot$doy+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$date_decStation=toPlot$date_decStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-        toPlot$interactionStation=toPlot$interactionStation+mod4$coefficients[1]+mod4$coefficients[indexS]
-      }
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
-        geom_line(data=toPlot,aes(x=date,y = station, color = 'station'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y = doy, color = 'ti(doy)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=date_decStation, color = 'ti(date_dec,Station)'), lwd=1)+
-        geom_line(data=toPlot,aes(x=date,y=interactionStation, color = 'ti(date_dec,doy_Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[1]], color = 'ti(doy)'), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[2]], color = 'ti(date_dec,Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y=names(data)[toPlot[3]], color = 'ti(date_dec,doy_Station)'), lwd=1)+
+        geom_line(aes_string(x="Date",y = names(data)[toPlot[4]], color = 'station'), lwd=1)+
+        
         scale_colour_manual(name = '',
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec,Station)",
