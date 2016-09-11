@@ -169,3 +169,26 @@ CM2 <- Balance %*% CM1 %*% Balance
 max(CM2-empCov)/max(empCov) ##  0.004342025 not a serious deviation
 
 cbind(eigen(CM2)$values,eigen(empCov)$values)
+
+
+##
+D=diag(eigen(empCov)$values)
+V=eigen(empCov)$vectors
+
+V1=V[,13]
+C2=empCov+V1%*%t(V1)*( 7.1054e-15-D[13,13])
+##eps(D[13,13])= 7.1054e-15 ## matlab minimum eigenvalue
+eigen(C2)$values
+
+## still on enegative eigenvalue, repeat
+D=diag(eigen(C2)$values)
+V=eigen(C2)$vectors
+V1=V[,13]
+C3=C2+V1%*%t(V1)*(1.7764e-15-D[13,13])
+
+##eps(D[13,13])= 1.7764e-15 ## matlab minimum eigenvalue
+eigen(C3)$values
+  
+## now still a negative eigenvalue
+
+cbind(eigen(empCov)$values,eigen(C2)$values,eigen(C3)$values)
