@@ -79,10 +79,10 @@ require(httr)
 # response<- GET(url="https://www.dropbox.com/s/mj7b9crkyaxaxjd/perStationParsimoniousModels.Rda?dl=0")
 # load(rawConnection(response$content))
 
-#response<- GET(url="https://www.dropbox.com/s/mo8kob5m8f3yykd/perStationFullModels.Rda?dl=0")
-#load(rawConnection(response$content))
+response<- GET(url="https://www.dropbox.com/s/mo8kob5m8f3yykd/perStationFullModels.Rda?dl=0")
+load(rawConnection(response$content))
 
-load(file="~/Desktop/sfei/perStationPredVal.Rda")
+#load(file="~/Desktop/sfei/perStationPredVal.Rda")
 
 #response<- GET(url="https://www.dropbox.com/s/3ql5nihqjt1pxak/perStationTOTModels.Rda?dl=0")
 #load(rawConnection(response$content))
