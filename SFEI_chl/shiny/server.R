@@ -79,16 +79,18 @@ require(httr)
 # response<- GET(url="https://www.dropbox.com/s/mj7b9crkyaxaxjd/perStationParsimoniousModels.Rda?dl=0")
 # load(rawConnection(response$content))
 
-response<- GET(url="https://www.dropbox.com/s/vqolh5rnp2w1iai/perStationPredVal.Rda?dl=0")
-load(rawConnection(response$content))
+#response<- GET(url="https://www.dropbox.com/s/mo8kob5m8f3yykd/perStationFullModels.Rda?dl=0")
+#load(rawConnection(response$content))
+
+load(file="~/Desktop/sfei/perStationPredVal.Rda")
 
 #response<- GET(url="https://www.dropbox.com/s/3ql5nihqjt1pxak/perStationTOTModels.Rda?dl=0")
 #load(rawConnection(response$content))
 # Define server logic required to generate and plot data
 wholeSeries<-c(1, 2, 5, 7, 11, 13, 15, 16, 17, 18, 21, 22, 23, 29, 40)
-allData<- do.call("rbind", perStationAdd[wholeSeries])
-forMap=allData[,c("Longitude","Latitude","Station")]
-forMap=unique(forMap)
+#allData<- do.call("rbind", perStationAdd[wholeSeries])
+#forMap=allData[,c("Longitude","Latitude","Station")]
+#forMap=unique(forMap)
 
 dt_rng=c(NA,NA)
 
@@ -180,45 +182,45 @@ getSummaryRMSE<-function(data,namePred){
 }
 
 spatialPlotRMSE_pieces=function(data,breakdownPieces,modName,removeOutlier=F){
-  testMerge=cbind(forMap,data)
-  
+  #testMerge=cbind(forMap,data)
+  testMerge=cbind(longitude,latitude,data)
   if(removeOutlier){
     testMerge=testMerge[-1,]
   }
   
   if(length(breakdownPieces)==4){
     
-    g1<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[1],cex=2))+geom_point()+
+    g1<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[1],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[1]))+scale_size(guide=F)
     
-    g2<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[2],cex=2))+geom_point()+
+    g2<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[2],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[2]))+scale_size(guide=F)
     
-    g3<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[3],cex=2))+geom_point()+
+    g3<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[3],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[2]))+scale_size(guide=F)
     
-    g4<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
+    g4<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[4]))+scale_size(guide=F)
     
     grid.arrange(g1,g2,g3,g4)
   }else{
     
-    g1<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[1],cex=2))+geom_point()+
+    g1<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[1],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[1]))+scale_size(guide=F)
     
-    g2<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[2],cex=2))+geom_point()+
+    g2<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[2],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[2]))+scale_size(guide=F)
     
-    g3<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[3],cex=2))+geom_point()+
+    g3<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[3],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[3]))+scale_size(guide=F)
     
-    g4<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
+    g4<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[4],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[4]))+scale_size(guide=F)
     
-    g5<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[5],cex=2))+geom_point()+
+    g5<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[5],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[5]))+scale_size(guide=F)
     
-    g6<-ggplot(testMerge,aes_string(x = "Longitude", y = "Latitude",colour=breakdownPieces[6],cex=2))+geom_point()+
+    g6<-ggplot(testMerge,aes_string(x = "longitude", y = "latitude",colour=breakdownPieces[6],cex=2))+geom_point()+
       ggtitle(paste(modName,breakdownPieces[6]))+scale_size(guide=F)
     
     grid.arrange(g1,g2,g3,g4,g5,g6)
@@ -330,7 +332,7 @@ shinyServer(function(input, output) {
   output$plot5choice1<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(stationNames==input$stat)
     
     if(index %in% c(5,7,13)){
       selectInput("plot5choice1","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"),"Intercept will be added to center results")
@@ -346,7 +348,7 @@ shinyServer(function(input, output) {
   output$plot5choice2<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(stationNames==input$stat)
     
     if(index %in% c(5,7,13)){
       selectInput("plot5choice2","Select a variable in parsimonious model.",c("doy","date_dec","pheo","do_per"))
@@ -362,7 +364,7 @@ shinyServer(function(input, output) {
   output$plot6choice1<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(stationNames==input$stat)
     
     if(index %in% c(5,7)){
       selectInput("plot6choice1","Select a variable in full model.",c("doy","date_dec","pheo","do_per",
@@ -386,7 +388,7 @@ shinyServer(function(input, output) {
   output$plot6choice2<- renderUI({
     
     
-    index=which(names(perStationAdd)==input$stat)
+    index=which(stationNames==input$stat)
     
     if(index %in% c(5,7)){
       selectInput("plot6choice2","Select a variable in full model.",c("doy","date_dec","pheo","do_per",
@@ -546,14 +548,14 @@ shinyServer(function(input, output) {
       indexCol=82
     }
    
-    
-    ggplot(data,aes(x = Date, y = chl))+geom_point()+
-      #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
-      geom_line(aes_string(x="Date",y = names(data)[indexCol], color = shQuote("red")),lwd=1)+
-      ggtitle(paste(input$spatMod,stationNames[index], "Fitted Values Model",sep=" "))+
-      theme(legend.position='none')+
-      scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
-    
+
+    ggplot(data,aes(x = Date, y = chl))+geom_point()+ #
+    #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+ #
+    geom_line(aes_string(x="Date",y = names(data)[indexCol], color =
+    shQuote("red")),lwd=1)+ #
+    ggtitle(paste(input$spatMod,stationNames[index], "Fitted Values
+    Model",sep=" "))+ #   theme(legend.position='none')+ #
+    scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12) #
     
   }, height = 250, width = 1200)
   
@@ -593,7 +595,7 @@ shinyServer(function(input, output) {
       #geom_line(aes(x=Date,y =names(data)[index] ,col="red"),lwd=1)+
       geom_line(aes(x=Date,y = flowPred, color = "red"),lwd=1)+
       
-      ggtitle(paste(stationNames[index],"Flow Fitted Values Model",sep=""))+
+      ggtitle(paste(stationNames[index]," Flow Fitted Values Model",sep=""))+
       theme(legend.position='none')+
       scale_x_date(limits = dt_rng)+ylab("chl a (microgram/L)")+xlab("Date")+ylim(0,input$ylim12)
     
@@ -862,6 +864,8 @@ shinyServer(function(input, output) {
     }else{
       getID=c("doy","date_dec","pheo","tn","do_per","sio2","tp","tss","nh4")
       id1=which(getID==input$plot6choice1)
+      toPlot=which(grepl("parsFull_",names(data)))
+      
       id2=which(getID==input$plot6choice2)
       ggplot(data,aes(x = Date, y = log(chl)))+geom_point()+
         geom_line(aes_string(x="Date",y = names(data)[toPlot[id1]], color = "input$plot6choice1"),lwd=1)+
@@ -1004,7 +1008,7 @@ shinyServer(function(input, output) {
                             labels =c('red'="station","dodgerblue"="ti(doy)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(int,2),sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. ",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatDOY"){
@@ -1019,7 +1023,7 @@ shinyServer(function(input, output) {
                             labels =c('red'="station","dodgerblue"="ti(doy_Station)",
                                       "forestgreen"="ti(date_dec,Station)"),values=c("red","dodgerblue","forestgreen")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. \n Intercept =",round(int,2),sep=" "))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model \n Intercept added to each piece to center. ",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }else if(input$spatMod=="spatinteraction"){
@@ -1037,7 +1041,7 @@ shinyServer(function(input, output) {
                                       "purple"="ti(date_dec,doy_Station)"),values=c("red","dodgerblue",
                                                                                     "forestgreen","purple")
         ) +
-        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center. \n Intercept =",round(int,2)))+scale_x_date(limits = dt_rng)+
+        ggtitle(paste(stat,"Component-Wise Predictions",input$spatMod ,"Model  \n Intercept added to each piece to center. ",sep=" "))+scale_x_date(limits = dt_rng)+
         ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
       
     }
@@ -1131,7 +1135,7 @@ shinyServer(function(input, output) {
                                     "forestgreen"=terms[3],"purple"=terms[4]),values=c("red",
                                                                                        "dodgerblue","forestgreen","purple")
       ) +
-      ggtitle(paste(names(perStationAdd)[index],"Component-Wise Predictions Chl Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
+      ggtitle(paste(stationNames[index],"Component-Wise Predictions Chl Flow Model",sep=" "))+scale_x_date(limits = dt_rng)+
       ylab("ln(chl a) ")+xlab("Date")+ylim(input$ylim34L,input$ylim34U)
     
     
