@@ -8,7 +8,7 @@ Shiny app deployed here: https://sastoudt.shinyapps.io/SF_chl/
 
 Fixed as of 9/11. Give it a little bit of time to load and any error messages that pop up initially will go away. 
 
-~~8/24: I still can't get this to run on shiny io. The app works fine locally, but crashes with no error messages when deployed. I even moved all of the large files to Dropbox to remove the size issues, but to no avail. As a last resort, you can now run the app on your own computer, using the following two lines of code. ~~
+~~8/24: I still can't get this to run on shiny io. The app works fine locally, but crashes with no error messages when deployed. I even moved all of the large files to Dropbox to remove the size issues, but to no avail. As a last resort, you can now run the app on your own computer, using the following two lines of code.~~
 
 library(shiny)
 
