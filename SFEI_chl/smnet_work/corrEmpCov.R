@@ -31,7 +31,10 @@ testMerge=testMerge[,c("Date",orderL2R)]
 View(testMerge)
 
 require(Hmisc)
-result<-rcorr(as.matrix(testMerge[,-1]))
+result<-rcorr(as.matrix(testMerge[,-1])) ## pearson
+resultS<-rcorr(as.matrix(testMerge[,-1]),type="spearman")
+resultK<-cor(as.matrix(testMerge[,-1]), method="kendall", use="pairwise")  ## use n from rcorr
+
 result$r[result$n<100]<-0 ## get rid of correlations made with not a lot of pairwise matches
 result$r
 
@@ -146,3 +149,23 @@ empCov=D%*%flatten%*%D
 ## http://stats.stackexchange.com/questions/69114/why-does-correlation-matrix-need-to-be-positive-semi-definite-and-what-does-it-m
 ## http://www.avrahamadler.com/2013/08/19/correcting-a-pseudo-correlation-matrix-to-be-positive-semidefinite/
 
+
+CorrectCM < - function(CM)
+{
+  n <- dim(var(CM))[1L]
+  E <- eigen(CM)
+  CM1 <- E$vectors %*% tcrossprod(diag(pmax(E$values, 0), n), E$vectors)
+  Balance <- diag(1/sqrt(diag(CM1)))
+  CM2 <- Balance %*% CM1 %*% Balance  
+  return(CM2)
+}
+
+n <- dim(var(empCov))[1L]
+E <- eigen(empCov)
+CM1 <- E$vectors %*% tcrossprod(diag(pmax(E$values, 0), n), E$vectors)
+Balance <- diag(1/sqrt(diag(CM1)))
+CM2 <- Balance %*% CM1 %*% Balance  
+
+max(CM2-empCov)/max(empCov) ##  0.004342025 not a serious deviation
+
+cbind(eigen(CM2)$values,eigen(empCov)$values)
