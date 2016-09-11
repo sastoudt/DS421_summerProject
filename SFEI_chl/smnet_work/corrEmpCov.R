@@ -133,3 +133,16 @@ eigen(D%*%flatten%*%D)$values
 empCov=D%*%flatten%*%D
 
 ## relationship between this and a distance metric?
+
+### kriging overview
+### http://people.ku.edu/~gbohling/cpe940/Kriging.pdf
+
+## spatiotemp krig
+##https://www.r-bloggers.com/spatio-temporal-kriging-in-r/
+##http://geostat-course.org/system/files/part01.pdf
+
+## adjusting non psd matrices to be psd
+## http://www.mathworks.com/matlabcentral/answers/6057-repair-non-positive-definite-correlation-matrix?
+## http://stats.stackexchange.com/questions/69114/why-does-correlation-matrix-need-to-be-positive-semi-definite-and-what-does-it-m
+## http://www.avrahamadler.com/2013/08/19/correcting-a-pseudo-correlation-matrix-to-be-positive-semidefinite/
+
