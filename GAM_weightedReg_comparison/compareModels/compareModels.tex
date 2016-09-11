@@ -19,7 +19,7 @@
 
 Note: Filled in D4din, D4nh, D4no23, D6din, D6nh, D6no23, D7din, D7nh, D7no23 by building a mean model on the corresponding dataNiceNoLag data and using fit0.5.
 
-Explanation of the NAs from Marcus: ``The issue is that the flow variable (in this case salinity) used to create the model predictions was slightly different from the flow variable used to fit the model.  It’s actually the same time series in both cases but one was monthly aggregated and the other was not. I had to do some data tweaking early on to make the models comparable.  The NA values occur when the observation date for the flow variable used for prediction did not match the observation date for the aggregated monthly response, i.e., predicting response variables with ‘new’ data."
+Explanation of the NAs from Marcus: ``The issue is that the flow variable (in this case salinity) used to create the model predictions was slightly different from the flow variable used to fit the model.  It?s actually the same time series in both cases but one was monthly aggregated and the other was not. I had to do some data tweaking early on to make the models comparable.  The NA values occur when the observation date for the flow variable used for prediction did not match the observation date for the aggregated monthly response, i.e., predicting response variables with 'new' data."
 
 \section{Like Table 2 in Beck and Murphy EMA}
 
@@ -71,9 +71,9 @@ Explanation of the NAs from Marcus: ``The issue is that the flow variable (in th
 
 \subsection{Observations on Results of Different Parameter Experiment }
 \begin{itemize}
-\item Stations of interest: D7, D19 chosen to be fairly represent (in the center portion)
+\item Stations of interest: D7, D19 chosen to be fairly representative (in the center portion)
 \item Expand k: visually the predictions look similar to those of the GAM model with the original choices of k
-\item WRTDS predictions are less extreme than the GAM predictions: so if GAM is always "winning" it means it gets high/low enough in the right places and isn't losing big by being large in magnitude when it shouldn't
+\item WRTDS predictions are less extreme than the GAM predictions: so if GAM is always ``winning" it means it gets high/low enough in the right places and isn't losing big by being large in magnitude when it shouldn't
 \item expanded k version always has smaller RMSE breakdown than the original GAM model which means it still has smaller RMSE than WRTDS
 \item can't expand k any further because of identifiability constraints
 \item Original window sizes (0.5, 10, 0.5) try smaller window sizes (0.25, 5, 0.25), bigger window sizes (0.75, 15, 0.75) and an even bigger widows size (1,20,1)
