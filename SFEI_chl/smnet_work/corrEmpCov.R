@@ -50,19 +50,20 @@ flattenCorrMatrix <- function(cormat) {
 }
 flatCorr=flattenCorrMatrix(result$r)
 
-toUse=flatCorr[which(abs(flatCorr$cor)>.5),]
+#toUse=flatCorr[which(abs(flatCorr$cor)>.5),]
 
 forMap=allData[,c("Longitude","Latitude","Station")]
 forMap=unique(forMap)
+forMap=forMap[-c(1,10),]
 
-tryThis=merge(toUse,forMap,by.x="row",by.y="Station",all.x=T)
-names(tryThis)[4:5]=c("Long1","Lat1")
-tryThis2=merge(tryThis,forMap,by.x="column",by.y="Station",all.x=T)
-names(tryThis2)[6:7]=c("Long2","Lat2")
+#tryThis=merge(toUse,forMap,by.x="row",by.y="Station",all.x=T)
+#names(tryThis)[4:5]=c("Long1","Lat1")
+#tryThis2=merge(tryThis,forMap,by.x="column",by.y="Station",all.x=T)
+#names(tryThis2)[6:7]=c("Long2","Lat2")
 
-plot(allData$Longitude,allData$Latitude,type="n")
-text(allData$Longitude,allData$Latitude, allData$Station)
-arrows(tryThis2$Long1,tryThis2$Lat1,tryThis2$Long2,tryThis2$Lat2,angle=90,code=2,length=0)
+#plot(allData$Longitude,allData$Latitude,type="n")
+#text(allData$Longitude,allData$Latitude, allData$Station)
+#arrows(tryThis2$Long1,tryThis2$Lat1,tryThis2$Long2,tryThis2$Lat2,angle=90,code=2,length=0)
 
 ## need to make covariance matrix out of 
 
@@ -81,11 +82,41 @@ merge2
 names(merge2)[4:5]=c("i","j")
 
 
+####
 
-flattenD4W=matrix(0,nrow=13,ncol=13)
-for(i in 1:nrow(flattenD4)){
-  row=flattenD4[i,]
-  flattenD4W[row[1],row[2]]=row[3]
+flatten=matrix(0,nrow=13,ncol=13)
+for(i in 1:nrow(merge2)){
+  row=unname(as.vector(merge2[i,]))
+  flatten[row[[4]],row[[5]]]=row[[3]]
+  print(i)
 }
 
-flattenD4W
+flatten
+eigen(flatten)$values
+
+## need to make diagonals 1
+
+for(i in 1:13){
+  flatten[i,i]=1
+}
+
+flatten
+
+## correlation matrix --> covariance matrix
+## http://blogs.sas.com/content/iml/2010/12/10/converting-between-correlation-and-covariance-matrices.html
+## standard deviations of each variable
+
+wholeSeries2=wholeSeries[-c(1,10)]
+wholeSeries2
+
+sd_chl<-c()
+for(i in wholeSeries2){
+ sd_chl<-c(sd_chl,sd(perStation[[i]]$chl,na.rm=T)) 
+}
+sd_chl
+D=diag(sd_chl)
+D
+
+eigen(D%*%flatten%*%D)$values
+## PSD
+
