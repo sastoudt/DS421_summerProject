@@ -86,9 +86,6 @@ if(flolab == 'sal'){
 
 mod <- wrtds(tomod, tau = c(0.1, 0.5, 0.9), wins = list(0.5, 10, 0.5), flo_div = 30, min_obs = 150)
 
-out <- mod %>% 
-  respred(dat_pred = topred) %>% 
-  resnorm
 
 mod=mods_nolag_mean$mod[[1]]
 out <- mod %>% 
