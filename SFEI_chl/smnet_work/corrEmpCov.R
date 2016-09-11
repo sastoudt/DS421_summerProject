@@ -192,3 +192,23 @@ eigen(C3)$values
 ## now still a negative eigenvalue
 
 cbind(eigen(empCov)$values,eigen(C2)$values,eigen(C3)$values)
+
+
+### 
+k=min(eigen(empCov)$values)
+C2=empCov-k*diag(n)
+C2=C2/C2[1,1]
+C2
+cbind(eigen(empCov)$values,eigen(C2)$values)
+
+max(abs(C2-empCov))/max(abs(empCov)) ## 0.9714147 huge
+
+## optimization of perturbation, do in matlab
+
+## think about what these adjustments do to the matrices and how this affects the properties that we may want to preserve
+## identify these properties
+
+## still all for symmetric matrices, for correlation is fine for now
+
+
+
