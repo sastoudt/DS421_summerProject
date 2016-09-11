@@ -102,6 +102,16 @@ for(i in 1:13){
 
 flatten
 
+## need to symmetrize
+for(i in 1:nrow(merge2)){
+  row=unname(as.vector(merge2[i,]))
+  flatten[row[[5]],row[[4]]]=row[[3]]
+  print(i)
+}
+
+flatten[12,6]
+flatten[6,12]
+
 ## correlation matrix --> covariance matrix
 ## http://blogs.sas.com/content/iml/2010/12/10/converting-between-correlation-and-covariance-matrices.html
 ## standard deviations of each variable
@@ -118,5 +128,8 @@ D=diag(sd_chl)
 D
 
 eigen(D%*%flatten%*%D)$values
-## PSD
+## not psd
 
+empCov=D%*%flatten%*%D
+
+## relationship between this and a distance metric?
