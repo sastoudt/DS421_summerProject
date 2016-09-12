@@ -291,12 +291,15 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
     #forAgg2=mergeData2[,c("date.x","res","normValNoFlow")]
     
     forAgg=data[,c("date","res")]
-    forAgg2=normVal[,c("Date","meanPred")]
+    #forAgg2=as.data.frame(normVal)
+    forAgg2=cbind.data.frame(normVal[,4],unname(normVal[,3]))
+    #forAgg2[,2]=unname(forAgg2[,2])
+    #forAgg2=normVal[,c(3,4)]
     names(forAgg)=names(forAgg2)=c("date","res")
     ## right input for annual_agg
     data=annual_agg(forAgg,min_mo=11)
     normVal=annual_agg(forAgg2,min_mo=11)
-    
+   
     if(scale){
       #data1$res=exp(data1$res)
       #data2$res=exp(data2$res)
@@ -308,12 +311,13 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
       ylabel <- as.expression(parse(text = ylabel))
       
     }
+ 
     #data1=data1[order(data1$date),]
     #data2=data2[order(data2$date),]
     txt <- paste0("Flow Normalized: ",titleLab, ' ~ s(time) + s(season) + s(flo)') 
     
-    ggplot(data,aes(x=date,y=res))+geom_point()+
-      geom_line(data=  normVal, aes(x=date,y=res))+ xlim(xlim)+
+    ggplot(data=data,aes_string(x="date",y="res"))+geom_point()+
+      geom_line(data=normVal, aes_string(x="date",y="res"))+ xlim(xlim)+
       xlab("")+
       ylab(ylabel)+
       ggtitle(txt)
