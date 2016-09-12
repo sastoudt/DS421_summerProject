@@ -303,7 +303,7 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
       #data1$norm=exp(data1$norm)
       #data2$norm=exp(data2$norm)
       data$res=exp(data$res)
-      normVal$meanPred=exp(normVal$meanPred)
+      normVal$res=exp(normVal$res)
       ylabel <- gsub('ln-|log-', '', as.character(ylabel))
       ylabel <- as.expression(parse(text = ylabel))
       
@@ -313,7 +313,7 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
     txt <- paste0("Flow Normalized: ",titleLab, ' ~ s(time) + s(season) + s(flo)') 
     
     ggplot(data,aes(x=date,y=res))+geom_point()+
-      geom_line(data=  normVal, aes(x=Date,y=meanPred))+ xlim(xlim)+
+      geom_line(data=  normVal, aes(x=date,y=res))+ xlim(xlim)+
       xlab("")+
       ylab(ylabel)+
       ggtitle(txt)

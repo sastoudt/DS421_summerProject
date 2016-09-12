@@ -73,6 +73,8 @@
 # 
 # avgOverFlow$Date=as.Date(paste(avgOverFlow$year,avgOverFlow$month,"01",sep="-"))
 
+data=dataNiceNoLag[[1]]
+mod=modelsNoLag_Nested[[1]]
 
 flowNormalized=function(data,mod){
   data=data[!is.na(data$res),]
@@ -95,7 +97,7 @@ flowNormalized=function(data,mod){
   predGrid$dec_time=dec_time(predGrid$Date)[['dec_time']]
   predGrid$doy=yday(predGrid$Date)
   testPred=predict(mod,predGrid)
-  
+  predGrid$testPred=testPred
   byYearMonth=group_by(predGrid,month,year)
   avgOverFlow=summarise(byYearMonth,meanPred=mean(testPred,na.rm=T))
   avgOverFlow$Date=as.Date(paste(avgOverFlow$year,avgOverFlow$month,"01",sep="-"))
