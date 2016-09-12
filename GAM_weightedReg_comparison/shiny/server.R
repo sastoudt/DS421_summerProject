@@ -1,4 +1,4 @@
-source("setup_code/getFlowNormalized.R")
+source("setup_code/flowNormalized_tryAgain.R")
 source("nestedPlot.R")
 source("spatialResultsPlot.R")
 source("comparePlot.R")
@@ -251,13 +251,13 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
   # mergeData=merge(data,monthFlow,by.x="month",by.y="month")
   # 
   #normVal=getFlowNormalized(mod,data,monthFlow$avgFlow)
-  normVal=getFlowNormalized(data,mod)
+  normVal=flowNormalized(data,mod)
   
   #normValNoFlow=getFlowNormalized(modNoFlow,data,monthFlow$avgFlow)
   
   #normVal$date=as.Date(paste(normVal$year,normVal$month,"01",sep="-"))
  # normValNoFlow$date=as.Date(paste(normValNoFlow$year,normValNoFlow$month,"01",sep="-"))
-  normVal=normVal[order(normVal$date),]
+  normVal=normVal[order(normVal$Date),]
 #  normValNoFlow=normValNoFlow[order(normValNoFlow$date),]
   #print(head(normValNoFlow))
   #print(head(normVal))
@@ -287,8 +287,8 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
   titleLab=ifelse(scale,data$resdup[1],paste("ln(",data$resdup[1],")",sep=""))
   
   if(annual){
-    forAgg=mergeData2[,c("date.x","res","normVal")]
-    forAgg2=mergeData2[,c("date.x","res","normValNoFlow")]
+    #forAgg=mergeData2[,c("date.x","res","normVal")]
+    #forAgg2=mergeData2[,c("date.x","res","normValNoFlow")]
     
     forAgg=data[,c("date","res")]
     forAgg2=normVal[,c("Date","meanPred")]
@@ -345,7 +345,7 @@ else{
   
   if(scale){
     data$res=exp(data$res)
-    data$normVal=exp(data$normVal)
+    normVal$meanPred=exp(normVal$meanPred)
     #data$normValNoFlow=exp(data$normValNoFlow)
     ylabel <- gsub('ln-|log-', '', as.character(ylabel))
     ylabel <- as.expression(parse(text = ylabel))
