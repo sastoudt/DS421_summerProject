@@ -322,6 +322,9 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
       ylab(ylabel)+
       ggtitle(txt)
     
+    #plot(data$date,data$res,pch=19)
+    #lines(normVal$date,normVal$res)
+    
     
     # ggplot(data1, aes(x = date, y = res))+geom_point()+
     #   geom_line(aes(y = norm, color = 'With Flow'),lwd=1)+
