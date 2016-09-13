@@ -73,8 +73,8 @@
 # 
 # avgOverFlow$Date=as.Date(paste(avgOverFlow$year,avgOverFlow$month,"01",sep="-"))
 
-data=dataNiceNoLag[[1]]
-mod=modelsNoLag_Nested[[1]]
+#data=dataNiceNoLag[[1]]
+#mod=modelsNoLag_Nested[[1]]
 
 flowNormalized=function(data,mod){
   data=data[!is.na(data$res),]
