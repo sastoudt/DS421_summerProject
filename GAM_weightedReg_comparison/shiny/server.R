@@ -288,11 +288,11 @@ flowPlotNorm_SAS=function(data,mod,index,xlim=range(data$date),scale=F,annual=F)
 # }
   titleLab=ifelse(scale,data$resdup[1],paste("ln(",data$resdup[1],")",sep=""))
   
-  if(annual){
+  if(!annual){
     #forAgg=mergeData2[,c("date.x","res","normVal")]
     #forAgg2=mergeData2[,c("date.x","res","normValNoFlow")]
-    test=read.csv("data/test.csv",stringsAsFactors=F)
-   # forAgg=data[,c("date","res")]
+    #test=read.csv("data/test.csv",stringsAsFactors=F)
+    #forAgg=data[,c("date","res")]
     #forAgg2=as.data.frame(normVal)
     #forAgg2=cbind.data.frame(normVal[,4],unname(normVal[,3]))
     #forAgg2[,2]=unname(forAgg2[,2])
@@ -329,7 +329,7 @@ flowPlotNorm_SAS=function(data,mod,index,xlim=range(data$date),scale=F,annual=F)
    test2$dateA=as.Date(test2$dateA)
    test2$resA=as.vector(test2$resA)
     ggplot(data=test,aes_string(x="dateD",y="resD"))+geom_point()+
-      geom_line(data=test2,aes_string(x="dateA",y="resA"))+ xlim(xlim)+
+      geom_line(data=test2,aes_string(x="dateA",y="resA"),lwd=2)+ xlim(xlim)+
       xlab("")+
       ylab(ylabel)+
       ggtitle(txt)
