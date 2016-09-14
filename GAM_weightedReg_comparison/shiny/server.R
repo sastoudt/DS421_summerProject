@@ -3,6 +3,8 @@ source("nestedPlot.R")
 source("spatialResultsPlot.R")
 source("comparePlot.R")
 load("data/delt_dat.RData")
+load("data/flowNormToLoad.RData")
+load("data/flowNormToLoad2.RData")
 #load("data/delt_map.RData")
 
 ## need to change xlabel to something more informative
@@ -225,7 +227,7 @@ flowPlot_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F)
 
 
 
-flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annual=F){
+flowPlotNorm_SAS=function(data,mod,index,xlim=range(data$date),scale=F,annual=F){
   
   ## doesn't make sense to flow normalize if we don't put flow in the model
   ## don't really need modNoFlow anymore
@@ -299,7 +301,8 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
     ## right input for annual_agg
     #data=annual_agg(forAgg,min_mo=11)
     #normVal=annual_agg(forAgg2,min_mo=11)
-   
+   test=flowNormToSave[[index]]
+   test2=flowNormToSave2[[index]]
     if(scale){
       #data1$res=exp(data1$res)
       #data2$res=exp(data2$res)
@@ -310,17 +313,23 @@ flowPlotNorm_SAS=function(data,mod,modNoFlow,xlim=range(data$date),scale=F,annua
       #normVal$res=exp(normVal$res)
       ylabel <- gsub('ln-|log-', '', as.character(ylabel))
       ylabel <- as.expression(parse(text = ylabel))
+     # print(dim(test2))
+      #print(class(test2$resA))
+      #print(head(as.vector(test2$resA)))
       test$resD=exp(test$resD)
-      test$resA=exp(test$resA)
+      test2$resA=exp(as.vector(test2$resA))
     }
  
     #data1=data1[order(data1$date),]
     #data2=data2[order(data2$date),]
     txt <- paste0("Flow Normalized: ",titleLab, ' ~ s(time) + s(season) + s(flo)') 
-   test$dateD=as.Date(test$dateD)
-   test$dateA=as.Date(test$dateA)
+   #print(class(test$dateD))
+   #print(head(test2$dateA))
+    test$dateD=as.Date(test$dateD)
+   test2$dateA=as.Date(test2$dateA)
+   test2$resA=as.vector(test2$resA)
     ggplot(data=test,aes_string(x="dateD",y="resD"))+geom_point()+
-      geom_line(aes_string(x="dateA",y="resA"))+ xlim(xlim)+
+      geom_line(data=test2,aes_string(x="dateA",y="resA"))+ xlim(xlim)+
       xlab("")+
       ylab(ylabel)+
       ggtitle(txt)
@@ -551,7 +560,7 @@ shinyServer(function(input, output) {
     ## wrtds
     
     dat=dataNiceNoLag[[dat()]]
-    flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_Nested[[mod()]],modelsNoLag_Nested[[mod()]],xlim=dt_rng,scale=logspace,annual=annuals)
+    flowPlotNorm_SAS(dat,modelsNoLag_NoFlow_Nested[[mod()]],mod(),xlim=dt_rng,scale=logspace,annual=annuals)
     
     
   }, height = 250, width = 1200)
