@@ -18,7 +18,7 @@ for(i in 1:length(dataNiceNoLag)){
   flowNorm=flowNormalized(data,mod)
   
   test1=cbind.data.frame(data$date,data$res) 
-  test2=flowNorm
+  test2=cbind.data.frame(flowNorm[,4],flowNorm[,3])
   names(test1)=c("dateD","resD")
   names(test2)=c("dateA","resA")
   
