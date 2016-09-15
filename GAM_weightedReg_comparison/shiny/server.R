@@ -367,21 +367,41 @@ else{
   
   #data=data[order(data$date),]
  # data=mergeData2[order(mergeData2$date.x),]
+  test=flowNormToSave[[index]]
+  names(test)=c("date","res")
+  test=annual_agg(test,min_mo=11)
+  names(test)=c("dateD","resD")
+  
+  test2=flowNormToSave2[[index]]
+  names(test2)=c("date","res")
+  test2=annual_agg(test2,min_mo=11)
+  names(test2)=c("dateA","resA")
+  
   
   if(scale){
-    data$res=exp(data$res)
-    normVal$meanPred=exp(normVal$meanPred)
+    #print(head(test))
+    test$resD=exp(test$resD)
+    test2$resA=exp(test2$resA)
     #data$normValNoFlow=exp(data$normValNoFlow)
     ylabel <- gsub('ln-|log-', '', as.character(ylabel))
     ylabel <- as.expression(parse(text = ylabel))
     
   }
   
-  ggplot(data,aes(x=date,y=res))+geom_point()+
-    geom_line(data=  normVal, aes(x=Date,y=meanPred))+ xlim(xlim)+
+  test$dateD=as.Date(test$dateD)
+  test2$dateA=as.Date(test2$dateA)
+  test2$resA=as.vector(test2$resA)
+  ggplot(data=test,aes_string(x="dateD",y="resD"))+geom_point()+
+    geom_line(data=test2,aes_string(x="dateA",y="resA"),lwd=2)+ xlim(xlim)+
     xlab("")+
     ylab(ylabel)+
     ggtitle(txt)
+  
+  # ggplot(data,aes(x=date,y=res))+geom_point()+
+  #   geom_line(data=  normVal, aes(x=Date,y=meanPred))+ xlim(xlim)+
+  #   xlab("")+
+  #   ylab(ylabel)+
+  #   ggtitle(txt)
   
   
   # ggplot(data, aes(x = date.x, y = res))+geom_point()+
