@@ -76,7 +76,7 @@ Explanation of the NAs from Marcus: ``The issue is that the flow variable (in th
 \item WRTDS predictions are less extreme than the GAM predictions: so if GAM is always ``winning" it means it gets high/low enough in the right places and isn't losing big by being large in magnitude when it shouldn't
 \item expanded k version always has smaller RMSE breakdown than the original GAM model which means it still has smaller RMSE than WRTDS
 \item can't expand k any further because of identifiability constraints
-\item Original window sizes (0.5, 10, 0.5) try smaller window sizes (0.25, 5, 0.25), bigger window sizes (0.75, 15, 0.75) and an even bigger widows size (1,20,1)
+\item Original window sizes (0.5, 10, 0.5) try smaller window sizes (0.25, 5, 0.25) and (0.1, 2, 0.1) and bigger window sizes (0.75, 15, 0.75) and (1,20,1)
 \item Still overall the expanded GAM does better than all of the WRTDS models
 \item of the WRTDS models, the smaller window model generally does better, with a few breakdown categories having the original WRTDS model being the best
 \end{itemize}
