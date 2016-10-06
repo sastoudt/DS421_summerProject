@@ -89,7 +89,7 @@ I started this project with a side motivation of thinking about how to incorpora
 
 In the spatial models, the station is just a factor. There is no explicit information about which stations are close to one another. However, just considering the Euclidean distance between two stations may not be the most indicative version of distance if the two stations are not flow connected. If we could somehow incorporate information about the flow network structure into the GAM, we may be able to leverage more spatial information than if we merely used longitude and latitude to determine ``closeness".
 
-I had two approaches for trying to incorporate flow that approach the problem from different angles. Using the chlorophyll series of a neighboring station (correlation-wise) as a covariate, incorporates some information about the network that doesn't explicitly use Euclidean distance between stations. \textcolor{red}{A next step would be to do the same thing only using the station that is nearest in a Euclidean sense to see if there are any major differences.}
+I had two approaches for trying to incorporate flow that approach the problem from different angles. Using the chlorophyll series of a neighboring station (correlation-wise) as a covariate, incorporates some information about the network that doesn't explicitly use Euclidean distance between stations. A next step would be to do the same thing only using the station that is nearest in a Euclidean sense to see if there are any major differences.
 
 I also used flow data from \url{http://www.water.ca.gov/dayflow/} as a covariate. Since I used this in a by station approach, this doesn't actually incorporate information about the spatial network, but it does help us think about flow in general. 
 
@@ -118,12 +118,12 @@ The RMSEs for the chlorophyll ``flow" models are less than the RMSEs for both ve
 
 \subsubsection{True Flow}
 
-My second approach was inspired by Marcus Beck's work on adjusting for flow in his Weighted Regression on Time, Discharge, and Season models. The use of flow as a covariate can help account for the variance in the response that is attributed to flow instead of allowing it to be potentially confounded with a temporal trend. \textcolor{red}{To make this approach more spatial, I should go back and fit a spatial model with flow as a covariate allowing as many of the temporal components to vary by station as possible. Then at least the flows from each station can be leveraged.} A variant on the flow approach that I did try was to look at the volumetric flow data, determine which source made the largest contribution on average to each station, and then using flow data matching the largest contribution source from the water flow data. This was not always possible since for example, there was no obvious matching water flow data for the Carquinez Straight at Martinez even though a few stations had this as their highest volumetric component. To better understand flow over time, I  made plots that show the composition of flow at each station aggregated by year to see changes over time, and by month to see changes over seasons. These can be found in the Shiny app.
+My second approach was inspired by Marcus Beck's work on adjusting for flow in his Weighted Regression on Time, Discharge, and Season models. The use of flow as a covariate can help account for the variance in the response that is attributed to flow instead of allowing it to be potentially confounded with a temporal trend. To make this approach more spatial, it would be great to go back and fit a spatial model with flow as a covariate allowing as many of the temporal components to vary by station as possible. Then at least the flows from each station can be leveraged. A variant on the flow approach that I did try was to look at the volumetric flow data, determine which source made the largest contribution on average to each station, and then using flow data matching the largest contribution source from the water flow data. This was not always possible since for example, there was no obvious matching water flow data for the Carquinez Straight at Martinez even though a few stations had this as their highest volumetric component. To better understand flow over time, I  made plots that show the composition of flow at each station aggregated by year to see changes over time, and by month to see changes over seasons. These can be found in the Shiny app.
 
 %\textcolor{red}{come back and put results/observations}
 
 For the flow models, I also built simple day of year, date, and interaction between day of year and date models per station to have a better baseline for comparison.
-The RMSEs for interaction models are smaller than for total flow model for 7/15 stations. The RMSEs for interaction models are smaller than for station specific flow model for 7/15 stations.  The RMSEs for total flow are less than the RMSE for flow specific for 7/15 stations.  However, this could be partially confounded with how much the interaction term helps at each station. \textcolor{red}{I should either add the interaction term to the flow models or take out the interaction term from the baseline models to check this.}
+The RMSEs for interaction models are smaller than for total flow model for 7/15 stations. The RMSEs for interaction models are smaller than for station specific flow model for 7/15 stations.  The RMSEs for total flow are less than the RMSE for flow specific for 7/15 stations.  However, this could be partially confounded with how much the interaction term helps at each station. To check this the interaction term should be added to the flow models or the interaction term from the baseline models should be taken out.
 
 \subsection{Overall Comparisons (RMSE per station/model combinations)}
 
@@ -145,7 +145,7 @@ The RMSEs for interaction models are smaller than for total flow model for 7/15 
 \item P8: chlorophyll correlation does best, parsimonious and full models next
 \end{itemize}
 
-Overall it looks like chlorophyll correlation as another predictor variable is valuable. \textcolor{red}{Trying a by station model with an interaction term, chlorophyll from a correlated station, and the effective predictors from the parsimonious model might be the best combination.}
+Overall it looks like chlorophyll correlation as another predictor variable is valuable. Trying a by station model with an interaction term, chlorophyll from a correlated station, and the effective predictors from the parsimonious model might be the best combination.
 
 
 \textbf{By Model (numbers out of 15)}
@@ -278,7 +278,7 @@ The metrics of comparison are taken from Beck and Murphy's manuscript. They all 
 \item root-mean-squared-error (RMSE): $\sqrt{\frac{\sum_{i}=1^n (\hat{y}-y)^2}{n}}$
 \item deviance: sum of squared residuals
 \item average difference: $\left(\frac{\sum_{i=1}^n \hat{y}_{WRTDS,i}-\sum_{i=1}^n \hat{y}_{GAM,i}}{\sum_{i=1}^n \hat{y}_{GAM,i}}\right)*100$
-\item percent change: annual mean estimates for the first and last three years of flow-normalized estimates, excluding the annual aggregations that had limited annual mean data (i.e., seven years per period) \textcolor{red}{double check, still might have done this wrong}
+\item percent change: annual mean estimates for the first and last three years of flow-normalized estimates, excluding the annual aggregations that had limited annual mean data (i.e., seven years per period)% \textcolor{red}{double check, still might have done this wrong}
 \item RMSE between: $\sqrt{\frac{\sum_{i=1}^n (\hat{y}_{WRTDS,i}-\hat{y}_{GAM,i})^2}{n}}$
 \item regression of wrtdsPred ~ gamPred: is intercept significant? ( $>0$ WRTDS estimates were on average larger than GAMs) is slope significant? ( $<1$ GAMs fit a wider range of values compared to WRTDS)
 \item visually compare fitted values on Shiny app
@@ -317,16 +317,28 @@ NOTE: For more detailed results, see compareModels.tex.
 \item RMSE breakdown spatial plots
 \end{itemize}
 
-\subsection{In Progress}
+%\subsection{In Progress}
+%
+%I am currently investigating what is going on at station P8. In context, P8 is downstream of a wastewater treatment plant. Changes happened in the mid-2000s to reduce ammonium outputs from the treatment plant. Water quality changes in ammonium and to a lesser extent dissolved inorganic nitrogen have been shown in other work.
+%
+%The biggest differences seen in the metrics of comparison between GAMs and WRTDS happens for P8, so I am looking into where the methods differ, and if these differences correspond to the times where we know something new is happening. Some of the differences in the metrics are huge, so first I want to make sure this isn't a missingness issue or some other artifact. 
+%
+%There is also a major discrepancy in the annual aggregated GAM with flow v. GAM without flow. The without flow model does much better, which is not consistent with the rest of the results. I refit the models to give higher maximum basis dimensions in case the model fit was off. This didn't help. It looks like there is some asymmetry around $y=0$ in the residuals v. predicted values plot, but there are so few points where this is true, and on the annual aggregation level, this shouldn't be a big issue. I took those points out and refit the model, but this still didn't help. For dissolved inorganic nitrogen and nitrate, this station has an increased mean, median, and spread than all of the other stations for that response, but C10 is also up there and seems to be fine on the Shiny app. Ammonium is still a mystery; the flow model consistently predicts larger values than the no flow predictions, but both the distributions of flow and the response are consistent with those of other stations.
+%
+%The annual, flow-normalized predictions for GAMs at P8 look weird compared to the WRTDS version, so I need to make sure the flow-normalization is not off or see why the model is behaving so poorly.
 
-I am currently investigating what is going on at station P8. In context, P8 is downstream of a wastewater treatment plant. Changes happened in the mid-2000s to reduce ammonium outputs from the treatment plant. Water quality changes in ammonium and to a lesser extent dissolved inorganic nitrogen have been shown in other work.
+\subsection{Future Work}
 
-The biggest differences seen in the metrics of comparison between GAMs and WRTDS happens for P8, so I am looking into where the methods differ, and if these differences correspond to the times where we know something new is happening. Some of the differences in the metrics are huge, so first I want to make sure this isn't a missingness issue or some other artifact. 
+SFEI has done preliminary analysis of spatial and temporal trends with this data, but flow is a major confounder that may weaken or even negate conclusions. The analysis is going to be redone using WRTDS to adjust for flow because of its simplicity and ease of interpretability. The results from this work will generate new hypotheses about interactions between nutrients and time periods with different behaviors. These can be more readily explored using Generalized Additive Models because it is easy to add additional covariates (unlike in the WRTDS case that is specifically built to adjust for flow only). Once these hypotheses are generated, I will use my experience this summer to fit appropriate GAM models to target these specific questions. 
 
-There is also a major discrepancy in the annual aggregated GAM with flow v. GAM without flow. The without flow model does much better, which is not consistent with the rest of the results. I refit the models to give higher maximum basis dimensions in case the model fit was off. This didn't help. It looks like there is some asymmetry around $y=0$ in the residuals v. predicted values plot, but there are so few points where this is true, and on the annual aggregation level, this shouldn't be a big issue. I took those points out and refit the model, but this still didn't help. For dissolved inorganic nitrogen and nitrate, this station has an increased mean, median, and spread than all of the other stations for that response, but C10 is also up there and seems to be fine on the Shiny app. Ammonium is still a mystery; the flow model consistently predicts larger values than the no flow predictions, but both the distributions of flow and the response are consistent with those of other stations.
+Additionally there is interest in using the scientific context to determine hypotheses of mechanisms between the different nutrients and change points over time and test these hypotheses for causality in a structural equation modeling or graphical model framework. This may be incorporated into my final class project for my Statistical Learning Theory course this semester.\\
 
-The annual, flow-normalized predictions for GAMs at P8 look weird compared to the WRTDS version, so I need to make sure the flow-normalization is not off or see why the model is behaving so poorly.
+Other questions of interest:
 
-
+\begin{itemize}
+\item \textit{Model Selection}: I fit many different GAM models, but how do we choose the best one. There is model selection extensions of GAMS in the R package I'm using. This could be an interesting path forward methodologically, but the goal of SFEI is not to find the best model for predicting chlorophyll but rather to understand the relationships between other nutrients and chlorophyll and how these vary over space an dtime.
+\item \textit{Incorporating Uncertainty in ``Flow" covariate}: the ``measure" of flow comes from a hydrological model and comes with its own set of uncertainties. However, now we are treating it as a ``fixed" covariate. There has been some work in comparing Errors-in-Variables modeling (allowing for error in the predictor variables as well as the response) with Generalized Additive Models that could be incorporated here.
+\item \textit{Missingness in covariates}: As we fit more complicated models, the missingness of one covariate will mean that we can't make predictions of the whole model in those locations. With more predictor variables it is more likely that at least one will be missing, making the fitted value series rather sparse. We could work on imputing these missing variables, but this brings its own set of challenges. 
+\end{itemize}
 
 \end{document}
