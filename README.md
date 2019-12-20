@@ -22,6 +22,8 @@ A series of models in increasing complexity of chlorophyll as a function of vari
 ## Primary Products:
 - Github repository with reproducible code and documentation.
 - Written report of findings with appropriate visuals.
+- [Dashboard for Exploring Different Models](https://sastoudt.shinyapps.io/SF_chl/)
+- [Dashboard for Exploring Results](https://sastoudt.shinyapps.io/GAM_Delta/)
 
 ## Proposed Timeline:
 - Before I leave for NIST: SFEI will pass along raw data, code for some preliminary preprocessing, and flow data (including volumetric print data)	
